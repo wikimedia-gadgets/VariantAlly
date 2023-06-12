@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "build:debug": "DEBUG=1 rollup -c"
   },
   "author": "See AUTHORS",
   "license": "BSD-3-Clause",
@@ -14,8 +15,10 @@
     "only-allow": "^1.1.1"
   },
   "devDependencies": {
+    "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-terser": "^0.4.3",
     "@rollup/plugin-typescript": "^11.1.1",
+    "@types/node": "^20.3.0",
     "@types/oojs-ui": "^0.46.3",
     "rollup": "^3.23.0",
     "tslib": "^2.5.2",

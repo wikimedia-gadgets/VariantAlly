@@ -1,10 +1,20 @@
 // Variant related code.
 
 const LOCAL_STORAGE_KEY = 'var-pref';
+const EXPERIENCED_USERS = [
+  'TheresNoTime',
+  'WMFOffice'
+];
 
 function isExperiencedUser(): boolean {
+  if (!isLoggedIn()) {
+    return false;
+  }
+  const username = mw.config.get('wgUserName');
   return mw.config.get('wgUserGroups').includes('extendedconfirmed')
-    || mw.config.get('wgUserName').endsWith(' (WMF)');
+    || username.endsWith(' (WMF)')
+    || username.endsWith(' (WMDE)')
+    || EXPERIENCED_USERS.includes(username);
 }
 
 function isLoggedIn(): boolean {
@@ -12,25 +22,39 @@ function isLoggedIn(): boolean {
 }
 
 /**
- * Get current variant of the page.
- * @returns variant
+ * Get current variant of the page (don't be misled by config naming).
+ * @returns variant, null for non-wikitext page
  */
-function getCurrentVariant(): string | null {
+function getPageVariant(): string | null {
   return mw.config.get('wgUserVariant');
 }
 
 /**
- * Get preferred variant from Special:Preferences (logged-in users)
+ * Get account variant.
+ * @returns account variant, null for anonymous user
+ */
+function getAccountVariant(): string | null {
+  if (isLoggedIn()) {
+    return mw.user.options.get('variant');
+  }
+  return null;
+}
+
+function getLocalVariant(): string | null {
+  return localStorage.getItem(LOCAL_STORAGE_KEY);
+}
+
+/**
+ * Calculate preferred variant from Special:Preferences (logged-in users)
  * or local storage (anonymous users). Resets local storage if there's a conflict.
  * @returns preferred variant
  */
-// TODO: Should we use isExperiencedUser?
-function getPreferredVariant(): string | null {
-  const localVariant = localStorage.getItem(LOCAL_STORAGE_KEY);
+function calculatePreferredVariant(): string | null {
+  const localVariant = getLocalVariant();
+  const accountVariant = getAccountVariant();
 
-  if (isLoggedIn()) {
-    const accountVariant: string = mw.user.options.get('variant');
-    if (localVariant !== null && accountVariant !== localVariant) {
+  if (accountVariant !== null) {
+    if (localVariant === null) {
       setPreferredVariant(accountVariant);
     }
     return accountVariant;
@@ -44,8 +68,11 @@ function setPreferredVariant(variant: string): void {
 }
 
 export {
+  isExperiencedUser,
   isLoggedIn,
-  getCurrentVariant,
-  getPreferredVariant,
+  getPageVariant,
+  getAccountVariant,
+  getLocalVariant,
+  calculatePreferredVariant,
   setPreferredVariant,
 }

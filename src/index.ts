@@ -1,5 +1,15 @@
-import { checkCurrentPage, redirectAnchors } from './redirect';
+import { output, showDebugInformation } from './debug';
+import showPrompt from './prompt';
+import { checkThisPage, redirect, redirectAnchors } from './redirect';
+import { calculatePreferredVariant } from './variant';
 
+showDebugInformation();
 
-checkCurrentPage();
-redirectAnchors();
+const preferrerVariant = calculatePreferredVariant();
+if (preferrerVariant === null) {
+  output('Preferred variant is null, show prompt');
+  showPrompt().then((variant) => { redirect(variant); });
+} else {
+  checkThisPage(preferrerVariant);
+  redirectAnchors(preferrerVariant);
+}

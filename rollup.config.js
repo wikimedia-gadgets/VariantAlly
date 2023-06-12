@@ -1,7 +1,9 @@
+// @ts-check
 import { defineConfig } from 'rollup';
 import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
 import { readFileSync } from 'fs';
+import replace from '@rollup/plugin-replace';
 
 export default defineConfig({
   input: 'src/index.ts',
@@ -12,6 +14,10 @@ export default defineConfig({
     footer: readFileSync('./gadget-append.js').toString(),
   },
   plugins: [
+    replace({
+      preventAssignment: true,
+      DEBUG: JSON.stringify(process.env.DEBUG ? true : false),
+    }),
     typescript(),
     terser({
       format: {

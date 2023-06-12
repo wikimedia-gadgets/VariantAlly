@@ -1,59 +1,86 @@
 // Handle redirection from incorrect language variants.
 
-import showPrompt from './prompt';
-import { getCurrentVariant, getPreferredVariant, isLoggedIn } from './variant';
+import { output } from './debug';
+import { getPageVariant, calculatePreferredVariant, isLoggedIn, isExperiencedUser } from './variant';
 
 // Including:
-// - zh.wikipedia.org
 // - w.wiki
 // - Google (T305540)
-const BLOCKED_REFERRER_HOST = /^zh\.wikipedia\.org$|^w\.wiki$|\bgoogle(?:\.\w{2,3}){1,2}$/i;
+const BLOCKED_REFERRER_HOST = /^w\.wiki$|\bgoogle(?:\.\w{2,3}){1,2}$/i;
 const WIKIURL_REGEX = /^\/(?:wiki|zh-\w+)\//i;
+const DUMMY_REFERRER = 'a:';
 
 function rewriteLink(link: string, variant: string): string {
   const url = new URL(link);
   const pathname = url.pathname;
   const searchParams = url.searchParams
-  if (WIKIURL_REGEX.test(pathname)) {
-    url.pathname = `/${variant}/${url.pathname.replace(WIKIURL_REGEX, '')}`;
-    searchParams.delete('variant'); // For things like /zh-cn/A?variant=zh-hk
-  } else if (pathname.startsWith('/w/index.php')) {
-    searchParams.set('variant', variant);
+
+  // Only handle same origin
+  if (url.host === location.host) {
+    if (WIKIURL_REGEX.test(pathname)) {
+      url.pathname = `/${variant}/${url.pathname.replace(WIKIURL_REGEX, '')}`;
+      searchParams.delete('variant'); // For things like /zh-cn/A?variant=zh-hk
+    } else if (pathname.startsWith('/w/index.php')) {
+      searchParams.set('variant', variant);
+    }
   }
+
+  output(`${link} + ${variant} => ${url.toString()}`);
   return url.toString();
 }
 
-async function checkCurrentPage(): Promise<void> {
-  if (
-    isLoggedIn()
-    || (document.referrer !== '' && BLOCKED_REFERRER_HOST.test(new URL(document.referrer).hostname))
+function redirect(variant: string): void {
+  output('Redirecting...');
+  location.href = rewriteLink(location.href, variant);
+}
+
+async function checkThisPage(variant: string): Promise<void> {
+  const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
+  if (isExperiencedUser()
+    || referrerHostname === location.hostname
+    || BLOCKED_REFERRER_HOST.test(referrerHostname)
   ) {
     // Assume this is user intention and do nothing
+    output(`checkThisPage: Experienced in or referrer in blocklist, do nothing.`);
     return;
   }
 
-  const currentVariant = getCurrentVariant();
-  const preferredVariant = getPreferredVariant();
-  if (preferredVariant === null) {
-    await showPrompt();
-    location.href = rewriteLink(location.href, getPreferredVariant()!);
-  } else if (currentVariant !== preferredVariant) {
-    location.href = rewriteLink(location.href, preferredVariant);
+  const pageVariant = getPageVariant();
+  if (pageVariant === null) {
+    return;
+  }
+  if (pageVariant !== variant) {
+    redirect(variant);
+  } else {
+    output('checkThisPage: Variant is correct :)');
   }
 }
 
-function redirectAnchors(): void {
-  const preferredVariant = getPreferredVariant();
-  if (preferredVariant === null) {
-    return;
-  }
-  ['keydown', 'mousedown', 'touchstart'].forEach((name) => {
-    document.addEventListener(name, (e) => {
-      if (e.target instanceof HTMLAnchorElement) {
-        e.target.href = rewriteLink(e.target.href, preferredVariant);
+function redirectAnchors(variant: string): void {
+  ['click', 'auxclick'].forEach((i) => {
+    document.addEventListener(i, (e) => {
+      const target = e.target;
+
+      if (target instanceof Element) {
+        const anchor = target.closest('a');
+
+        if (anchor !== null) {
+          output('redirectAnchors: Navigation event');
+
+          const originalHref = anchor.href;
+          anchor.href = rewriteLink(anchor.href, variant);
+
+          // HACK: workaround popups not working on modified links
+          // Add handler to <a> directly so it was triggered before anything else
+          ['mouseover', 'mouseout', 'keyup'].forEach((j) => {
+            anchor.addEventListener(j, () => {
+              anchor.href = originalHref;
+            });
+          });
+        }
       }
     });
   });
 }
 
-export { checkCurrentPage, redirectAnchors };
+export { redirect, checkThisPage, redirectAnchors };
