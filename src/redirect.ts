@@ -25,7 +25,7 @@ function rewriteLink(link: string, variant: string): string {
     }
   }
 
-  output(`${link} + ${variant} => ${url.toString()}`);
+  output(`${decodeURI(link)} + ${variant} => ${decodeURI(url.toString())}`);
   return url.toString();
 }
 
@@ -57,26 +57,39 @@ async function checkThisPage(variant: string): Promise<void> {
 }
 
 function redirectAnchors(variant: string): void {
-  ['click', 'auxclick'].forEach((i) => {
-    document.addEventListener(i, (e) => {
-      const target = e.target;
+  ['click', 'auxclick', 'dragstart'].forEach((name) => {
+    document.addEventListener(name, (ev) => {
+      if (ev.target instanceof Element) {
+        const anchor = ev.target.closest('a');
+        if (anchor) {
+          output(`redirectAnchors: Event ${ev.type} on ${anchor.href}`);
 
-      if (target instanceof Element) {
-        const anchor = target.closest('a');
+          const newLink = rewriteLink(anchor.href, variant);
+          if (ev instanceof DragEvent && ev.dataTransfer) {
+            // Modify drag data directly as setting href has no effect on drag event
+            for (const type of ev.dataTransfer.types) {
+              ev.dataTransfer.setData(type, newLink);
+            }
+          } else {
+            // Prevent being overwritten by overlapped call
+            if (!anchor.dataset.origHref) {
+              anchor.dataset.origHref = anchor.href;
+            }
+            anchor.href = newLink;
 
-        if (anchor !== null) {
-          output('redirectAnchors: Navigation event');
+            // HACK: workaround popups not working on modified links
+            // Add handler to <a> directly so it was triggered before anything else
+            ['mouseover', 'mouseleave', 'keyup'].forEach((innerName) => {
+              anchor.addEventListener(innerName, (innerEv) => {
+                output(`redirectAnchors: Restoration event ${innerEv.type} on ${anchor.href}, origHref ${anchor.dataset.origHref}`);
 
-          const originalHref = anchor.href;
-          anchor.href = rewriteLink(anchor.href, variant);
-
-          // HACK: workaround popups not working on modified links
-          // Add handler to <a> directly so it was triggered before anything else
-          ['mouseover', 'mouseout', 'keyup'].forEach((j) => {
-            anchor.addEventListener(j, () => {
-              anchor.href = originalHref;
+                if (anchor.dataset.origHref) {
+                  anchor.href = anchor.dataset.origHref;
+                  delete anchor.dataset.origHref;
+                }
+              }, { once: true });
             });
-          });
+          }
         }
       }
     });
