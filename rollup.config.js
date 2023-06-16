@@ -5,6 +5,8 @@ import terser from '@rollup/plugin-terser';
 import { readFileSync } from 'fs';
 import replace from '@rollup/plugin-replace';
 
+const production = process.env.NODE_ENV === 'production';
+
 export default defineConfig({
   input: 'src/index.ts',
   output: {
@@ -16,7 +18,7 @@ export default defineConfig({
   plugins: [
     replace({
       preventAssignment: true,
-      DEBUG: JSON.stringify(process.env.DEBUG ? true : false),
+      DEBUG: JSON.stringify(!production),
     }),
     typescript(),
     terser({

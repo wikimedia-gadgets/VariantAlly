@@ -7,7 +7,8 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "rollup -c",
-    "build:debug": "DEBUG=1 rollup -c"
+    "build:debug": "NODE_ENV=development rollup -c",
+    "build:watch": "NODE_ENV=development rollup -c -w"
   },
   "author": "See AUTHORS",
   "license": "BSD-3-Clause",

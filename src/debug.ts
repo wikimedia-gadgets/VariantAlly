@@ -17,11 +17,9 @@ Calculated preferred variant: ${calculatePreferredVariant()}
 `);
 }
 
-function output(str: string): void {
-  if (!DEBUG) {
-    return;
-  }
-  console.log(`[VariantAlly] ${str}`);
+function output(...outputs: string[]): void {
+  console.log(`[VariantAlly] ${outputs.slice(0, -1).join('/')}: ${outputs.pop()}`);
 }
+
 
 export { showDebugInformation, output }

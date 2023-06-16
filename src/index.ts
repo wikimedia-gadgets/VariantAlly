@@ -7,7 +7,7 @@ showDebugInformation();
 
 const preferrerVariant = calculatePreferredVariant();
 if (preferrerVariant === null) {
-  output('Preferred variant is null, show prompt');
+  output('index', 'Preferred variant is null, show prompt');
   showPrompt().then((variant) => { redirect(variant); });
 } else {
   checkThisPage(preferrerVariant);
