@@ -1,4 +1,4 @@
-// Variant related code.
+// Variant-manage related code.
 
 const LOCAL_STORAGE_KEY = 'var-pref';
 const EXPERIENCED_USERS = [
@@ -67,6 +67,17 @@ function setPreferredVariant(variant: string): void {
   localStorage.setItem(LOCAL_STORAGE_KEY, variant);
 }
 
+async function showPrompt(): Promise<string> {
+  const result = await OO.ui.prompt('Enter variant', { textInput: { value: 'zh-cn' } });
+  if (result === null) {
+    prompt('variant cannot be null!');
+    throw new Error();
+  } else {
+    setPreferredVariant(result);
+    return result;
+  }
+}
+
 export {
   isExperiencedUser,
   isLoggedIn,
@@ -75,4 +86,5 @@ export {
   getLocalVariant,
   calculatePreferredVariant,
   setPreferredVariant,
+  showPrompt,
 }

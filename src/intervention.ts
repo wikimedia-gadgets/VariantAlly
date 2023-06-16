@@ -1,7 +1,7 @@
-// Handle redirection from incorrect language variants.
+// Handle auto redirection and link fixes.
 
 import { output } from './debug';
-import { getPageVariant, isExperiencedUser } from './variant';
+import { getPageVariant, isExperiencedUser } from './management';
 
 // Including:
 // - w.wiki

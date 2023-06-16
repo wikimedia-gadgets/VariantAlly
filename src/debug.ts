@@ -1,6 +1,6 @@
 // Show debug information.
 
-import { getAccountVariant, getLocalVariant, getPageVariant, calculatePreferredVariant, isLoggedIn, isExperiencedUser } from './variant';
+import { getAccountVariant, getLocalVariant, getPageVariant, calculatePreferredVariant, isLoggedIn, isExperiencedUser } from './management';
 
 function showDebugInformation(): void {
   if (!DEBUG) {

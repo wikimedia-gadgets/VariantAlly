@@ -1,7 +1,6 @@
 import { output, showDebugInformation } from './debug';
-import showPrompt from './prompt';
-import { checkThisPage, redirect, redirectAnchors } from './redirect';
-import { calculatePreferredVariant } from './variant';
+import { checkThisPage, redirect, redirectAnchors } from './intervention';
+import { calculatePreferredVariant, showPrompt } from './management';
 
 showDebugInformation();
 
