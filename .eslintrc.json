@@ -1,0 +1,40 @@
+{
+  "root": true,
+  "parser": "vue-eslint-parser",
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "rules": {
+    "semi": "error",
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "quotes": [
+      "error",
+      "single",
+      {
+        "avoidEscape": true,
+        "allowTemplateLiterals": true
+      }
+    ],
+    "max-lines": [
+      "error",
+      100
+    ]
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:vue/vue3-recommended"
+  ],
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "sourceType": "module"
+  }
+}

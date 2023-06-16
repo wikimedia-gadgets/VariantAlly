@@ -1,3 +1,5 @@
+// Lib entry point.
+
 import { output, showDebugInformation } from './debug';
 import { checkThisPage, redirect, redirectAnchors } from './intervention';
 import { calculatePreferredVariant, showPrompt } from './management';

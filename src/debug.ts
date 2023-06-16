@@ -18,8 +18,11 @@ Calculated preferred variant: ${calculatePreferredVariant()}
 }
 
 function output(...outputs: string[]): void {
+  if (!DEBUG) {
+    return;
+  }
   console.log(`[VariantAlly] ${outputs.slice(0, -1).join('/')}: ${outputs.pop()}`);
 }
 
 
-export { showDebugInformation, output }
+export { showDebugInformation, output };
