@@ -12,7 +12,7 @@ const DUMMY_REFERRER = 'a:';
 function rewriteLink(link: string, variant: string): string {
   const url = new URL(link);
   const pathname = url.pathname;
-  const searchParams = url.searchParams
+  const searchParams = url.searchParams;
 
   // Only handle same origin
   if (url.host === location.host) {
@@ -81,7 +81,7 @@ function redirectAnchors(variant: string): void {
             output(
               'redirectAnchors',
               'click-handler',
-              `href ${anchor.href}, origHref ${anchor.dataset.origHref}`
+              `href ${anchor.href}, origHref ${anchor.dataset.origHref}`,
             );
 
             // HACK: workaround popups not working on modified links
@@ -92,7 +92,7 @@ function redirectAnchors(variant: string): void {
                   'redirectAnchors',
                   'click-handler',
                   'restoration-handler',
-                  `Event ${innerEv.type} on ${anchor.href}, origHref ${anchor.dataset.origHref}`
+                  `Event ${innerEv.type} on ${anchor.href}, origHref ${anchor.dataset.origHref}`,
                 );
 
                 if (anchor.dataset.origHref) {

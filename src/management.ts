@@ -1,9 +1,9 @@
-// Variant-manage related code.
+// Variant-management related code.
 
 const LOCAL_STORAGE_KEY = 'var-pref';
 const EXPERIENCED_USERS = [
   'TheresNoTime',
-  'WMFOffice'
+  'WMFOffice',
 ];
 
 function isExperiencedUser(): boolean {
@@ -67,15 +67,11 @@ function setPreferredVariant(variant: string): void {
   localStorage.setItem(LOCAL_STORAGE_KEY, variant);
 }
 
-async function showPrompt(): Promise<string> {
-  const result = await OO.ui.prompt('Enter variant', { textInput: { value: 'zh-cn' } });
-  if (result === null) {
-    prompt('variant cannot be null!');
-    throw new Error();
-  } else {
-    setPreferredVariant(result);
-    return result;
-  }
+async function showDialog(): Promise<void> {
+  // Use dynamic import to improve performance
+  const { default: DialogVue } = await import('./components/Dialog.vue');
+  const { createMwApp } = await import('vue');
+  createMwApp(DialogVue).mount(document.body);
 }
 
 export {
@@ -86,5 +82,5 @@ export {
   getLocalVariant,
   calculatePreferredVariant,
   setPreferredVariant,
-  showPrompt,
-}
+  showDialog,
+};

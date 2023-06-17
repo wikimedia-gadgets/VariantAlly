@@ -1,6 +1,13 @@
 // Show debug information.
 
-import { getAccountVariant, getLocalVariant, getPageVariant, calculatePreferredVariant, isLoggedIn, isExperiencedUser } from './management';
+import {
+  getAccountVariant,
+  getLocalVariant,
+  getPageVariant,
+  calculatePreferredVariant,
+  isLoggedIn,
+  isExperiencedUser,
+} from './management';
 
 function showDebugInformation(): void {
   if (!DEBUG) {
@@ -23,6 +30,5 @@ function output(...outputs: string[]): void {
   }
   console.log(`[VariantAlly] ${outputs.slice(0, -1).join('/')}: ${outputs.pop()}`);
 }
-
 
 export { showDebugInformation, output };

@@ -19,9 +19,11 @@
         "allowTemplateLiterals": true
       }
     ],
-    "max-lines": [
+    "max-len": [
       "error",
-      100
+      {
+        "code": 100
+      }
     ]
   },
   "plugins": [
