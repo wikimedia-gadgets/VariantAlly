@@ -3,39 +3,15 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { readFileSync } from 'fs';
-
-/**
- * Simple plugin to transform dynamic imports to MediaWiki ResourceLoader calls.
- * @param {string[]} externals external modules to handle
- * @returns {import('vite').PluginOption}
- */
-function mwGadgets(externals) {
-  return {
-    name: 'mw-dynamic-import',
-    enforce: 'pre',
-    async resolveId(source) {
-      if (externals.includes(source)) {
-        return false;
-      }
-    },
-    renderDynamicImport({ targetModuleId }) {
-      if (targetModuleId && externals.includes(targetModuleId)) {
-        return {
-          left: 'mw.loader.using(',
-          right: `).then(require=>require("${targetModuleId}"))`,
-        };
-      }
-    },
-  };
-}
+import mwGadget from 'rollup-plugin-mediawiki-gadget';
 
 export default defineConfig(({ command }) => {
   const production = command === 'build';
 
   return {
     esbuild: {
-      banner: readFileSync('src/res/intro.js').toString(),
-      footer: readFileSync('src/res/outro.js').toString(),
+      banner: readFileSync('assets/intro.js').toString(),
+      footer: readFileSync('assets/outro.js').toString(),
     },
     define: {
       DEBUG: JSON.stringify(!production),
@@ -49,20 +25,26 @@ export default defineConfig(({ command }) => {
       target: ['es2016'], // MediaWiki's JavaScript minifier supports up to ES2016
       rollupOptions: {
         output: {
-          entryFileNames: () => 'VariantAlly.js',
-          chunkFileNames: () => 'VariantAlly-[name].js',
+          entryFileNames: () => 'VariantAllyDialog.js',
+          chunkFileNames: () => 'VariantAllyDialog-[name].js',
         },
       },
       minify: 'terser', // Use terser for smaller bundle size
       terserOptions: {
         format: {
-          comments: /(^\*!|nowiki)/i, // Preserve banners & nowiki guards
+          // Reserve intro && outro
+          comments: /(^\*!|nowiki|SPDX-License-Identifier)/i,
         },
       },
     },
     plugins: [
       vue(),
-      mwGadgets(['vue']),
+      {
+        enforce: 'pre',
+        ...mwGadget({
+          gadgetDef: 'gadget-def.txt',
+        }),
+      },
     ],
   };
 });

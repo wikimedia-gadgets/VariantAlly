@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "lint": "eslint . && pnpm -r exec tsc --noEmit",
+    "lint": "eslint .",
+    "type-check": "pnpm -r exec tsc --noEmit",
     "build": "pnpm -r run build"
   },
   "author": "See AUTHORS",

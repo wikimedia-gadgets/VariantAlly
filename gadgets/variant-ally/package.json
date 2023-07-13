@@ -8,10 +8,6 @@
   },
   "author": "See AUTHORS",
   "license": "BSD-3-Clause",
-  "dependencies": {
-    "only-allow": "^1.1.1",
-    "vue": "^3.3.4"
-  },
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-terser": "^0.4.3",

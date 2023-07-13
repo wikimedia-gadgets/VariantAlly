@@ -1,1 +1,1 @@
-// Start the Vite dev server.
+// Start Vite dev server.
