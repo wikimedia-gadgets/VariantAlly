@@ -1,0 +1,20 @@
+{
+  "name": "variant-ally-dialog",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "only-allow": "^1.1.1",
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "vite": "^4.3.9",
+    "vue-tsc": "^1.6.5"
+  }
+}

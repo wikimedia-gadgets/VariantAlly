@@ -9,9 +9,15 @@ import { readFileSync } from 'fs';
  * @param {string[]} externals external modules to handle
  * @returns {import('vite').PluginOption}
  */
-function mwDynamicImport(externals) {
+function mwGadgets(externals) {
   return {
     name: 'mw-dynamic-import',
+    enforce: 'pre',
+    async resolveId(source) {
+      if (externals.includes(source)) {
+        return false;
+      }
+    },
     renderDynamicImport({ targetModuleId }) {
       if (targetModuleId && externals.includes(targetModuleId)) {
         return {
@@ -46,7 +52,6 @@ export default defineConfig(({ command }) => {
           entryFileNames: () => 'VariantAlly.js',
           chunkFileNames: () => 'VariantAlly-[name].js',
         },
-        external: ['vue'],
       },
       minify: 'terser', // Use terser for smaller bundle size
       terserOptions: {
@@ -57,7 +62,7 @@ export default defineConfig(({ command }) => {
     },
     plugins: [
       vue(),
-      mwDynamicImport(['vue']),
+      mwGadgets(['vue']),
     ],
   };
 });

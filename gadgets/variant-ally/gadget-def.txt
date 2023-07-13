@@ -1,0 +1,1 @@
+* VariantAlly[ResourceLoader|requiresES6|targets=desktop,mobile|dependencies=user.options]|VariantAlly.js

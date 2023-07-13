@@ -1,33 +1,23 @@
 {
-  "name": "variant-ally",
+  "name": "variant-ally-monorepo",
   "version": "0.0.1",
   "description": "Enhance Chinese Wikipedia's variant support",
   "private": true,
   "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint . && tsc --noEmit"
+    "lint": "eslint . && pnpm -r exec tsc --noEmit",
+    "build": "pnpm -r run build"
   },
   "author": "See AUTHORS",
   "license": "BSD-3-Clause",
-  "dependencies": {
-    "only-allow": "^1.1.1",
-    "vue": "^3.3.4"
-  },
   "devDependencies": {
-    "@types/jquery": "^3.5.16",
-    "@types/node": "^20.3.1",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
-    "@vitejs/plugin-vue": "^4.2.3",
     "eslint": "^8.42.0",
     "eslint-plugin-vue": "^9.14.1",
-    "terser": "^5.18.0",
-    "types-mediawiki": "^1.3.0",
-    "typescript": "^5.0.4",
-    "vite": "^4.3.9",
-    "vue-tsc": "^1.6.5"
+    "only-allow": "^1.1.1",
+    "tslib": "^2.6.0",
+    "typescript": "^5.1.6"
   }
 }
