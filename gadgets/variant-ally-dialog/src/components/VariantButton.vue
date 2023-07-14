@@ -12,6 +12,7 @@ function onClick() {
     @click="onClick"
   >
     <svg
+      class="variant-button__icon"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       width="20"
@@ -34,17 +35,52 @@ function onClick() {
   .button-base();
 
   appearance: none;
-  background-color: @background-color-interactive-subtle;
+
+  background-color: @background-color-base;
   color: @color-progressive;
   border-color: @border-color-progressive;
+
   padding-top: @spacing-vertical-variant-button;
   padding-bottom: @spacing-vertical-variant-button;
   font-size: @font-size-large;
+  text-align: left;
 
-  &:hover {}
+  display: flex;
+  align-items: center;
 
-  &:active {}
+  &:hover {
+    color: @color-progressive--hover;
+    background-color: @background-color-progressive-subtle;
 
-  &:focus:not(:active) {}
+    .variant-button__icon {
+      fill: @color-progressive--hover;
+    }
+  }
+
+  &:active {
+    color: @color-inverted;
+    background-color: @background-color-progressive--active;
+    border-color: @border-color-progressive--active;
+
+    .variant-button__icon {
+      fill: @color-inverted;
+    }
+  }
+
+  &:focus {
+    outline: @outline-base--focus;
+  }
+
+  &:focus:not(:active) {
+    border-color: @border-color-progressive--focus;
+    box-shadow: @box-shadow-progressive--focus;
+  }
+
+  &__icon {
+    margin-right: @spacing-25;
+    fill: @color-progressive;
+    transition-property: fill;
+    transition-duration: @transition-duration-base;
+  }
 }
 </style>

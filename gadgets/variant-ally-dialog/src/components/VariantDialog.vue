@@ -25,7 +25,10 @@ defineExpose({ currentPage });
     appear
   >
     <div class="variant-dialog">
-      <Transition name="switch">
+      <Transition
+        name="switch"
+        mode="out-in"
+      >
         <!-- Main panel -->
         <div
           v-if="currentPage === Page.MAIN"
@@ -36,7 +39,10 @@ defineExpose({ currentPage });
           </h2>
           <div class="variant-dialog__main__body">
             <p class="variant-dialog__main__body__desc">
-              {{ msg('main.desc') }}<a href="#">{{ msg('main.desc.ext') }}</a>
+              {{ msg('main.desc') }}<a
+                href="#"
+                @click.prevent="currentPage = Page.MORE"
+              >{{ msg('main.desc.ext') }}</a>
             </p>
             <div class="variant-dialog__main__body__options">
               <VariantButton>{{ msg('main.zh-cn') }}</VariantButton>
@@ -49,7 +55,10 @@ defineExpose({ currentPage });
           </div>
           <footer class="variant-dialog__main__footer">
             <p>
-              {{ msg('main.footer') }}<a href="#">{{ msg('main.footer.ext') }}</a>
+              {{ msg('main.footer') }}<a
+                href="#"
+                @click.prevent="currentPage = Page.TROUBLESHOOT"
+              >{{ msg('main.footer.ext') }}</a>
             </p>
           </footer>
         </div>
@@ -59,6 +68,7 @@ defineExpose({ currentPage });
           v-else-if="currentPage === Page.MORE"
           class="variant-dialog__more"
         >
+          <h2>{{ msg('main.heading') }}</h2>
           <p>{{ msg('more.desc.1') }}</p>
           <p>{{ msg('more.desc.2') }}</p>
           <p>{{ msg('more.desc.3') }}</p>
@@ -69,6 +79,7 @@ defineExpose({ currentPage });
           v-else-if="currentPage === Page.TROUBLESHOOT"
           class="variant-dialog__troubleshoot"
         >
+          <h2>{{ msg('main.heading') }}</h2>
           <p>{{ msg('troubleshoot.desc.1') }}</p>
           <p>{{ msg('troubleshoot.desc.2') }}</p>
         </div>
@@ -93,18 +104,26 @@ defineExpose({ currentPage });
 
 .variant-dialog {
   position: fixed;
-  z-index: @z-index-overlay;
   top: 50%;
   left: 50%;
-  width: 40em;
-  height: 20em;
+
+  max-width: 42em;
+  width: 100%;
+  min-height: 22em;
+
+  z-index: @z-index-overlay;
   transform: translateX(-50%) translateY(-50%);
+  padding: @spacing-125 @spacing-200;
+  overflow: hidden;
+
   background-color: @background-color-base;
   border: @border-base;
   border-radius: @border-radius-base;
   box-shadow: @box-shadow-drop-medium;
-  padding: @spacing-100 @spacing-150;
-  overflow: hidden;
+
+  //display: flex;
+  //flex-direction: column;
+  //justify-content: center;
 
   &__main {
     &__title {}
@@ -114,8 +133,10 @@ defineExpose({ currentPage });
 
       &__options {
         display: grid;
-        gap: @spacing-25;
+        gap: @spacing-35;
+        grid-auto-flow: column;
         grid-template: 1fr 1fr 1fr / 1fr 1fr;
+        margin: @spacing-100 0;
       }
     }
   }
@@ -125,21 +146,24 @@ a {
   .link-base();
 }
 
+/* Switch panel effect */
+
 .switch-enter-active,
 .switch-leave-active {
-  //position: absolute;
-  transition-property: transform;
-  transition-duration: 2s;
+  transition-property: @transition-property-fade;
+  transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-user;
 }
 
 .switch-enter-from {
-  transform: translateX(-100%);
+  opacity: 0;
 }
 
 .switch-leave-to {
-  transform: translateX(100%);
+  opacity: 0;
 }
+
+/* Window fade effect */
 
 .fade-enter-active,
 .fade-leave-active {
