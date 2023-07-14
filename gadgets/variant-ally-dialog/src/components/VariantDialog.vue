@@ -2,8 +2,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { msg } from '../msg';
+import { currentLocale, msg } from '../msg';
 import VariantButton from './VariantButton.vue';
+import { setPreferredVariant, rewriteCurrentURL } from '../management';
 
 const enum Page {
   MAIN,
@@ -11,8 +12,11 @@ const enum Page {
   TROUBLESHOOT,
   QUIT
 }
-
 const currentPage = ref(Page.MAIN);
+
+defineEmits<{
+  (e: 'select', variant: string): void;
+}>();
 
 // For debugging purpose
 defineExpose({ currentPage });
@@ -24,7 +28,10 @@ defineExpose({ currentPage });
     name="fade"
     appear
   >
-    <div class="variant-dialog">
+    <div
+      class="variant-dialog"
+      :lang="currentLocale"
+    >
       <Transition
         name="switch"
         mode="out-in"
@@ -45,12 +52,18 @@ defineExpose({ currentPage });
               >{{ msg('main.desc.ext') }}</a>
             </p>
             <div class="variant-dialog__main__body__options">
-              <VariantButton>{{ msg('main.zh-cn') }}</VariantButton>
-              <VariantButton>{{ msg('main.zh-sg') }}</VariantButton>
-              <VariantButton>{{ msg('main.zh-my') }}</VariantButton>
-              <VariantButton>{{ msg('main.zh-hk') }}</VariantButton>
-              <VariantButton>{{ msg('main.zh-mo') }}</VariantButton>
-              <VariantButton>{{ msg('main.zh-tw') }}</VariantButton>
+              <VariantButton @click="$emit('select', 'zh-cn')">{{ msg('main.zh-cn') }}
+              </VariantButton>
+              <VariantButton @click="$emit('select', 'zh-sg')">{{ msg('main.zh-sg') }}
+              </VariantButton>
+              <VariantButton @click="$emit('select', 'zh-my')">{{ msg('main.zh-my') }}
+              </VariantButton>
+              <VariantButton @click="$emit('select', 'zh-hk')">{{ msg('main.zh-hk') }}
+              </VariantButton>
+              <VariantButton @click="$emit('select', 'zh-mo')">{{ msg('main.zh-mo') }}
+              </VariantButton>
+              <VariantButton @click="$emit('select', 'zh-tw')">{{ msg('main.zh-tw') }}
+              </VariantButton>
             </div>
           </div>
           <footer class="variant-dialog__main__footer">
@@ -68,10 +81,12 @@ defineExpose({ currentPage });
           v-else-if="currentPage === Page.MORE"
           class="variant-dialog__more"
         >
-          <h2>{{ msg('main.heading') }}</h2>
-          <p>{{ msg('more.desc.1') }}</p>
-          <p>{{ msg('more.desc.2') }}</p>
-          <p>{{ msg('more.desc.3') }}</p>
+          <h2>{{ msg('more.heading') }}</h2>
+          <div>
+            <p>{{ msg('more.desc.1') }}</p>
+            <p>{{ msg('more.desc.2') }}</p>
+            <p>{{ msg('more.desc.3') }}</p>
+          </div>
         </div>
 
         <!-- Troubleshoot panel -->
@@ -79,7 +94,7 @@ defineExpose({ currentPage });
           v-else-if="currentPage === Page.TROUBLESHOOT"
           class="variant-dialog__troubleshoot"
         >
-          <h2>{{ msg('main.heading') }}</h2>
+          <h2>{{ msg('troubleshoot.heading') }}</h2>
           <p>{{ msg('troubleshoot.desc.1') }}</p>
           <p>{{ msg('troubleshoot.desc.2') }}</p>
         </div>
@@ -109,7 +124,6 @@ defineExpose({ currentPage });
 
   max-width: 42em;
   width: 100%;
-  min-height: 22em;
 
   z-index: @z-index-overlay;
   transform: translateX(-50%) translateY(-50%);
@@ -121,9 +135,7 @@ defineExpose({ currentPage });
   border-radius: @border-radius-base;
   box-shadow: @box-shadow-drop-medium;
 
-  //display: flex;
-  //flex-direction: column;
-  //justify-content: center;
+  font-family: @font-family-base;
 
   &__main {
     &__title {}

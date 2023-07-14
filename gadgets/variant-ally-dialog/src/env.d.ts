@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import { createApp } from 'vue';
 
 module 'vue' {

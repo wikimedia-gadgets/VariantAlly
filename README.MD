@@ -44,17 +44,10 @@
 
 ## 不会解决的问题
 1. 本小工具不涉及桌面移动端跳转相关逻辑。
+2. 不会支持除简体中文、繁体中文和英文之外的其他语言。
 
 ## 开发和构建
-本小工具使用 `pnpm` 和 `vite`。
-
-```sh
-$ pnpm i
-$ pnpm run dev # 启动开发服务器
-$ pnpm run build # 构建
-```
-
-构建完成后，请根据 [`gadget-def.txt`](./gadget-def.txt) 中的内容填写小工具定义，将 JavaScript 文件复制到 `MediaWiki:Gadget-<文件名>` 中。
+参见 [CONTRIBUTING.MD](./CONTRIBUTING.MD)。
 
 ## 协议
 本项目以 3 Clause BSD 协议授权。

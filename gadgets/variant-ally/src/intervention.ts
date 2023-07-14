@@ -33,7 +33,8 @@ function rewriteLink(link: string, variant: string): string {
 }
 
 function redirect(variant: string): void {
-  location.href = rewriteLink(location.href, variant);
+  // Use replace() to prevent navigating back
+  location.replace(rewriteLink(location.href, variant));
 }
 
 async function checkThisPage(variant: string): Promise<void> {

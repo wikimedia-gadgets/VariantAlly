@@ -16,6 +16,10 @@ function setPage(page: number) {
   variantDialog.value.currentPage = page;
 }
 
+function onSelect(variant: string) {
+  alert(`Selected ${variant}`);
+}
+
 </script>
 
 <template>
@@ -56,6 +60,7 @@ function setPage(page: number) {
     <VariantDialog
       v-show="isDialogVisible"
       ref="variantDialog"
+      @select="onSelect"
     />
   </Teleport>
 </template>
