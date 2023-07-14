@@ -24,7 +24,8 @@
       {
         "code": 100
       }
-    ]
+    ],
+    "vue/multiline-html-element-content-newline": "off"
   },
   "plugins": [
     "@typescript-eslint"

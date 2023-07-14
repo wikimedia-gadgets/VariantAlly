@@ -25,8 +25,9 @@ export default defineConfig(({ command }) => {
       target: ['es2016'], // MediaWiki's JavaScript minifier supports up to ES2016
       rollupOptions: {
         output: {
-          entryFileNames: () => 'VariantAllyDialog.js',
-          chunkFileNames: () => 'VariantAllyDialog-[name].js',
+          entryFileNames: 'VariantAllyDialog.js',
+          chunkFileNames: 'VariantAllyDialog-[name].js',
+          assetFileNames: 'VariantAllyDialog.css',
         },
       },
       minify: 'terser', // Use terser for smaller bundle size
