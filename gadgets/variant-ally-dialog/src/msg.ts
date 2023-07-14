@@ -3,7 +3,9 @@
 import { Ref, ref } from 'vue';
 import msgsByLocale from '../assets/msg.json';
 
-const currentLocale: Ref<keyof typeof msgsByLocale> = ref('zh-hans');
+const DEFAULT_LANG = 'zh-hans';
+
+const currentLocale: Ref<keyof typeof msgsByLocale> = ref(DEFAULT_LANG);
 
 function msg(key: string): string {
   const currentMsgsGroup: Record<string, string> = msgsByLocale[currentLocale.value];

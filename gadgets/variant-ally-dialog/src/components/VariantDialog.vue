@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import { currentLocale, msg } from '../msg';
 import VariantButton from './VariantButton.vue';
 import BackButton from './BackButton.vue';
+import LangButton from './LangButton.vue';
 
 const enum Page {
   MAIN,
@@ -41,9 +42,12 @@ defineExpose({ currentPage });
           v-if="currentPage === Page.MAIN"
           class="variant-dialog__main"
         >
-          <h2 class="variant-dialog__main__title">
-            {{ msg('main.heading') }}
-          </h2>
+          <div class="variant-dialog__main__heading">
+            <h2 class="variant-dialog__main__heading__title">
+              {{ msg('main.heading') }}
+            </h2>
+            <LangButton />
+          </div>
           <div class="variant-dialog__main__body">
             <p class="variant-dialog__main__body__desc">
               {{ msg('main.desc') }}<a
@@ -159,7 +163,28 @@ defineExpose({ currentPage });
   }
 
   &__main {
-    &__title {}
+    &__heading {
+      display: flex;
+      align-items: center;
+
+      @media screen and (min-width: @min-width-breakpoint-tablet) {
+        margin-right: -(@spacing-back-button + 1px);
+
+        &__title {
+          flex: 1;
+        }
+      }
+
+      @media screen and (max-width: @max-width-breakpoint-mobile) {
+        flex-direction: column-reverse;
+        justify-content: center;
+
+        &__title {
+          text-align: center;
+          margin-top: @spacing-25;
+        }
+      }
+    }
 
     &__body {
       &__desc {}
