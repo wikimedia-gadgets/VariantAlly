@@ -11,7 +11,7 @@ const production = process.env.NODE_ENV === 'production';
 export default defineConfig({
   input: 'src/index.ts',
   output: {
-    file: 'dist/VariantAlly.js',
+    file: 'dist/Gadget-VariantAlly.js',
     format: 'iife',
     banner: readFileSync('assets/intro.js').toString(),
     footer: readFileSync('assets/outro.js').toString(),

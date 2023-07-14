@@ -3,4 +3,6 @@
 import { createMwApp } from 'vue';
 import VariantDialog from './components/VariantDialog.vue';
 
-createMwApp(VariantDialog).mount(document.body);
+const root = document.createElement('div');
+document.body.appendChild(root);
+createMwApp(VariantDialog).mount(root);

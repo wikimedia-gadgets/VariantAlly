@@ -1,0 +1,29 @@
+@import (reference) './tokens.less';
+
+.link-base() {
+  color: @color-progressive;
+  border-radius: @border-radius-base;
+  text-decoration: @text-decoration-none;
+
+  &:visited {
+    color: @color-visited;
+
+    &:hover {
+      color: @color-visited;
+    }
+  }
+
+  &:hover {
+    color: @color-progressive--hover;
+    text-decoration: @text-decoration-underline;
+  }
+
+  &:active {
+    color: @color-progressive--active;
+    text-decoration: @text-decoration-underline;
+  }
+
+  &:focus {
+    outline: @border-style-base @border-width-thick @color-progressive--focus;
+  }
+}

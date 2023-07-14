@@ -1,21 +1,77 @@
 /* Foreground colors */
 @color-base: #202122;
 @color-progressive: #36c;
+@color-progressive--hover: #447ff5;
+@color-progressive--active: #2a4b8d;
+@color-progressive--focus: #36c;
+@color-visited: #6b4ba1;
 
 /* Background colors */
 @background-color-base: #fff;
 
+/* Border colors */
+@border-color-base: #a2a9b1;
+
 /* Border radius */
 @border-radius-base: 2px;
 
+/* Border widths */
+@border-width-base: 1px;
+@border-width-thick: 2px;
+
+/* Border styles */
+@border-style-base: solid;
+
 /* Border (shorthand) */
-@border-base: 1px solid #a2a9b1;
+@border-base: @border-width-base @border-style-base @border-color-base;
 
 /* Box shadows */
 @box-shadow-drop-medium: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
 
 /* Z-Indexes */
 @z-index-overlay: 450;
+
+/* Text decorations */
+@text-decoration-none: none;
+@text-decoration-underline: underline;
+
+/* Breakpoints */
+@min-width-breakpoint-mobile: 320px;
+@min-width-breakpoint-tablet: 640px;
+@min-width-breakpoint-desktop: 1120px;
+@min-width-breakpoint-desktop-wide: 1680px;
+@max-width-breakpoint-mobile: 640px - 1px;
+@max-width-breakpoint-tablet: 1120px - 1px;
+@max-width-breakpoint-desktop: 1680px - 1px;
+
+/* Transition timing functions */
+@transition-timing-function-system: ease;
+@transition-timing-function-user: ease-out;
+
+/* Transition props */
+@transition-property-base: background-color, color, border-color, box-shadow;
+@transition-property-fade: opacity;
+@transition-property-icon: color;
+@transition-property-icon-css-only: background-color;
+
+/* Transition durations */
+@transition-duration-base: 100ms;
+@transition-duration-medium: 250ms;
+
+/* Opacities */
+@opacity-base: 1;
+@opacity-medium: 0.65;
+@opacity-low: 0.3;
+@opacity-transparent: 0;
+
+/* Font sizes */
+@font-size-x-small: 0.75em;
+@font-size-small: 0.875em;
+@font-size-medium: 1em;
+@font-size-large: 1.125em;
+@font-size-x-large: 1.25em;
+@font-size-xx-large: 1.5em;
+@font-size-xxx-large: 1.75em;
 
 /* Spacing */
 @spacing-0: 0;

@@ -1,1 +1,1 @@
-* VariantAllyDialog[ResourceLoader|requiresES6|targets=desktop,mobile|dependencies=user.options,vue]|VariantAllyDialog.js
+* VariantAllyDialog[ResourceLoader|requiresES6|targets=desktop,mobile|dependencies=user.options,vue]|VariantAllyDialog.js|VariantAllyDialog.css

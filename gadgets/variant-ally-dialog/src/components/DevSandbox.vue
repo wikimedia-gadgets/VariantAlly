@@ -25,33 +25,32 @@ function setPage(page: number) {
     Toggle dialog
   </button>
 
-  <button @click="currentLocale = 'zh-hans'">
-    Set locale to zh-hans
-  </button>
+  <div>
+    <button @click="currentLocale = 'zh-hans'">
+      Set locale to zh-hans
+    </button>
+    <button @click="currentLocale = 'zh-hant'">
+      Set locale to zh-hant
+    </button>
+    <button @click="currentLocale = 'en'">
+      Set locale to en
+    </button>
+  </div>
 
-  <button @click="currentLocale = 'zh-hant'">
-    Set locale to zh-hant
-  </button>
-
-  <button @click="currentLocale = 'en'">
-    Set locale to en
-  </button>
-
-  <button @click="setPage(0)">
-    Set page to MAIN
-  </button>
-
-  <button @click="setPage(1)">
-    Set page to MORE
-  </button>
-
-  <button @click="setPage(2)">
-    Set page to TROUBLESHOOT
-  </button>
-
-  <button @click="setPage(3)">
-    Set page to QUIT
-  </button>
+  <div>
+    <button @click="setPage(0)">
+      Set page to MAIN
+    </button>
+    <button @click="setPage(1)">
+      Set page to MORE
+    </button>
+    <button @click="setPage(2)">
+      Set page to TROUBLESHOOT
+    </button>
+    <button @click="setPage(3)">
+      Set page to QUIT
+    </button>
+  </div>
 
   <Teleport to="body">
     <VariantDialog v-show="isDialogVisible" ref="variantDialog" />
