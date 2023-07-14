@@ -1,4 +1,6 @@
 # 中文变体助手（Variant Ally）
+[English](./README.EN.MD)
+
 本小工具旨在解决中文维基百科中 MediaWiki 无法顾及的变体处理问题。
 
 ## 要解决什么问题？
