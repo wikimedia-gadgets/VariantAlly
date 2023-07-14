@@ -4,7 +4,7 @@
 import { ref } from 'vue';
 import { currentLocale, msg } from '../msg';
 import VariantButton from './VariantButton.vue';
-import { setPreferredVariant, rewriteCurrentURL } from '../management';
+import BackButton from './BackButton.vue';
 
 const enum Page {
   MAIN,
@@ -25,7 +25,7 @@ defineExpose({ currentPage });
 
 <template>
   <Transition
-    name="fade"
+    name="dialog"
     appear
   >
     <div
@@ -33,7 +33,7 @@ defineExpose({ currentPage });
       :lang="currentLocale"
     >
       <Transition
-        name="switch"
+        name="panel"
         mode="out-in"
       >
         <!-- Main panel -->
@@ -81,7 +81,13 @@ defineExpose({ currentPage });
           v-else-if="currentPage === Page.MORE"
           class="variant-dialog__more"
         >
-          <h2>{{ msg('more.heading') }}</h2>
+          <div class="variant-dialog__more__heading">
+            <BackButton
+              class="variant-dialog__more__heading__back"
+              @click="currentPage = Page.MAIN"
+            />
+            <h2>{{ msg('more.heading') }}</h2>
+          </div>
           <div>
             <p>{{ msg('more.desc.1') }}</p>
             <p>{{ msg('more.desc.2') }}</p>
@@ -94,7 +100,13 @@ defineExpose({ currentPage });
           v-else-if="currentPage === Page.TROUBLESHOOT"
           class="variant-dialog__troubleshoot"
         >
-          <h2>{{ msg('troubleshoot.heading') }}</h2>
+          <div class="variant-dialog__troubleshoot__heading">
+            <BackButton
+              class="variant-dialog__troubleshoot__heading__back"
+              @click="currentPage = Page.MAIN"
+            />
+            <h2>{{ msg('troubleshoot.heading') }}</h2>
+          </div>
           <p>{{ msg('troubleshoot.desc.1') }}</p>
           <p>{{ msg('troubleshoot.desc.2') }}</p>
         </div>
@@ -121,14 +133,13 @@ defineExpose({ currentPage });
   position: fixed;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
 
   max-width: 42em;
   width: 100%;
 
   z-index: @z-index-overlay;
-  transform: translateX(-50%) translateY(-50%);
   padding: @spacing-125 @spacing-200;
-  overflow: hidden;
 
   background-color: @background-color-base;
   border: @border-base;
@@ -136,6 +147,16 @@ defineExpose({ currentPage });
   box-shadow: @box-shadow-drop-medium;
 
   font-family: @font-family-base;
+
+  @media screen and (max-width: @max-width-breakpoint-mobile) {
+    transform: none;
+    left: auto;
+    top: auto;
+    bottom: 0;
+    height: 60%;
+    overflow: scroll;
+    padding: @spacing-100;
+  }
 
   &__main {
     &__title {}
@@ -149,6 +170,34 @@ defineExpose({ currentPage });
         grid-auto-flow: column;
         grid-template: 1fr 1fr 1fr / 1fr 1fr;
         margin: @spacing-100 0;
+
+        @media screen and (max-width: @max-width-breakpoint-mobile) {
+          grid-template: repeat(6, 1fr) / 1fr;
+        }
+      }
+    }
+  }
+
+  &__more {
+    &__heading {
+      display: flex;
+      align-items: center;
+
+      &__back {
+        margin-right: @spacing-30;
+        margin-left: -(@spacing-back-button + 1px);
+      }
+    }
+  }
+
+  &__troubleshoot {
+    &__heading {
+      display: flex;
+      align-items: center;
+
+      &__back {
+        margin-right: @spacing-30;
+        margin-left: -(@spacing-back-button + 1px);
       }
     }
   }
@@ -158,34 +207,40 @@ a {
   .link-base();
 }
 
-/* Switch panel effect */
+/* Panel switch transition effect */
 
-.switch-enter-active,
-.switch-leave-active {
+.panel-enter-active,
+.panel-leave-active {
   transition-property: @transition-property-fade;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-user;
 }
 
-.switch-enter-from {
+.panel-enter-from {
   opacity: 0;
 }
 
-.switch-leave-to {
+.panel-leave-to {
   opacity: 0;
 }
 
-/* Window fade effect */
+/* Dialog transition effect */
 
-.fade-enter-active,
-.fade-leave-active {
-  transition-property: @transition-property-fade;
+.dialog-enter-active,
+.dialog-leave-active {
+  transition-property: @transition-property-fade, @transition-property-popup;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.dialog-enter-from,
+.dialog-leave-to {
+  @media screen and (min-width: @min-width-breakpoint-tablet) {
+    opacity: 0;
+  }
+
+  @media screen and (max-width: @max-width-breakpoint-mobile) {
+    transform: translateY(100%);
+  }
 }
 </style>

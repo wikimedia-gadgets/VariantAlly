@@ -2,6 +2,7 @@
   "zh-hans": {
     "label": "简",
     "label.full": "简体中文",
+    "back": "返回",
     "main.heading": "我们希望提供更好的阅读体验",
     "main.desc": "为保障阅读体验，请选择您希望看到的中文语言变体。",
     "main.desc.ext": "了解更多。",
@@ -28,6 +29,7 @@
   "zh-hant": {
     "label": "繁",
     "label.full": "繁體中文",
+    "back": "返回",
     "main.heading": "我們希望提供更好的閱讀體驗",
     "main.desc": "為保障閱讀體驗，請選擇您希望看到的中文語言變體。",
     "main.desc.ext": "瞭解更多。",
@@ -54,6 +56,7 @@
   "en": {
     "label": "EN",
     "label.full": "English",
+    "back": "Back",
     "main.heading": "We strive for a better experience",
     "main.desc": "Please select the Chinese language variant you prefer. ",
     "main.desc.ext": "Learn more.",

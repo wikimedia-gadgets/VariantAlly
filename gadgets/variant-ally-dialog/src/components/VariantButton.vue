@@ -1,15 +1,11 @@
 <script setup lang="ts">
-const emit = defineEmits(['click']);
-
-function onClick() {
-  emit('click');
-}
+defineEmits(['click']);
 </script>
 
 <template>
   <button
     class="variant-button"
-    @click="onClick"
+    @click="$emit('click')"
   >
     <svg
       class="variant-button__icon"
@@ -33,8 +29,6 @@ function onClick() {
 
 .variant-button {
   .button-base();
-
-  appearance: none;
 
   background-color: @background-color-base;
   color: @color-progressive;
