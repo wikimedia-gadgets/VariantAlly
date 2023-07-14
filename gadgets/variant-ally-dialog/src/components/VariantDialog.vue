@@ -3,6 +3,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { msg } from '../msg';
+import VariantButton from './VariantButton.vue';
 
 const enum Page {
   MAIN,
@@ -19,11 +20,17 @@ defineExpose({ currentPage });
 </script>
 
 <template>
-  <Transition name="fade" appear>
+  <Transition
+    name="fade"
+    appear
+  >
     <div class="variant-dialog">
       <Transition name="switch">
         <!-- Main panel -->
-        <div v-if="currentPage === Page.MAIN" class="variant-dialog__main">
+        <div
+          v-if="currentPage === Page.MAIN"
+          class="variant-dialog__main"
+        >
           <h2 class="variant-dialog__main__title">
             {{ msg('main.heading') }}
           </h2>
@@ -31,7 +38,14 @@ defineExpose({ currentPage });
             <p class="variant-dialog__main__body__desc">
               {{ msg('main.desc') }}<a href="#">{{ msg('main.desc.ext') }}</a>
             </p>
-            <div class="variant-dialog__main__body__options"></div>
+            <div class="variant-dialog__main__body__options">
+              <VariantButton>{{ msg('main.zh-cn') }}</VariantButton>
+              <VariantButton>{{ msg('main.zh-sg') }}</VariantButton>
+              <VariantButton>{{ msg('main.zh-my') }}</VariantButton>
+              <VariantButton>{{ msg('main.zh-hk') }}</VariantButton>
+              <VariantButton>{{ msg('main.zh-mo') }}</VariantButton>
+              <VariantButton>{{ msg('main.zh-tw') }}</VariantButton>
+            </div>
           </div>
           <footer class="variant-dialog__main__footer">
             <p>
@@ -41,20 +55,29 @@ defineExpose({ currentPage });
         </div>
 
         <!-- More panel -->
-        <div v-else-if="currentPage === Page.MORE" class="variant-dialog__more">
+        <div
+          v-else-if="currentPage === Page.MORE"
+          class="variant-dialog__more"
+        >
           <p>{{ msg('more.desc.1') }}</p>
           <p>{{ msg('more.desc.2') }}</p>
           <p>{{ msg('more.desc.3') }}</p>
         </div>
 
         <!-- Troubleshoot panel -->
-        <div v-else-if="currentPage === Page.TROUBLESHOOT" class="variant-dialog__troubleshoot">
+        <div
+          v-else-if="currentPage === Page.TROUBLESHOOT"
+          class="variant-dialog__troubleshoot"
+        >
           <p>{{ msg('troubleshoot.desc.1') }}</p>
           <p>{{ msg('troubleshoot.desc.2') }}</p>
         </div>
 
         <!-- Quit confirmation panel -->
-        <div v-else class="variant-dialog__quit">
+        <div
+          v-else
+          class="variant-dialog__quit"
+        >
           <h2>{{ msg('quit.heading') }}</h2>
           <p>{{ msg('quit.desc') }}</p>
         </div>
@@ -88,6 +111,12 @@ defineExpose({ currentPage });
 
     &__body {
       &__desc {}
+
+      &__options {
+        display: grid;
+        gap: @spacing-25;
+        grid-template: 1fr 1fr 1fr / 1fr 1fr;
+      }
     }
   }
 }

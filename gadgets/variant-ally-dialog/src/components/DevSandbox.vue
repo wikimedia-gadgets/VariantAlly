@@ -53,7 +53,10 @@ function setPage(page: number) {
   </div>
 
   <Teleport to="body">
-    <VariantDialog v-show="isDialogVisible" ref="variantDialog" />
+    <VariantDialog
+      v-show="isDialogVisible"
+      ref="variantDialog"
+    />
   </Teleport>
 </template>
 

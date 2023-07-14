@@ -2,6 +2,8 @@
 
 * {
   all: revert;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 h2 {
@@ -15,6 +17,25 @@ p {
   color: @color-base;
 }
 
-button {
-  font-family: inherit;
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  text-transform: none;
+}
+
+*::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
 }
