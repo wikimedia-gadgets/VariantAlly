@@ -23,12 +23,31 @@ function rewriteLink(link: string, variant: string): string {
       url.pathname = `/${variant}/${url.pathname.replace(WIKIURL_REGEX, '')}`;
       searchParams.delete('variant'); // For things like /zh-cn/A?variant=zh-hk
     } else if (pathname.startsWith('/w/index.php')) {
-      searchParams.set('variant', variant);
+      // HACK: workaround search box redirection not respecting `variant` URL param
+      // This should be eventually fixed in MediaWiki itself
+      //
+      // Example url: https://zh.wikipedia.org/w/index.php?title=Special:Search&search=Foo&wprov=acrw1_0
+      // It should be replaced by https://zh.wikipedia.org/<variant>/Foo.
+      //
+      // Note that the "search for pages containing XXX" link is not covered by this hack
+      // since the `variant` URL param works there
+      const searchQuery = searchParams.get('search');
+
+      if (
+        searchQuery !== null
+        && searchParams.get('title')?.startsWith('Special:')
+        && searchParams.get('fulltext') !== '1'
+      ) {
+        url.pathname = `/${variant}/${searchQuery}`;
+        url.search = '';
+      } else {
+        searchParams.set('variant', variant);
+      }
     }
   }
 
   const result = url.toString();
-  output('rewriteLink', `${link} + ${variant} => ${result}`);
+  output(() => ['rewriteLink', `${link} + ${variant} => ${result}`]);
   return result;
 }
 
@@ -37,27 +56,27 @@ function redirect(variant: string): void {
   location.replace(rewriteLink(location.href, variant));
 }
 
-async function checkThisPage(variant: string): Promise<void> {
+function checkThisPage(variant: string): void {
   const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
   if (isExperiencedUser()
     || referrerHostname === location.hostname
     || BLOCKED_REFERRER_HOST.test(referrerHostname)
   ) {
     // Assume this as user intention and do nothing
-    output('checkThisPage', `Experienced or referrer in blocklist, do nothing.`);
+    output(() => ['checkThisPage', `Experienced or referrer in blocklist, do nothing.`]);
     return;
   }
 
   const pageVariant = getPageVariant();
   if (pageVariant === null) {
-    output('checkThisPage', 'Non-wikitext page. Do nothing.');
+    output(() => ['checkThisPage', 'Non-wikitext page. Do nothing.']);
     return;
   }
   if (pageVariant !== variant) {
-    output('checkThisPage', `Redirecting to ${variant}...`);
+    output(() => ['checkThisPage', `Redirecting to ${variant}...`]);
     redirect(variant);
   } else {
-    output('checkThisPage', 'Variant is correct :)');
+    output(() => ['checkThisPage', 'Variant is correct :)']);
   }
 }
 
@@ -67,7 +86,7 @@ function redirectAnchors(variant: string): void {
       if (ev.target instanceof Element) {
         const anchor = ev.target.closest('a');
         if (anchor) {
-          output('redirectAnchors', `Event ${ev.type} on ${anchor.href}`);
+          output(() => ['redirectAnchors', `Event ${ev.type} on ${anchor.href}`]);
 
           const newLink = rewriteLink(anchor.href, variant);
           if (ev instanceof DragEvent && ev.dataTransfer) {
@@ -75,29 +94,29 @@ function redirectAnchors(variant: string): void {
             for (const type of ev.dataTransfer.types) {
               ev.dataTransfer.setData(type, newLink);
             }
-            output('redirectAnchors', 'drag-handler', `Drop data changed!`);
+            output(() => ['redirectAnchors', 'drag-handler', `Drop data changed!`]);
           } else {
             // Avoid being overwritten by overlapped handler calls
             if (!anchor.dataset.origHref) {
               anchor.dataset.origHref = anchor.href;
             }
             anchor.href = newLink;
-            output(
+            output(() => [
               'redirectAnchors',
               'click-handler',
               `href ${anchor.href}, origHref ${anchor.dataset.origHref}`,
-            );
+            ]);
 
             // HACK: workaround popups not working on modified links
             // Add handler to <a> directly so it was triggered before anything else
             ['mouseover', 'mouseleave', 'keyup'].forEach((innerName) => {
               anchor.addEventListener(innerName, (innerEv) => {
-                output(
+                output(() => [
                   'redirectAnchors',
                   'click-handler',
                   'restoration-handler',
                   `Event ${innerEv.type} on ${anchor.href}, origHref ${anchor.dataset.origHref}`,
-                );
+                ]);
 
                 if (anchor.dataset.origHref) {
                   anchor.href = anchor.dataset.origHref;

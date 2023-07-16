@@ -67,8 +67,8 @@ function setPreferredVariant(variant: string): void {
   localStorage.setItem(LOCAL_STORAGE_KEY, variant);
 }
 
-async function showDialog(): Promise<void> {
-  await import('ext.gadget.VariantAllyDialog');
+function showDialog(): void {
+  import('ext.gadget.VariantAllyDialog');
 }
 
 export {

@@ -8,7 +8,7 @@ showDebugInformation();
 
 const preferrerVariant = calculatePreferredVariant();
 if (preferrerVariant === null) {
-  output('index', 'Preferred variant is null, show dialog');
+  output(() => ['index', 'Preferred variant is null, show dialog']);
   showDialog();
 } else {
   checkThisPage(preferrerVariant);

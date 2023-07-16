@@ -24,10 +24,11 @@ Calculated preferred variant: ${calculatePreferredVariant()}
 `);
 }
 
-function output(...outputs: string[]): void {
+function output(outputFunc: () => string[]): void {
   if (!DEBUG) {
     return;
   }
+  const outputs = outputFunc();
   console.log(`[VariantAlly] ${outputs.slice(0, -1).join('/')}: ${outputs.pop()}`);
 }
 
