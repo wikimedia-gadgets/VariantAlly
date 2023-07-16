@@ -157,9 +157,10 @@ defineExpose({ currentPage });
     left: auto;
     top: auto;
     bottom: 0;
-    height: 60%;
+    min-height: 50%;
     overflow: scroll;
     padding: @spacing-100;
+    overscroll-behavior: none;
   }
 
   &__main {
@@ -181,7 +182,8 @@ defineExpose({ currentPage });
 
         &__title {
           text-align: center;
-          margin-top: @spacing-25;
+          margin: @spacing-50 0;
+          font-size: @font-size-x-large;
         }
       }
     }
@@ -197,7 +199,7 @@ defineExpose({ currentPage });
         margin: @spacing-100 0;
 
         @media screen and (max-width: @max-width-breakpoint-mobile) {
-          grid-template: repeat(6, 1fr) / 1fr;
+          grid-template: 1fr 1fr /1fr 1fr 1fr;
         }
       }
     }

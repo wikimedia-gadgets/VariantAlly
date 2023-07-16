@@ -42,6 +42,14 @@ defineEmits(['click']);
   display: flex;
   align-items: center;
 
+  @media screen and (max-width: @max-width-breakpoint-mobile) {
+    flex-direction: column;
+    font-size: @font-size-small;
+    padding-left: @spacing-vertical-variant-button--mobile;
+    padding-right: @spacing-vertical-variant-button--mobile;
+    text-align: center;
+  }
+
   &:hover {
     color: @color-progressive--hover;
     background-color: @background-color-progressive-subtle;
@@ -75,6 +83,11 @@ defineEmits(['click']);
     fill: @color-progressive;
     transition-property: fill;
     transition-duration: @transition-duration-base;
+
+    @media screen and (max-width: @max-width-breakpoint-mobile) {
+      margin-right: 0;
+      margin-bottom: @spacing-25;
+    }
   }
 }
 </style>
