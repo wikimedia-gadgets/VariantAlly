@@ -88,6 +88,16 @@ function redirectAnchors(variant: string): void {
         if (anchor) {
           output(() => ['redirectAnchors', `Event ${ev.type} on ${anchor.href}`]);
 
+          // Prevent variant dropdown/list links being overridden
+          // Vector/Vector 2022: in #p-variants
+          // Timeless: in #p-variants-desktop
+          // Minerva/MobileFrontend: in .suggested-languages
+          // Monobook: in .pBody
+          if (anchor.closest('#p-variants, #p-variants-desktop, .suggested-languages, .pBody')) {
+            output(() => ['redirectAnchors', `Anchor is in variant dropdown list. Do nothing.`]);
+            return;
+          }
+
           const newLink = rewriteLink(anchor.href, variant);
           if (ev instanceof DragEvent && ev.dataTransfer) {
             // Modify drag data directly because setting href has no effect in drag event

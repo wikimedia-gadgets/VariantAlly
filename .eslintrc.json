@@ -23,7 +23,9 @@
       "error",
       {
         "code": 100,
-        "ignoreComments": true
+        "ignoreComments": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
       }
     ],
     "vue/multiline-html-element-content-newline": "off"
