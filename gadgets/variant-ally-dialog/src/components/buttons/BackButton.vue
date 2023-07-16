@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { msg } from '../msg';
+import { msg } from '../../msg';
 
 defineEmits(['click']);
 </script>
@@ -28,7 +28,7 @@ defineEmits(['click']);
 </template>
 
 <style scoped lang="less">
-@import (reference) '../styles/mixins.less';
+@import (reference) '../../styles/mixins.less';
 
 .back-button {
   .button-base();

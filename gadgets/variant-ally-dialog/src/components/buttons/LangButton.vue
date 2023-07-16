@@ -1,17 +1,5 @@
 <script setup lang="ts">
-import { currentLocale } from '../msg';
-
-const languageGenerator = (function* () {
-  while (true) {
-    yield 'en';
-    yield 'zh-hant';
-    yield 'zh-hans';
-  }
-})();
-
-function switchLanguage() {
-  currentLocale.value = languageGenerator.next().value;
-}
+import { switchLang } from '../../msg';
 </script>
 
 <template>
@@ -19,7 +7,7 @@ function switchLanguage() {
     class="lang-button"
     title="切换语言 / 切換語言 / Switch languages"
     aria-label="切换语言 / 切換語言 / Switch languages"
-    @click="switchLanguage"
+    @click="switchLang"
   >
     <svg
       class="lang-button__icon"
@@ -46,7 +34,7 @@ function switchLanguage() {
 </template>
 
 <style scoped lang="less">
-@import (reference) '../styles/mixins.less';
+@import (reference) '../../styles/mixins.less';
 
 .lang-button {
   .button-base();

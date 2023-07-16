@@ -11,8 +11,8 @@ defineEmits(['click']);
       class="variant-button__icon"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 20 20"
       aria-hidden="true"
     >
@@ -25,7 +25,7 @@ defineEmits(['click']);
 </template>
 
 <style scoped lang="less">
-@import (reference) '../styles/mixins.less';
+@import (reference) '../../styles/mixins.less';
 
 .variant-button {
   .button-base();
@@ -36,19 +36,21 @@ defineEmits(['click']);
 
   padding-top: @spacing-vertical-variant-button;
   padding-bottom: @spacing-vertical-variant-button;
-  font-size: @font-size-large;
+  font-size: @font-size-medium;
   text-align: left;
 
   display: flex;
   align-items: center;
 
   @media screen and (max-width: @max-width-breakpoint-mobile) {
-    flex-direction: column;
     font-size: @font-size-small;
-    padding-left: @spacing-vertical-variant-button--mobile;
-    padding-right: @spacing-vertical-variant-button--mobile;
+    padding: @spacing-vertical-variant-button--mobile @spacing-horizontal-variant-button--mobile;
     text-align: center;
     justify-content: center;
+
+    &__icon {
+      display: none;
+    }
   }
 
   &:hover {

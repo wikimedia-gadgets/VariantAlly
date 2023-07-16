@@ -2,10 +2,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { currentLocale, msg } from '../msg';
-import VariantButton from './VariantButton.vue';
-import BackButton from './BackButton.vue';
-import LangButton from './LangButton.vue';
+import MainPanel from './panels/MainPanel.vue';
+import MoreInfoPanel from './panels/MoreInfoPanel.vue';
+import TroubleshootPanel from './panels/TroubleshootPanel.vue';
+import QuitPanel from './panels/QuitPanel.vue';
 
 const enum Page {
   MAIN,
@@ -29,101 +29,26 @@ defineExpose({ currentPage });
     name="dialog"
     appear
   >
-    <div
-      class="variant-dialog"
-      :lang="currentLocale"
-    >
+    <div class="variant-dialog">
       <Transition
         name="panel"
         mode="out-in"
       >
-        <!-- Main panel -->
-        <div
+        <MainPanel
           v-if="currentPage === Page.MAIN"
-          class="variant-dialog__main"
-        >
-          <div class="variant-dialog__main__heading">
-            <h2 class="variant-dialog__main__heading__title">
-              {{ msg('main.heading') }}
-            </h2>
-            <LangButton />
-          </div>
-          <div class="variant-dialog__main__body">
-            <p class="variant-dialog__main__body__desc">
-              {{ msg('main.desc') }}<a
-                href="#"
-                @click.prevent="currentPage = Page.MORE"
-              >{{ msg('main.desc.ext') }}</a>
-            </p>
-            <div class="variant-dialog__main__body__options">
-              <VariantButton @click="$emit('select', 'zh-cn')">{{ msg('main.zh-cn') }}
-              </VariantButton>
-              <VariantButton @click="$emit('select', 'zh-sg')">{{ msg('main.zh-sg') }}
-              </VariantButton>
-              <VariantButton @click="$emit('select', 'zh-my')">{{ msg('main.zh-my') }}
-              </VariantButton>
-              <VariantButton @click="$emit('select', 'zh-hk')">{{ msg('main.zh-hk') }}
-              </VariantButton>
-              <VariantButton @click="$emit('select', 'zh-mo')">{{ msg('main.zh-mo') }}
-              </VariantButton>
-              <VariantButton @click="$emit('select', 'zh-tw')">{{ msg('main.zh-tw') }}
-              </VariantButton>
-            </div>
-          </div>
-          <footer class="variant-dialog__main__footer">
-            <p>
-              <!-- Disable link because it's unfinished -->
-              {{ msg('main.footer') }}<!--<a
-                href="#"
-                @click.prevent="currentPage = Page.TROUBLESHOOT"
-              >{{ msg('main.footer.ext') }}</a>-->
-            </p>
-          </footer>
-        </div>
-
-        <!-- More panel -->
-        <div
+          @more="currentPage = Page.MORE"
+          @troubleshoot="currentPage = Page.TROUBLESHOOT"
+          @select="(variant) => { $emit('select', variant); }"
+        />
+        <MoreInfoPanel
           v-else-if="currentPage === Page.MORE"
-          class="variant-dialog__more"
-        >
-          <div class="variant-dialog__more__heading">
-            <BackButton
-              class="variant-dialog__more__heading__back"
-              @click="currentPage = Page.MAIN"
-            />
-            <h2>{{ msg('more.heading') }}</h2>
-          </div>
-          <div>
-            <p>{{ msg('more.desc.1') }}</p>
-            <p>{{ msg('more.desc.2') }}</p>
-            <p>{{ msg('more.desc.3') }}</p>
-          </div>
-        </div>
-
-        <!-- Troubleshoot panel -->
-        <div
+          @main="currentPage = Page.MAIN"
+        />
+        <TroubleshootPanel
           v-else-if="currentPage === Page.TROUBLESHOOT"
-          class="variant-dialog__troubleshoot"
-        >
-          <div class="variant-dialog__troubleshoot__heading">
-            <BackButton
-              class="variant-dialog__troubleshoot__heading__back"
-              @click="currentPage = Page.MAIN"
-            />
-            <h2>{{ msg('troubleshoot.heading') }}</h2>
-          </div>
-          <p>{{ msg('troubleshoot.desc.1') }}</p>
-          <p>{{ msg('troubleshoot.desc.2') }}</p>
-        </div>
-
-        <!-- Quit confirmation panel -->
-        <div
-          v-else
-          class="variant-dialog__quit"
-        >
-          <h2>{{ msg('quit.heading') }}</h2>
-          <p>{{ msg('quit.desc') }}</p>
-        </div>
+          @main="currentPage = Page.MAIN"
+        />
+        <QuitPanel v-else />
       </Transition>
     </div>
   </Transition>
@@ -140,7 +65,7 @@ defineExpose({ currentPage });
   left: 50%;
   transform: translate(-50%, -50%);
 
-  max-width: 42em;
+  max-width: 640px;
   width: 100%;
 
   z-index: @z-index-overlay;
@@ -155,11 +80,15 @@ defineExpose({ currentPage });
   font-family: @font-family-base;
 
   @media screen and (max-width: @max-width-breakpoint-mobile) {
-    transform: none;
-    left: auto;
+    left: @spacing-35;
+    right: @spacing-35;
     top: auto;
-    bottom: 0;
-    min-height: 28em;
+    bottom: @spacing-35;
+    transform: none;
+
+    max-width: none;
+    width: auto;
+
     padding: @spacing-100;
   }
 
@@ -171,78 +100,12 @@ defineExpose({ currentPage });
     transform: translateX(-50%);
 
     @media (max-width: @max-width-breakpoint-mobile) {
+      left: 0;
+      right: 0;
       transform: none;
       min-height: auto;
     }
   }
-
-  &__main {
-    &__heading {
-      display: flex;
-      align-items: center;
-
-      @media screen and (min-width: @min-width-breakpoint-tablet) {
-        margin-right: -(@spacing-back-button + 1px);
-
-        &__title {
-          flex: 1;
-        }
-      }
-
-      @media screen and (max-width: @max-width-breakpoint-mobile) {
-        flex-direction: column-reverse;
-        justify-content: center;
-
-        &__title {
-          text-align: center;
-          margin: @spacing-50 0;
-          font-size: @font-size-x-large;
-        }
-      }
-    }
-
-    &__body {
-      &__options {
-        display: grid;
-        gap: @spacing-35;
-        grid-auto-flow: column;
-        grid-template: 1fr 1fr 1fr / 1fr 1fr;
-        margin: @spacing-100 0;
-
-        @media screen and (max-width: @max-width-breakpoint-mobile) {
-          grid-template: 1fr 1fr /1fr 1fr 1fr;
-        }
-      }
-    }
-  }
-
-  &__more {
-    &__heading {
-      display: flex;
-      align-items: center;
-
-      &__back {
-        margin-right: @spacing-30;
-        margin-left: -(@spacing-back-button + 1px);
-      }
-    }
-  }
-
-  &__troubleshoot {
-    &__heading {
-      display: flex;
-      align-items: center;
-
-      &__back {
-        margin-right: @spacing-30;
-        margin-left: -(@spacing-back-button + 1px);
-      }
-    }
-  }
-}
-
-a {
-  .link-base();
 }
 
 /* Panel switch transition effect */
