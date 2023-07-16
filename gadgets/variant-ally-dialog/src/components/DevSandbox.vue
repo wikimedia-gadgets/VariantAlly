@@ -4,7 +4,6 @@
 import { ref } from 'vue';
 import VariantDialog from './VariantDialog.vue';
 import { currentLocale } from '../msg';
-import { onMounted } from 'vue';
 
 const isDialogVisible = ref(false);
 const variantDialog = ref<InstanceType<typeof VariantDialog> | null>(null);

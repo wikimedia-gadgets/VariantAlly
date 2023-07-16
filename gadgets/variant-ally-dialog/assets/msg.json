@@ -70,7 +70,7 @@
     "main.footer": "This is a one-time prompt. ",
     "main.footer.ext": "Keep seeing this?",
     "main.quit": "Close",
-    "more.heading": "About Simp-Trad conversion",
+    "more.heading": "About",
     "more.desc.1": "Chinese Wikipedia uses an automatic conversion mechanism between Simplified and Traditional Chinese to provide relevant content to users worldwide.",
     "more.desc.2": "Unfortunately, we cannot detect your preferred Chinese language variant, which may cause you to see irrelevant information, even in a mixture Simplified and Traditional Chinese.",
     "more.desc.3": "To ensure reading experience, it is strongly recommended to specify your preferred Chinese variant. Sorry for any inconvenience.",

@@ -72,10 +72,11 @@ defineExpose({ currentPage });
           </div>
           <footer class="variant-dialog__main__footer">
             <p>
-              {{ msg('main.footer') }}<a
+              <!-- Disable link because it's unfinished -->
+              {{ msg('main.footer') }}<!--<a
                 href="#"
                 @click.prevent="currentPage = Page.TROUBLESHOOT"
-              >{{ msg('main.footer.ext') }}</a>
+              >{{ msg('main.footer.ext') }}</a>-->
             </p>
           </footer>
         </div>
@@ -144,12 +145,13 @@ defineExpose({ currentPage });
 
   z-index: @z-index-overlay;
   padding: @spacing-125 @spacing-200;
+  overflow: auto;
+  overscroll-behavior: none;
 
   background-color: @background-color-base;
   border: @border-base;
   border-radius: @border-radius-base;
   box-shadow: @box-shadow-drop-medium;
-
   font-family: @font-family-base;
 
   @media screen and (max-width: @max-width-breakpoint-mobile) {
@@ -157,10 +159,21 @@ defineExpose({ currentPage });
     left: auto;
     top: auto;
     bottom: 0;
-    min-height: 50%;
-    overflow: scroll;
+    min-height: 28em;
     padding: @spacing-100;
-    overscroll-behavior: none;
+  }
+
+  /* Styles for thin screens */
+
+  @media screen and (max-height: @max-height-breakpoint-mobile) {
+    top: 0;
+    bottom: 0;
+    transform: translateX(-50%);
+
+    @media (max-width: @max-width-breakpoint-mobile) {
+      transform: none;
+      min-height: auto;
+    }
   }
 
   &__main {
@@ -189,8 +202,6 @@ defineExpose({ currentPage });
     }
 
     &__body {
-      &__desc {}
-
       &__options {
         display: grid;
         gap: @spacing-35;

@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { currentLocale } from '../msg';
 
-const nextLanguage = (function* () {
+const languageGenerator = (function* () {
   while (true) {
     yield 'en';
     yield 'zh-hant';
-    yield 'en';
     yield 'zh-hans';
   }
 })();
 
 function switchLanguage() {
-  currentLocale.value = nextLanguage.next().value;
+  currentLocale.value = languageGenerator.next().value;
 }
 </script>
 

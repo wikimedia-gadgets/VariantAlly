@@ -48,6 +48,7 @@ defineEmits(['click']);
     padding-left: @spacing-vertical-variant-button--mobile;
     padding-right: @spacing-vertical-variant-button--mobile;
     text-align: center;
+    justify-content: center;
   }
 
   &:hover {
