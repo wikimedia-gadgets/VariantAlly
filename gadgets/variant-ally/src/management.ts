@@ -5,6 +5,14 @@ const EXPERIENCED_USERS = [
   'TheresNoTime',
   'WMFOffice',
 ];
+const VALID_VARIANTS = [
+  'zh-cn',
+  'zh-sg',
+  'zh-my',
+  'zh-tw',
+  'zh-hk',
+  'zh-mo',
+];
 
 function isExperiencedUser(): boolean {
   if (!isLoggedIn()) {
@@ -44,12 +52,21 @@ function getLocalVariant(): string | null {
   return localStorage.getItem(LOCAL_STORAGE_KEY);
 }
 
+function getBrowserVariant(): string | null {
+  const result = navigator.language.toLowerCase();
+  if (VALID_VARIANTS.includes(result)) {
+    return result;
+  }
+  return null;
+}
+
 /**
  * Calculate preferred variant from Special:Preferences (logged-in users)
  * or local storage (anonymous users). Resets local storage if there's a conflict.
  * @returns preferred variant
  */
 function calculatePreferredVariant(): string | null {
+  const browserVariant = getBrowserVariant();
   const localVariant = getLocalVariant();
   const accountVariant = getAccountVariant();
 
@@ -60,7 +77,11 @@ function calculatePreferredVariant(): string | null {
     return accountVariant;
   }
 
-  return localVariant;
+  if (localVariant !== null) {
+    return localVariant;
+  }
+
+  return browserVariant;
 }
 
 function setPreferredVariant(variant: string): void {
@@ -77,6 +98,7 @@ export {
   getPageVariant,
   getAccountVariant,
   getLocalVariant,
+  getBrowserVariant,
   calculatePreferredVariant,
   setPreferredVariant,
   showDialog,

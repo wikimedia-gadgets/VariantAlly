@@ -7,6 +7,7 @@ import {
   calculatePreferredVariant,
   isLoggedIn,
   isExperiencedUser,
+  getBrowserVariant,
 } from './management';
 
 function showDebugInformation(): void {
@@ -15,11 +16,12 @@ function showDebugInformation(): void {
   }
   console.log(`[VariantAlly]
 Referrer: ${document.referrer || '(empty)'}
+Browser variant: ${getBrowserVariant()}
 Local (cached) variant: ${getLocalVariant()}
 Account variant: ${getAccountVariant()}
 Page variant: ${getPageVariant()}
-Logged in: ${isLoggedIn()}
-Experienced: ${isExperiencedUser()}
+User logged in: ${isLoggedIn()}
+User experienced: ${isExperiencedUser()}
 Calculated preferred variant: ${calculatePreferredVariant()}
 `);
 }

@@ -7,7 +7,7 @@ import { getPageVariant, isExperiencedUser } from './management';
 // - w.wiki
 const BLOCKED_REFERRER_HOST = /^w\.wiki$/i;
 
-const WIKIURL_REGEX = /^\/(?:wiki|zh-\w+)\//i;
+const WIKIURL_REGEX = /^\/(?:wiki|zh(?:-\w+)?)\//i;
 
 // Used to suppress exceptions of URL constructor
 const DUMMY_REFERRER = 'a:';
