@@ -10,7 +10,7 @@ document.body.appendChild(root);
 createMwApp(
   VariantDialog,
   {
-    onselect(variant: string) {
+    onSelect(variant: string) {
       setPreferredVariant(variant);
       // Use replace() to prevent navigating back
       location.replace(rewriteCurrentURL(variant));
