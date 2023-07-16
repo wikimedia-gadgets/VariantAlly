@@ -26,11 +26,13 @@ export default defineConfig({
       format: {
         // Reserve intro && outro
         comments: /(^\*!|nowiki|SPDX-License-Identifier)/i,
+        ecma: 5,
       },
     }),
     mwGadget({
       gadgetDef: 'gadget-def.txt',
       softDependencies: ['ext.gadget.VariantAllyDialog'],
+      legacy: true,
     }),
   ],
 });

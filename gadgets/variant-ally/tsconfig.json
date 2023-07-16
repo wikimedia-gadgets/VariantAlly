@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2016", // MediaWiki's JavaScript minifier supports up to ES2016
+    "target": "ES5", // Default gadget still requires ES5
     "module": "esnext",
     "lib": [
       "ESNext",

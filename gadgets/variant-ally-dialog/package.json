@@ -11,7 +11,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "less": "^4.1.3",
-    "rollup-plugin-mediawiki-gadget": "^1.0.4",
+    "rollup-plugin-mediawiki-gadget": "^1.0.5",
     "types-mediawiki": "^1.3.0",
     "vite": "^4.3.9"
   },

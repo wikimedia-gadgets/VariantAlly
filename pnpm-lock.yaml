@@ -45,8 +45,8 @@ importers:
         specifier: ^3.26.2
         version: 3.26.2
       rollup-plugin-mediawiki-gadget:
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.5
+        version: 1.0.5
       types-mediawiki:
         specifier: ^1.3.0
         version: 1.3.0
@@ -64,8 +64,8 @@ importers:
         specifier: ^4.1.3
         version: 4.1.3
       rollup-plugin-mediawiki-gadget:
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.5
+        version: 1.0.5
       types-mediawiki:
         specifier: ^1.3.0
         version: 1.3.0
@@ -1640,8 +1640,8 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup-plugin-mediawiki-gadget@1.0.4:
-    resolution: {integrity: sha512-jLNtA9ahcsJJP1HlqxgvIDEJzIfCbPd51xt4UT8Q0N2z0GObmVRTzXNSm6iGp06793oEgL3CgYRfLZb5MOsa8Q==}
+  /rollup-plugin-mediawiki-gadget@1.0.5:
+    resolution: {integrity: sha512-eOo9ba1BONFRXhCeZZiZ+x9/5QWPC5ojbolpQENKb2EzzOkWsgKpwQnb3yzaUuW5lOEVp/c1shVedgeHGx6GNQ==}
     dependencies:
       rollup: 3.26.2
     dev: true
