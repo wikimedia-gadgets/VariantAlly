@@ -41,6 +41,7 @@ import { switchLang } from '../../msg';
   .button-base();
 
   background-color: @background-color-transparent;
+  color: @color-base;
   border-color: @border-color-transparent;
   padding: @spacing-lang-button;
 
