@@ -11,12 +11,9 @@ defineEmits<{
 
 <template>
   <div class="main-panel">
-    <div class="main-panel__heading">
-      <h2 class="main-panel__heading__title">
-        {{ msg('main.heading') }}
-      </h2>
-      <LangButton />
-    </div>
+    <h2 class="main-panel__title">
+      {{ msg('main.heading') }}
+    </h2>
     <div class="main-panel__body">
       <p class="main-panel__body__desc">
         {{ msg('main.desc') }}<a
@@ -56,25 +53,13 @@ defineEmits<{
 @import (reference) '../../styles/tokens.less';
 
 .main-panel {
-  &__heading {
-    display: flex;
-    align-items: center;
+  &__title {
     margin-right: -(@spacing-back-button + 1px);
 
-    &__title {
-      flex: 1;
-    }
-
     @media screen and (max-width: @max-width-breakpoint-mobile) {
-      margin-right: @spacing-0;
-      flex-direction: column-reverse;
-      justify-content: center;
-
-      &__title {
-        text-align: center;
-        margin: @spacing-50 0;
-        font-size: @font-size-x-large;
-      }
+      text-align: center;
+      margin: @spacing-50 0;
+      font-size: @font-size-x-large;
     }
   }
 

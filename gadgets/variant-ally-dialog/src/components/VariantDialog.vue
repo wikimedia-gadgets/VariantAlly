@@ -6,6 +6,8 @@ import MainPanel from './panels/MainPanel.vue';
 import MoreInfoPanel from './panels/MoreInfoPanel.vue';
 import TroubleshootPanel from './panels/TroubleshootPanel.vue';
 import QuitPanel from './panels/QuitPanel.vue';
+import LangButton from './buttons/LangButton.vue';
+import { currentLocale } from '../msg';
 
 const enum Page {
   MAIN,
@@ -30,25 +32,37 @@ defineExpose({ currentPage });
     appear
   >
     <div class="variant-dialog">
+      <LangButton class="variant-dialog__lang-button" />
       <Transition
         name="panel"
         mode="out-in"
       >
-        <MainPanel
-          v-if="currentPage === Page.MAIN"
-          @more="currentPage = Page.MORE"
-          @troubleshoot="currentPage = Page.TROUBLESHOOT"
-          @select="(variant) => { $emit('select', variant); }"
-        />
-        <MoreInfoPanel
-          v-else-if="currentPage === Page.MORE"
-          @main="currentPage = Page.MAIN"
-        />
-        <TroubleshootPanel
-          v-else-if="currentPage === Page.TROUBLESHOOT"
-          @main="currentPage = Page.MAIN"
-        />
-        <QuitPanel v-else />
+        <div
+          :key="currentLocale"
+          :lang="currentLocale"
+          class="variant-dialog__content"
+        >
+          <Transition
+            name="panel"
+            mode="out-in"
+          >
+            <MainPanel
+              v-if="currentPage === Page.MAIN"
+              @more="currentPage = Page.MORE"
+              @troubleshoot="currentPage = Page.TROUBLESHOOT"
+              @select="(variant) => { $emit('select', variant); }"
+            />
+            <MoreInfoPanel
+              v-else-if="currentPage === Page.MORE"
+              @main="currentPage = Page.MAIN"
+            />
+            <TroubleshootPanel
+              v-else-if="currentPage === Page.TROUBLESHOOT"
+              @main="currentPage = Page.MAIN"
+            />
+            <QuitPanel v-else />
+          </Transition>
+        </div>
       </Transition>
     </div>
   </Transition>
@@ -90,6 +104,9 @@ defineExpose({ currentPage });
     width: auto;
 
     padding: @spacing-100;
+
+    display: flex;
+    flex-direction: column-reverse;
   }
 
   /* Styles for thin screens */
@@ -104,6 +121,18 @@ defineExpose({ currentPage });
       right: 0;
       transform: none;
       min-height: auto;
+    }
+  }
+
+  &__lang-button {
+    float: right;
+    margin-right: -(@spacing-back-button + 1px);
+    margin-top: @spacing-75;
+
+    @media screen and (max-width: @max-width-breakpoint-mobile) {
+      float: none;
+      margin-top: @spacing-0;
+      align-self: center;
     }
   }
 }
