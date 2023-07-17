@@ -1,6 +1,6 @@
 // Variant-management related code.
 
-const LOCAL_STORAGE_KEY = 'var-pref';
+const LOCAL_STORAGE_KEY = 'va-var';
 const EXPERIENCED_USERS = [
   'TheresNoTime',
   'WMFOffice',

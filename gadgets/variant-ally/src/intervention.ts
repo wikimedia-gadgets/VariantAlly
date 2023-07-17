@@ -115,10 +115,11 @@ function redirectAnchors(variant: string, mediaWikiVariant: string | null): void
             }
             output(() => ['redirectAnchors', 'drag-handler', `Drop data changed!`]);
           } else {
-            // Avoid being overwritten by overlapped handler calls
-            if (!anchor.dataset.origHref) {
-              anchor.dataset.origHref = anchor.href;
+            // Use a mutex to avoid being overwritten by overlapped handler calls
+            if (anchor.dataset.vaMutex === undefined) {
+              anchor.dataset.vaMutex = '';
             }
+            const origLink = anchor.href;
             anchor.href = newLink;
             output(() => [
               'redirectAnchors',
@@ -137,9 +138,9 @@ function redirectAnchors(variant: string, mediaWikiVariant: string | null): void
                   `Event ${innerEv.type} on ${anchor.href}, origHref ${anchor.dataset.origHref}`,
                 ]);
 
-                if (anchor.dataset.origHref) {
-                  anchor.href = anchor.dataset.origHref;
-                  delete anchor.dataset.origHref;
+                if (anchor.dataset.vaMutex !== undefined) {
+                  anchor.href = origLink;
+                  delete anchor.dataset.vaMutex;
                 }
               }, { once: true });
             });
