@@ -8,6 +8,7 @@ import {
   isLoggedIn,
   isExperiencedUser,
   getBrowserVariant,
+  getMediaWikiVariant,
 } from './management';
 
 function showDebugInformation(): void {
@@ -20,6 +21,7 @@ Browser variant: ${getBrowserVariant()}
 Local (cached) variant: ${getLocalVariant()}
 Account variant: ${getAccountVariant()}
 Page variant: ${getPageVariant()}
+MediaWiki variant: ${getMediaWikiVariant()}
 User logged in: ${isLoggedIn()}
 User experienced: ${isExperiencedUser()}
 Calculated preferred variant: ${calculatePreferredVariant()}

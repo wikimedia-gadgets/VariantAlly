@@ -2,7 +2,7 @@
 
 import { output, showDebugInformation } from './debug';
 import { checkThisPage, redirectAnchors } from './intervention';
-import { calculatePreferredVariant, showDialog } from './management';
+import { calculatePreferredVariant, getMediaWikiVariant, showDialog } from './management';
 
 showDebugInformation();
 
@@ -11,6 +11,7 @@ if (preferrerVariant === null) {
   output(() => ['index', 'Preferred variant is null, show dialog']);
   showDialog();
 } else {
-  checkThisPage(preferrerVariant);
-  redirectAnchors(preferrerVariant);
+  const mediaWikiVariant = getMediaWikiVariant();
+  checkThisPage(preferrerVariant, mediaWikiVariant);
+  redirectAnchors(preferrerVariant, mediaWikiVariant);
 }

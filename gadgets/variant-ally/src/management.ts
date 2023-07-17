@@ -49,15 +49,32 @@ function getAccountVariant(): string | null {
 }
 
 function getLocalVariant(): string | null {
-  return localStorage.getItem(LOCAL_STORAGE_KEY);
+  const browserVariant = getBrowserVariant();
+  const localVariant = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (browserVariant !== null && browserVariant !== localVariant) {
+    // Keep local variant in sync with browser variant
+    setLocalVariant(browserVariant);
+    return browserVariant;
+  }
+  return localVariant;
 }
 
 function getBrowserVariant(): string | null {
-  const result = navigator.language.toLowerCase();
-  if (VALID_VARIANTS.includes(result)) {
-    return result;
+  for (const lang of navigator.languages) {
+    const result = lang.toLowerCase();
+    if (VALID_VARIANTS.includes(result)) {
+      return result;
+    }
   }
   return null;
+}
+
+/**
+ * Get the variant inferred by MediaWiki.
+ * @returns variant
+ */
+function getMediaWikiVariant(): string | null {
+  return getAccountVariant() || getBrowserVariant();
 }
 
 /**
@@ -99,6 +116,7 @@ export {
   getAccountVariant,
   getLocalVariant,
   getBrowserVariant,
+  getMediaWikiVariant,
   calculatePreferredVariant,
   setLocalVariant,
   showDialog,
