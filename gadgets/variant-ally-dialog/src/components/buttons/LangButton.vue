@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { switchLang } from '../../msg';
+import { cycleLocale } from '../../msg';
 </script>
 
 <template>
@@ -7,7 +7,7 @@ import { switchLang } from '../../msg';
     class="lang-button"
     title="切换语言 / 切換語言 / Switch languages"
     aria-label="切换语言 / 切換語言 / Switch languages"
-    @click="switchLang"
+    @click="cycleLocale"
   >
     <svg
       class="lang-button__icon"

@@ -72,7 +72,7 @@ function calculatePreferredVariant(): string | null {
 
   if (accountVariant !== null) {
     if (localVariant === null) {
-      setPreferredVariant(accountVariant);
+      setLocalVariant(accountVariant);
     }
     return accountVariant;
   }
@@ -84,7 +84,7 @@ function calculatePreferredVariant(): string | null {
   return browserVariant;
 }
 
-function setPreferredVariant(variant: string): void {
+function setLocalVariant(variant: string): void {
   localStorage.setItem(LOCAL_STORAGE_KEY, variant);
 }
 
@@ -100,6 +100,6 @@ export {
   getLocalVariant,
   getBrowserVariant,
   calculatePreferredVariant,
-  setPreferredVariant,
+  setLocalVariant,
   showDialog,
 };

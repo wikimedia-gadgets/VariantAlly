@@ -91,7 +91,7 @@ defineExpose({ currentPage });
   border: @border-base;
   border-radius: @border-radius-base;
   box-shadow: @box-shadow-drop-medium;
-  font-family: @font-family-base;
+  font-family: @font-family-system-sans;
 
   @media screen and (max-width: @max-width-breakpoint-mobile) {
     left: @spacing-35;
