@@ -9,6 +9,7 @@ defineEmits<{
 
 defineProps<{
   titleId: string,
+  descId: string,
 }>();
 </script>
 
@@ -21,7 +22,10 @@ defineProps<{
       {{ msg('main.heading') }}
     </h2>
     <div class="main-panel__body">
-      <p class="main-panel__body__desc">
+      <p
+        :id="descId"
+        class="main-panel__body__desc"
+      >
         {{ msg('main.desc') }}<a
           href="#"
           @click.prevent="$emit('more')"
@@ -82,5 +86,4 @@ defineProps<{
       }
     }
   }
-}
-</style>
+}</style>

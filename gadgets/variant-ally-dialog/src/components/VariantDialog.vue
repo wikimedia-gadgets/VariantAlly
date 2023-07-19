@@ -21,6 +21,13 @@ const titleIdList = {
   [Page.TROUBLESHOOT]: useUniqueId(),
   [Page.QUIT]: useUniqueId(),
 };
+const descriptionIdList = {
+  [Page.MAIN]: useUniqueId(),
+  [Page.MORE]: useUniqueId(),
+  [Page.TROUBLESHOOT]: useUniqueId(),
+  [Page.QUIT]: useUniqueId(),
+};
+const dialog = ref<HTMLElement | null>(null);
 const focusHolder = ref<HTMLElement | null>(null);
 
 const props = defineProps<{
@@ -37,6 +44,29 @@ watchEffect(() => {
   }
 });
 
+/**
+ * Focus the first or last focusable element inside the dialog.
+ * @param last focus last element, first element otherwise
+ */
+function focusInsideDialog(last: boolean) {
+  if (dialog.value === null) {
+    return;
+  }
+  let focusableElements: HTMLElement[] = Array.from(dialog.value.querySelectorAll('button, a'));
+  if (last) {
+    focusableElements = focusableElements.reverse();
+  }
+  for (const element of focusableElements) {
+    // Try focus, may fail
+    element.focus();
+
+    if (document.activeElement === element) {
+      // Succeeded
+      return;
+    }
+  }
+}
+
 // For debugging purpose
 defineExpose({ currentPage });
 
@@ -49,11 +79,18 @@ defineExpose({ currentPage });
   >
     <div
       v-if="open"
+      ref="dialog"
       class="variant-dialog"
       role="dialog"
       aria-model="false"
       :aria-labelledby="titleIdList[currentPage]"
+      :aria-describedby="descriptionIdList[currentPage]"
     >
+      <div
+        class="variant-dialog__focus-holder"
+        tabindex="0"
+        @focus="focusInsideDialog(true)"
+      />
       <div
         ref="focusHolder"
         class="variant-dialog__focus-holder"
@@ -76,6 +113,7 @@ defineExpose({ currentPage });
             <MainPanel
               v-if="currentPage === Page.MAIN"
               :title-id="titleIdList[Page.MAIN]"
+              :desc-id="descriptionIdList[Page.MAIN]"
               @more="currentPage = Page.MORE"
               @troubleshoot="currentPage = Page.TROUBLESHOOT"
               @select="(variant) => { $emit('select', variant); }"
@@ -83,20 +121,29 @@ defineExpose({ currentPage });
             <MoreInfoPanel
               v-else-if="currentPage === Page.MORE"
               :title-id="titleIdList[Page.MORE]"
+              :desc-id="descriptionIdList[Page.MORE]"
               @main="currentPage = Page.MAIN"
             />
             <TroubleshootPanel
               v-else-if="currentPage === Page.TROUBLESHOOT"
               :title-id="titleIdList[Page.TROUBLESHOOT]"
+              :desc-id="descriptionIdList[Page.TROUBLESHOOT]"
               @main="currentPage = Page.MAIN"
             />
             <QuitPanel
               v-else
               :title-id="titleIdList[Page.QUIT]"
+              :desc-id="descriptionIdList[Page.QUIT]"
+              @main="currentPage = Page.MAIN"
             />
           </Transition>
         </div>
       </Transition>
+      <div
+        class="variant-dialog__focus-holder"
+        tabindex="0"
+        @focus="focusInsideDialog(false)"
+      />
     </div>
   </Transition>
 </template>
@@ -154,6 +201,14 @@ defineExpose({ currentPage });
       right: 0;
       transform: none;
       min-height: auto;
+    }
+  }
+
+  &__focus-holder {
+    position: absolute;
+
+    &:focus {
+      outline: 0;
     }
   }
 

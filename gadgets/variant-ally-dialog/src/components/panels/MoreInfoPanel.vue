@@ -6,12 +6,13 @@ defineEmits(['main']);
 
 defineProps<{
   titleId: string,
+  descId: string,
 }>();
 </script>
 
 <template>
   <div class="more-panel">
-    <div class="more-panel__heading">
+    <header class="more-panel__heading">
       <BackButton
         class="more-panel__heading__back"
         @click="$emit('main')"
@@ -19,11 +20,16 @@ defineProps<{
       <h2 :id="titleId">
         {{ msg('more.heading') }}
       </h2>
-    </div>
-    <div>
-      <p>{{ msg('more.desc.1') }}</p>
-      <p>{{ msg('more.desc.2') }}</p>
-      <p>{{ msg('more.desc.3') }}</p>
+    </header>
+    <div class="more-panel__body">
+      <div
+        :id="descId"
+        class="more-panel__body__desc"
+      >
+        <p>{{ msg('more.desc.1') }}</p>
+        <p>{{ msg('more.desc.2') }}</p>
+        <p>{{ msg('more.desc.3') }}</p>
+      </div>
     </div>
   </div>
 </template>

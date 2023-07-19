@@ -6,12 +6,13 @@ defineEmits(['main']);
 
 defineProps<{
   titleId: string,
+  descId: string,
 }>();
 </script>
 
 <template>
   <div class="troubleshoot-panel">
-    <div class="troubleshoot-panel__heading">
+    <header class="troubleshoot-panel__heading">
       <BackButton
         class="troubleshoot-panel__heading__back"
         @click="$emit('main')"
@@ -19,6 +20,8 @@ defineProps<{
       <h2 :id="titleId">
         {{ msg('troubleshoot.heading') }}
       </h2>
+    </header>
+    <div id="descId">
       <p>{{ msg('troubleshoot.desc.1') }}</p>
       <p>{{ msg('troubleshoot.desc.2') }}</p>
     </div>

@@ -34,6 +34,7 @@ defineEmits(['click']);
   .button-base();
 
   background-color: @background-color-transparent;
+  color: @color-base;
   border-color: @border-color-transparent;
   padding: @spacing-back-button;
 
