@@ -155,12 +155,6 @@ defineExpose({ currentPage });
 
 .variant-dialog {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  max-width: 640px;
-  width: 100%;
 
   z-index: @z-index-overlay;
   padding: @spacing-125 @spacing-200;
@@ -173,34 +167,40 @@ defineExpose({ currentPage });
   box-shadow: @box-shadow-drop-medium;
   font-family: @font-family-system-sans;
 
-  @media screen and (max-width: @max-width-breakpoint-mobile) {
-    left: @spacing-35;
-    right: @spacing-35;
-    top: auto;
-    bottom: @spacing-35;
-    transform: none;
+  @media screen {
+    @media (min-width: @min-width-breakpoint-tablet) {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
 
-    max-width: none;
-    width: auto;
-
-    padding: @spacing-100;
-
-    display: flex;
-    flex-direction: column-reverse;
-  }
-
-  /* Styles for thin screens */
-
-  @media screen and (max-height: @max-height-breakpoint-mobile) {
-    top: 0;
-    bottom: 0;
-    transform: translateX(-50%);
+      max-width: 640px;
+      width: 100%;
+    }
 
     @media (max-width: @max-width-breakpoint-mobile) {
-      left: 0;
-      right: 0;
-      transform: none;
-      min-height: auto;
+      left: @spacing-35;
+      right: @spacing-35;
+      bottom: @spacing-35;
+
+      padding: @spacing-100;
+
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    /* Styles for thin screens */
+
+    @media (max-height: @max-height-breakpoint-mobile) {
+      top: @spacing-0;
+      bottom: @spacing-0;
+      transform: translateX(-50%);
+
+      @media (max-width: @max-width-breakpoint-mobile) {
+        left: @spacing-0;
+        right: @spacing-0;
+        transform: none;
+        min-height: auto;
+      }
     }
   }
 
@@ -234,10 +234,7 @@ defineExpose({ currentPage });
   transition-timing-function: @transition-timing-function-user;
 }
 
-.panel-enter-from {
-  opacity: 0;
-}
-
+.panel-enter-from,
 .panel-leave-to {
   opacity: 0;
 }
@@ -253,12 +250,14 @@ defineExpose({ currentPage });
 
 .dialog-enter-from,
 .dialog-leave-to {
-  @media screen and (min-width: @min-width-breakpoint-tablet) {
-    opacity: 0;
-  }
+  @media screen {
+    @media (min-width: @min-width-breakpoint-tablet) {
+      opacity: 0;
+    }
 
-  @media screen and (max-width: @max-width-breakpoint-mobile) {
-    transform: translateY(100%);
+    @media (max-width: @max-width-breakpoint-mobile) {
+      transform: translateY(100%);
+    }
   }
 }
 </style>
