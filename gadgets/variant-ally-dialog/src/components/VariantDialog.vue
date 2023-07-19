@@ -149,9 +149,63 @@ defineExpose({ currentPage });
 </template>
 
 <style scoped lang="less">
-@import '../styles/reset.less';
 @import (reference) '../styles/mixins.less';
 @import (reference) '../styles/tokens.less';
+
+/* Global normalization */
+
+*,
+:deep(:not(svg, g, path)) {
+  all: revert;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+:deep(h2) {
+  font-size: @font-size-xx-large;
+  margin-top: @spacing-75;
+  margin-bottom: @spacing-75;
+  color: @color-base;
+}
+
+:deep(p) {
+  margin-bottom: @spacing-75;
+  color: @color-base;
+}
+
+:deep(input),
+:deep(button),
+:deep(textarea),
+:deep(select) {
+  font: inherit;
+  text-transform: none;
+  touch-action: manipulation;
+}
+
+:deep(button) {
+  appearance: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+:deep(*::-moz-focus-inner) {
+  border: 0;
+  padding: 0;
+}
+
+:deep(p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6) {
+  overflow-wrap: break-word;
+}
+
+:deep(a) {
+  .link-base();
+}
 
 .variant-dialog {
   position: fixed;
