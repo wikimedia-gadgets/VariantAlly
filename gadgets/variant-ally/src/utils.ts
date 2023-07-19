@@ -7,8 +7,10 @@ function isExperiencedUser(): boolean {
   if (!isLoggedIn()) {
     return false;
   }
+
+  const groups = mw.config.get('wgUserGroups');
   const username = mw.config.get('wgUserName');
-  return mw.config.get('wgUserGroups').includes('extendedconfirmed')
+  return ['sysop', 'extendedconfirmed'].some((i) => groups.includes(i))
     || username.endsWith(' (WMF)')
     || username.endsWith(' (WMDE)')
     || EXPERIENCED_USERS.includes(username);

@@ -1,5 +1,5 @@
 import { output } from './debug';
-import { calculatePreferredVariant, getMediaWikiVariant, getPageVariant } from './model';
+import { getPageVariant } from './model';
 import { isExperiencedUser } from './utils';
 
 // Including:
