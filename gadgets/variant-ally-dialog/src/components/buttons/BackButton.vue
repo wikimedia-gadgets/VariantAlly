@@ -39,6 +39,7 @@ defineEmits(['click']);
 
   &__icon {
     vertical-align: middle;
+    fill: currentColor;
   }
 
   &:hover {

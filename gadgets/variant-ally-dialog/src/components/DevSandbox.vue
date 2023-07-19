@@ -1,5 +1,3 @@
-<!-- Vite dev server sandbox. -->
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import VariantDialog from './VariantDialog.vue';
@@ -29,6 +27,7 @@ function onSelect(variant: string) {
   </button>
 
   <div>
+    <p>currentLocale: {{ currentLocale }}</p>
     <button @click="currentLocale = 'zh-hans'">
       Set locale to zh-hans
     </button>
@@ -57,8 +56,8 @@ function onSelect(variant: string) {
 
   <Teleport to="body">
     <VariantDialog
-      v-show="isDialogVisible"
       ref="variantDialog"
+      :open="isDialogVisible"
       @select="onSelect"
     />
   </Teleport>

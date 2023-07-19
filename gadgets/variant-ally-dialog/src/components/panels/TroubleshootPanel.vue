@@ -3,6 +3,10 @@ import { msg } from '../../msg';
 import BackButton from '../buttons/BackButton.vue';
 
 defineEmits(['main']);
+
+defineProps<{
+  titleId: string,
+}>();
 </script>
 
 <template>
@@ -12,10 +16,12 @@ defineEmits(['main']);
         class="troubleshoot-panel__heading__back"
         @click="$emit('main')"
       />
-      <h2>{{ msg('troubleshoot.heading') }}</h2>
+      <h2 :id="titleId">
+        {{ msg('troubleshoot.heading') }}
+      </h2>
+      <p>{{ msg('troubleshoot.desc.1') }}</p>
+      <p>{{ msg('troubleshoot.desc.2') }}</p>
     </div>
-    <p>{{ msg('troubleshoot.desc.1') }}</p>
-    <p>{{ msg('troubleshoot.desc.2') }}</p>
   </div>
 </template>
 

@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { msg } from '../../msg';
+
+defineProps<{
+  titleId: string,
+}>();
 </script>
 
 <template>
   <div class="quit-panel">
-    <h2>{{ msg('quit.heading') }}</h2>
+    <h2 :id="titleId">
+      {{ msg('quit.heading') }}
+    </h2>
     <p>{{ msg('quit.desc') }}</p>
   </div>
 </template>

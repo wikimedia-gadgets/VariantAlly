@@ -3,6 +3,10 @@ import { msg } from '../../msg';
 import BackButton from '../buttons/BackButton.vue';
 
 defineEmits(['main']);
+
+defineProps<{
+  titleId: string,
+}>();
 </script>
 
 <template>
@@ -12,7 +16,9 @@ defineEmits(['main']);
         class="more-panel__heading__back"
         @click="$emit('main')"
       />
-      <h2>{{ msg('more.heading') }}</h2>
+      <h2 :id="titleId">
+        {{ msg('more.heading') }}
+      </h2>
     </div>
     <div>
       <p>{{ msg('more.desc.1') }}</p>

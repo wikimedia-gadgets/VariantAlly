@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { msg } from '../../msg';
 import VariantButton from '../buttons/VariantButton.vue';
-import LangButton from '../buttons/LangButton.vue';
 
 defineEmits<{
   (e: 'more' | 'troubleshoot'): void;
   (e: 'select', variant: string): void;
 }>();
+
+defineProps<{
+  titleId: string,
+}>();
 </script>
 
 <template>
   <div class="main-panel">
-    <h2 class="main-panel__title">
+    <h2
+      :id="titleId"
+      class="main-panel__title"
+    >
       {{ msg('main.heading') }}
     </h2>
     <div class="main-panel__body">

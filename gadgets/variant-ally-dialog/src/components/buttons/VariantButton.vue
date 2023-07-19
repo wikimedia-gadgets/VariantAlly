@@ -47,29 +47,17 @@ defineEmits(['click']);
     padding: @spacing-vertical-variant-button--mobile @spacing-horizontal-variant-button--mobile;
     text-align: center;
     justify-content: center;
-
-    &__icon {
-      display: none;
-    }
   }
 
   &:hover {
     color: @color-progressive--hover;
     background-color: @background-color-progressive-subtle;
-
-    .variant-button__icon {
-      fill: @color-progressive--hover;
-    }
   }
 
   &:active {
     color: @color-inverted;
     background-color: @background-color-progressive--active;
     border-color: @border-color-progressive--active;
-
-    .variant-button__icon {
-      fill: @color-inverted;
-    }
   }
 
   &:focus {
@@ -83,13 +71,12 @@ defineEmits(['click']);
 
   &__icon {
     margin-right: @spacing-25;
-    fill: @color-progressive;
+    fill: currentColor;
     transition-property: fill;
     transition-duration: @transition-duration-base;
 
     @media screen and (max-width: @max-width-breakpoint-mobile) {
-      margin-right: 0;
-      margin-bottom: @spacing-25;
+      display: none;
     }
   }
 }

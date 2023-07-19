@@ -6,7 +6,6 @@ import { cycleLocale } from '../../msg';
   <button
     class="lang-button"
     title="切换语言 / 切換語言 / Switch languages"
-    aria-label="切换语言 / 切換語言 / Switch languages"
     @click="cycleLocale"
   >
     <svg
@@ -50,6 +49,7 @@ import { cycleLocale } from '../../msg';
 
   &__icon {
     vertical-align: middle;
+    fill: currentColor;
 
     @media screen and (max-width: @max-width-breakpoint-mobile) {
       margin-right: @spacing-25;

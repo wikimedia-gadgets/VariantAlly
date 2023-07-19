@@ -1,13 +1,12 @@
-<!-- Variant selection prompt. -->
-
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import MainPanel from './panels/MainPanel.vue';
 import MoreInfoPanel from './panels/MoreInfoPanel.vue';
 import TroubleshootPanel from './panels/TroubleshootPanel.vue';
 import QuitPanel from './panels/QuitPanel.vue';
 import LangButton from './buttons/LangButton.vue';
 import { currentLocale } from '../msg';
+import useUniqueId from '../composables/useUniqueId';
 
 const enum Page {
   MAIN,
@@ -16,10 +15,27 @@ const enum Page {
   QUIT
 }
 const currentPage = ref(Page.MAIN);
+const titleIdList = {
+  [Page.MAIN]: useUniqueId(),
+  [Page.MORE]: useUniqueId(),
+  [Page.TROUBLESHOOT]: useUniqueId(),
+  [Page.QUIT]: useUniqueId(),
+};
+const focusHolder = ref<HTMLElement | null>(null);
+
+const props = defineProps<{
+  open: boolean,
+}>();
 
 defineEmits<{
   (e: 'select', variant: string): void;
 }>();
+
+watchEffect(() => {
+  if (props.open) {
+    focusHolder.value?.focus();
+  }
+});
 
 // For debugging purpose
 defineExpose({ currentPage });
@@ -31,7 +47,18 @@ defineExpose({ currentPage });
     name="dialog"
     appear
   >
-    <div class="variant-dialog">
+    <div
+      v-if="open"
+      class="variant-dialog"
+      role="dialog"
+      aria-model="false"
+      :aria-labelledby="titleIdList[currentPage]"
+    >
+      <div
+        ref="focusHolder"
+        class="variant-dialog__focus-holder"
+        tabindex="-1"
+      />
       <LangButton class="variant-dialog__lang-button" />
       <Transition
         name="panel"
@@ -48,19 +75,25 @@ defineExpose({ currentPage });
           >
             <MainPanel
               v-if="currentPage === Page.MAIN"
+              :title-id="titleIdList[Page.MAIN]"
               @more="currentPage = Page.MORE"
               @troubleshoot="currentPage = Page.TROUBLESHOOT"
               @select="(variant) => { $emit('select', variant); }"
             />
             <MoreInfoPanel
               v-else-if="currentPage === Page.MORE"
+              :title-id="titleIdList[Page.MORE]"
               @main="currentPage = Page.MAIN"
             />
             <TroubleshootPanel
               v-else-if="currentPage === Page.TROUBLESHOOT"
+              :title-id="titleIdList[Page.TROUBLESHOOT]"
               @main="currentPage = Page.MAIN"
             />
-            <QuitPanel v-else />
+            <QuitPanel
+              v-else
+              :title-id="titleIdList[Page.QUIT]"
+            />
           </Transition>
         </div>
       </Transition>
