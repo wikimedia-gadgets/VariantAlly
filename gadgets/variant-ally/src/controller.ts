@@ -1,6 +1,5 @@
 import { output } from './debug';
 import { getPageVariant } from './model';
-import { isExperiencedUser } from './utils';
 
 // Including:
 // - w.wiki
@@ -79,20 +78,16 @@ function checkThisPage(
   normalizationTargetVariant: string | null,
 ): void {
   const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
-  if (isExperiencedUser()
-    || referrerHostname === location.hostname
+  if (referrerHostname === location.hostname
     || BLOCKED_REFERRER_HOST.test(referrerHostname)
   ) {
-    // Assume this as user intention and do nothing
-    output(() => ['checkThisPage', `Experienced or referrer in blocklist, do nothing.`]);
+    output(() => ['checkThisPage', `Referrer is in blocklist. Stop.`]);
     return;
   }
 
-  const pageVariant = getPageVariant();
-  if (pageVariant === null) {
-    output(() => ['checkThisPage', 'Non-wikitext page. Do nothing.']);
-    return;
-  }
+  // Non-wikitext pages are rejected in index.ts
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const pageVariant = getPageVariant()!;
   if (pageVariant !== preferredVariant) {
     output(() => ['checkThisPage', `Redirecting to ${preferredVariant}...`]);
     redirect(preferredVariant, normalizationTargetVariant);

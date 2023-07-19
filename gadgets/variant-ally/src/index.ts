@@ -1,7 +1,7 @@
 import { output, showDebugInformation } from './debug';
 import { checkThisPage, rewriteAnchors, showDialog } from './controller';
 import { calculatePreferredVariant, getMediaWikiVariant } from './model';
-import { isWikitextPage } from './utils';
+import { isExperiencedUser, isWikitextPage } from './utils';
 
 showDebugInformation();
 
@@ -13,9 +13,13 @@ if (!isWikitextPage()) {
     output(() => ['index', 'Preferred variant is null, show variant dialog']);
     showDialog();
   } else {
-    const normalizationTargetVariant = getMediaWikiVariant();
-    checkThisPage(preferredVariant, normalizationTargetVariant);
-    rewriteAnchors(preferredVariant, normalizationTargetVariant);
+    if (isExperiencedUser()) {
+      output(() => ['index', 'Experienced user. Stop.']);
+    } else {
+      const normalizationTargetVariant = getMediaWikiVariant();
+      checkThisPage(preferredVariant, normalizationTargetVariant);
+      rewriteAnchors(preferredVariant, normalizationTargetVariant);
+    }
   }
 }
 
