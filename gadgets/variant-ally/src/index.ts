@@ -20,5 +20,5 @@ if (!isWikitextPage()) {
 }
 
 // Expose for VariantAllyDialog's use
-export { setLocalVariant } from './model';
+export { getMediaWikiVariant, setLocalVariant } from './model';
 export { redirect } from './controller';

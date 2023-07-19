@@ -170,4 +170,4 @@ function showDialog(): void {
   import('ext.gadget.VariantAllyDialog');
 }
 
-export { redirect, checkThisPage, rewriteAnchors, showDialog };
+export { rewriteLink, redirect, checkThisPage, rewriteAnchors, showDialog };

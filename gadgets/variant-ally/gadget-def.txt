@@ -1,1 +1,1 @@
-* VariantAlly[ResourceLoader|package|hidden|default|requiresES6|targets=desktop,mobile|dependencies=user.options]|VariantAlly.js
+* VariantAlly[ResourceLoader|package|hidden|default|targets=desktop,mobile|dependencies=user.options]|VariantAlly.js
