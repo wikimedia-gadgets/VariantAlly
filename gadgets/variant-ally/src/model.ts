@@ -1,10 +1,6 @@
-// Variant-management related code.
+import { isLoggedIn } from './utils';
 
 const LOCAL_STORAGE_KEY = 'va-var';
-const EXPERIENCED_USERS = [
-  'TheresNoTime',
-  'WMFOffice',
-];
 const VALID_VARIANTS = [
   'zh-cn',
   'zh-sg',
@@ -13,21 +9,6 @@ const VALID_VARIANTS = [
   'zh-hk',
   'zh-mo',
 ];
-
-function isExperiencedUser(): boolean {
-  if (!isLoggedIn()) {
-    return false;
-  }
-  const username = mw.config.get('wgUserName');
-  return mw.config.get('wgUserGroups').includes('extendedconfirmed')
-    || username.endsWith(' (WMF)')
-    || username.endsWith(' (WMDE)')
-    || EXPERIENCED_USERS.includes(username);
-}
-
-function isLoggedIn(): boolean {
-  return mw.config.exists('wgUserId');
-}
 
 /**
  * Get current variant of the page (don't be misled by config naming).
@@ -59,6 +40,10 @@ function getLocalVariant(): string | null {
   return localVariant;
 }
 
+/**
+ * Return browser variant if it's valid.
+ * @returns browser variant
+ */
 function getBrowserVariant(): string | null {
   for (const lang of navigator.languages) {
     const result = lang.toLowerCase();
@@ -70,7 +55,7 @@ function getBrowserVariant(): string | null {
 }
 
 /**
- * Get the variant inferred by MediaWiki.
+ * Get the variant inferred by MediaWiki, if it's valid.
  * @returns variant
  */
 function getMediaWikiVariant(): string | null {
@@ -88,9 +73,6 @@ function calculatePreferredVariant(): string | null {
   const accountVariant = getAccountVariant();
 
   if (accountVariant !== null) {
-    if (localVariant === null) {
-      setLocalVariant(accountVariant);
-    }
     return accountVariant;
   }
 
@@ -105,13 +87,7 @@ function setLocalVariant(variant: string): void {
   localStorage.setItem(LOCAL_STORAGE_KEY, variant);
 }
 
-function showDialog(): void {
-  import('ext.gadget.VariantAllyDialog');
-}
-
 export {
-  isExperiencedUser,
-  isLoggedIn,
   getPageVariant,
   getAccountVariant,
   getLocalVariant,
@@ -119,5 +95,4 @@ export {
   getMediaWikiVariant,
   calculatePreferredVariant,
   setLocalVariant,
-  showDialog,
 };

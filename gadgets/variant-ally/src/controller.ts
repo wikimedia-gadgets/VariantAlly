@@ -1,7 +1,6 @@
-// Handle auto redirection and link fixes.
-
 import { output } from './debug';
-import { getPageVariant, isExperiencedUser } from './management';
+import { calculatePreferredVariant, getMediaWikiVariant, getPageVariant } from './model';
+import { isExperiencedUser } from './utils';
 
 // Including:
 // - w.wiki
@@ -12,7 +11,13 @@ const WIKIURL_REGEX = /^\/(?:wiki|zh(?:-\w+)?)\//i;
 // Used to suppress exceptions of URL constructor
 const DUMMY_REFERRER = 'a:';
 
-function rewriteLink(link: string, variant: string, mediaWikiVariant: string | null): string {
+const REDIRECTED_FROM_KEY = 'va-rf';
+
+function rewriteLink(
+  link: string,
+  variant: string,
+  normalizationTargetVariant: string | null,
+): string {
   const url = new URL(link);
   const pathname = url.pathname;
   const searchParams = url.searchParams;
@@ -45,27 +50,34 @@ function rewriteLink(link: string, variant: string, mediaWikiVariant: string | n
       }
     }
 
-    if (variant === mediaWikiVariant) {
-      // Normalize a link based on MediaWiki variant.
+    if (variant === normalizationTargetVariant) {
+      // Normalize the link.
       //
-      // For example, for link /zh-tw/Title and MediaWiki variant zh-tw, the result is /wiki/Title,
-      // while for the same link and MediaWiki variant zh-cn, the result is /zh-tw/Title (unchanged).
+      // For example, for link /zh-tw/Title and normalization variant zh-tw, the result is /wiki/Title,
+      // while for the same link and normalization variant zh-cn, the result is /zh-tw/Title (unchanged).
       url.pathname = url.pathname.replace(WIKIURL_REGEX, '/wiki/');
       url.searchParams.delete('variant');
     }
   }
 
   const result = url.toString();
-  output(() => ['rewriteLink', `${link} + ${variant} + mw:${mediaWikiVariant} => ${result}`]);
+  output(() => ['rewriteLink', `${link} + ${variant} + mw:${normalizationTargetVariant} => ${result}`]);
   return result;
 }
 
-function redirect(variant: string, mediaWikiVariant: string | null): void {
+function redirect(
+  preferredVariant: string,
+  normalizationTargetVariant: string | null,
+): void {
+  sessionStorage.setItem(REDIRECTED_FROM_KEY, preferredVariant);
   // Use replace() to prevent navigating back
-  location.replace(rewriteLink(location.href, variant, mediaWikiVariant));
+  location.replace(rewriteLink(location.href, preferredVariant, normalizationTargetVariant));
 }
 
-function checkThisPage(variant: string, mediaWikiVariant: string | null): void {
+function checkThisPage(
+  preferredVariant: string,
+  normalizationTargetVariant: string | null,
+): void {
   const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
   if (isExperiencedUser()
     || referrerHostname === location.hostname
@@ -81,15 +93,18 @@ function checkThisPage(variant: string, mediaWikiVariant: string | null): void {
     output(() => ['checkThisPage', 'Non-wikitext page. Do nothing.']);
     return;
   }
-  if (pageVariant !== variant) {
-    output(() => ['checkThisPage', `Redirecting to ${variant}...`]);
-    redirect(variant, mediaWikiVariant);
+  if (pageVariant !== preferredVariant) {
+    output(() => ['checkThisPage', `Redirecting to ${preferredVariant}...`]);
+    redirect(preferredVariant, normalizationTargetVariant);
   } else {
     output(() => ['checkThisPage', 'Variant is correct :)']);
   }
 }
 
-function redirectAnchors(variant: string, mediaWikiVariant: string | null): void {
+function rewriteAnchors(
+  preferredVariant: string,
+  normalizationTargetVariant: string | null,
+): void {
   ['click', 'auxclick', 'dragstart'].forEach((name) => {
     document.addEventListener(name, (ev) => {
       if (ev.target instanceof Element) {
@@ -107,7 +122,7 @@ function redirectAnchors(variant: string, mediaWikiVariant: string | null): void
             return;
           }
 
-          const newLink = rewriteLink(anchor.href, variant, mediaWikiVariant);
+          const newLink = rewriteLink(anchor.href, preferredVariant, normalizationTargetVariant);
           if (ev instanceof DragEvent && ev.dataTransfer) {
             // Modify drag data directly because setting href has no effect in drag event
             for (const type of ev.dataTransfer.types) {
@@ -151,4 +166,8 @@ function redirectAnchors(variant: string, mediaWikiVariant: string | null): void
   });
 }
 
-export { redirect, checkThisPage, redirectAnchors };
+function showDialog(): void {
+  import('ext.gadget.VariantAllyDialog');
+}
+
+export { redirect, checkThisPage, rewriteAnchors, showDialog };

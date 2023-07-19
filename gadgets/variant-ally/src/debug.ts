@@ -1,15 +1,12 @@
-// Show debug information.
-
 import {
   getAccountVariant,
   getLocalVariant,
   getPageVariant,
   calculatePreferredVariant,
-  isLoggedIn,
-  isExperiencedUser,
   getBrowserVariant,
   getMediaWikiVariant,
-} from './management';
+} from './model';
+import { isLoggedIn, isExperiencedUser } from './utils';
 
 function showDebugInformation(): void {
   if (!DEBUG) {

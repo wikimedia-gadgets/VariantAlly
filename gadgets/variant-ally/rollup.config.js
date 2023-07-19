@@ -12,7 +12,7 @@ export default defineConfig({
   input: 'src/index.ts',
   output: {
     file: 'dist/Gadget-VariantAlly.js',
-    format: 'iife',
+    format: 'cjs',
     banner: readFileSync('assets/intro.js').toString(),
     footer: readFileSync('assets/outro.js').toString(),
   },
