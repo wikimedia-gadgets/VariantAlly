@@ -13,6 +13,7 @@ function showDebugInformation(): void {
     return;
   }
   console.log(`[VariantAlly]
+Build: ${BUILD_HASH}
 Referrer: ${document.referrer || '(empty)'}
 Browser variant: ${getBrowserVariant()}
 Local (cached) variant: ${getLocalVariant()}

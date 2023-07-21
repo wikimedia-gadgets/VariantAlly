@@ -5,6 +5,7 @@ import terser from '@rollup/plugin-terser';
 import { readFileSync } from 'fs';
 import replace from '@rollup/plugin-replace';
 import mwGadget from 'rollup-plugin-mediawiki-gadget';
+import { randomBytes } from 'crypto';
 
 const production = process.env.NODE_ENV === 'production';
 
@@ -20,6 +21,7 @@ export default defineConfig({
     replace({
       preventAssignment: true,
       DEBUG: JSON.stringify(!production),
+      BUILD_HASH: JSON.stringify(randomBytes(3).toString('hex')),
     }),
     typescript(),
     terser({

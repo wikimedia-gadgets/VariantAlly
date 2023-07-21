@@ -2,7 +2,7 @@
 
 import { createMwApp } from 'vue';
 import VariantDialog from './components/VariantDialog.vue';
-import { getMediaWikiVariant, redirect, setLocalVariant } from 'ext.gadget.VariantAlly';
+import { redirect, setLocalVariant } from 'ext.gadget.VariantAlly';
 
 const root = document.createElement('div');
 document.body.appendChild(root);
@@ -13,7 +13,7 @@ createMwApp(
     open: true,
     onSelect(variant: string) {
       setLocalVariant(variant);
-      redirect(variant, getMediaWikiVariant());
+      redirect(variant);
     },
   },
 ).mount(root);

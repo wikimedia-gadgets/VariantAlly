@@ -1,4 +1,5 @@
 import { output } from './debug';
+import { getMediaWikiVariant, getPageVariant } from './model';
 
 // Including:
 // - w.wiki
@@ -11,11 +12,8 @@ const DUMMY_REFERRER = 'a:';
 
 const REDIRECTED_FROM_KEY = 'va-rf';
 
-function rewriteLink(
-  link: string,
-  variant: string,
-  normalizationTargetVariant: string | null,
-): string {
+function rewriteLink(link: string, variant: string): string {
+  const normalizationTargetVariant = getMediaWikiVariant();
   const url = new URL(link);
   const pathname = url.pathname;
   const searchParams = url.searchParams;
@@ -63,20 +61,13 @@ function rewriteLink(
   return result;
 }
 
-function redirect(
-  preferredVariant: string,
-  normalizationTargetVariant: string | null,
-): void {
+function redirect(preferredVariant: string): void {
   sessionStorage.setItem(REDIRECTED_FROM_KEY, preferredVariant);
   // Use replace() to prevent navigating back
-  location.replace(rewriteLink(location.href, preferredVariant, normalizationTargetVariant));
+  location.replace(rewriteLink(location.href, preferredVariant));
 }
 
-function checkThisPage(
-  preferredVariant: string,
-  normalizationTargetVariant: string | null,
-  pageVariant: string,
-): void {
+function checkThisPage(preferredVariant: string): void {
   const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
   if (referrerHostname === location.hostname
     || BLOCKED_REFERRER_HOST.test(referrerHostname)
@@ -85,18 +76,19 @@ function checkThisPage(
     return;
   }
 
-  if (pageVariant !== preferredVariant) {
+  if (getPageVariant() !== preferredVariant) {
     output(() => ['checkThisPage', `Redirecting to ${preferredVariant}...`]);
-    redirect(preferredVariant, normalizationTargetVariant);
+    redirect(preferredVariant);
   } else {
     output(() => ['checkThisPage', 'Variant is correct :)']);
   }
 }
 
-function rewriteAnchors(
-  variant: string,
-  normalizationTargetVariant: string | null,
-): void {
+function rewriteAnchors(): void {
+  // Null value is rejected by isWikitextPage()
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const pageVariant = getPageVariant()!;
+
   ['click', 'auxclick', 'dragstart'].forEach((name) => {
     document.addEventListener(name, (ev) => {
       const target = ev.target;
@@ -117,7 +109,7 @@ function rewriteAnchors(
             return;
           }
 
-          const newLink = rewriteLink(anchor.href, variant, normalizationTargetVariant);
+          const newLink = rewriteLink(anchor.href, pageVariant);
 
           if (ev instanceof DragEvent && ev.dataTransfer) {
             // Modify drag data directly because setting href has no effect in drag event
