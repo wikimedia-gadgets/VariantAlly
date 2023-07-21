@@ -1,5 +1,4 @@
 import { output } from './debug';
-import { getPageVariant } from './model';
 
 // Including:
 // - w.wiki
@@ -76,6 +75,7 @@ function redirect(
 function checkThisPage(
   preferredVariant: string,
   normalizationTargetVariant: string | null,
+  pageVariant: string,
 ): void {
   const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
   if (referrerHostname === location.hostname
@@ -85,9 +85,6 @@ function checkThisPage(
     return;
   }
 
-  // Non-wikitext pages are rejected in index.ts
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const pageVariant = getPageVariant()!;
   if (pageVariant !== preferredVariant) {
     output(() => ['checkThisPage', `Redirecting to ${preferredVariant}...`]);
     redirect(preferredVariant, normalizationTargetVariant);
@@ -97,7 +94,7 @@ function checkThisPage(
 }
 
 function rewriteAnchors(
-  preferredVariant: string,
+  variant: string,
   normalizationTargetVariant: string | null,
 ): void {
   ['click', 'auxclick', 'dragstart'].forEach((name) => {
@@ -113,17 +110,18 @@ function rewriteAnchors(
           // Minerva/MobileFrontend: in .suggested-languages
           // Monobook: in .pBody
           if (anchor.closest('#p-variants, #p-variants-desktop, .suggested-languages, .pBody')) {
-            output(() => ['redirectAnchors', `Anchor is in variant dropdown list. Do nothing.`]);
+            output(() => ['redirectAnchors', `Anchor is in variant dropdown list. Stop.`]);
             return;
           }
 
-          const newLink = rewriteLink(anchor.href, preferredVariant, normalizationTargetVariant);
+          const newLink = rewriteLink(anchor.href, variant, normalizationTargetVariant);
           if (ev instanceof DragEvent && ev.dataTransfer) {
             // Modify drag data directly because setting href has no effect in drag event
-            for (const type of ev.dataTransfer.types) {
-              ev.dataTransfer.setData(type, newLink);
-            }
-            output(() => ['redirectAnchors', 'drag-handler', `Drop data changed!`]);
+            ev.dataTransfer.types.forEach((type) => {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              ev.dataTransfer!.setData(type, newLink);
+            });
+            output(() => ['redirectAnchors', 'dragHandler', `Drop data changed!`]);
           } else {
             // Use a mutex to avoid being overwritten by overlapped handler calls
             if (anchor.dataset.vaMutex === undefined) {
@@ -133,8 +131,8 @@ function rewriteAnchors(
             anchor.href = newLink;
             output(() => [
               'redirectAnchors',
-              'click-handler',
-              `href ${anchor.href}, origHref ${anchor.dataset.origHref}`,
+              'clickHandler',
+              `href ${anchor.href}, origLink ${origLink}`,
             ]);
 
             // HACK: workaround popups not working on modified links
@@ -143,9 +141,9 @@ function rewriteAnchors(
               anchor.addEventListener(innerName, (innerEv) => {
                 output(() => [
                   'redirectAnchors',
-                  'click-handler',
-                  'restoration-handler',
-                  `Event ${innerEv.type} on ${anchor.href}, origHref ${anchor.dataset.origHref}`,
+                  'clickHandler',
+                  'restorationHandler',
+                  `Event ${innerEv.type} on ${anchor.href}, origLink ${origLink}`,
                 ]);
 
                 if (anchor.dataset.vaMutex !== undefined) {

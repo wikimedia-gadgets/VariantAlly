@@ -1,6 +1,6 @@
 import { output, showDebugInformation } from './debug';
 import { checkThisPage, rewriteAnchors, showDialog } from './controller';
-import { calculatePreferredVariant, getMediaWikiVariant } from './model';
+import { calculatePreferredVariant, getMediaWikiVariant, getPageVariant } from './model';
 import { isExperiencedUser, isWikitextPage } from './utils';
 
 showDebugInformation();
@@ -13,13 +13,14 @@ if (!isWikitextPage()) {
     output(() => ['index', 'Preferred variant is null, show variant dialog']);
     showDialog();
   } else {
-    if (isExperiencedUser()) {
-      output(() => ['index', 'Experienced user. Stop.']);
-    } else {
-      const normalizationTargetVariant = getMediaWikiVariant();
-      checkThisPage(preferredVariant, normalizationTargetVariant);
-      rewriteAnchors(preferredVariant, normalizationTargetVariant);
+    const normalizationTargetVariant = getMediaWikiVariant();
+    // For a wikitext page pageVariant cannot be null
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const pageVariant = getPageVariant()!;
+    if (!isExperiencedUser()) {
+      checkThisPage(preferredVariant, normalizationTargetVariant, pageVariant);
     }
+    rewriteAnchors(pageVariant, normalizationTargetVariant);
   }
 }
 

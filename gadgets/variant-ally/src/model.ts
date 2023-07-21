@@ -55,16 +55,23 @@ function getBrowserVariant(): string | null {
 }
 
 /**
- * Get the variant inferred by MediaWiki, if it's valid.
+ * Get the "natural" variant inferred by MediaWiki when the link doesn't specify a variant.
+ *
+ * Used in link normalization.
+ *
+ * Only return valid variants, null otherwise.
+ *
  * @returns variant
  */
 function getMediaWikiVariant(): string | null {
-  return getAccountVariant() || getBrowserVariant();
+  return getAccountVariant() ?? getBrowserVariant();
 }
 
 /**
- * Calculate preferred variant from Special:Preferences (logged-in users)
- * or local storage (anonymous users). Resets local storage if there's a conflict.
+ * Calculate preferred variant from browser variant, local variant and account variant.
+ *
+ * Priority: account variant > local variant > browser variant
+ *
  * @returns preferred variant
  */
 function calculatePreferredVariant(): string | null {
