@@ -57,7 +57,7 @@ function rewriteLink(link: string, variant: string): string {
   }
 
   const result = url.toString();
-  output(() => ['rewriteLink', `${link} + ${variant} + mw:${normalizationTargetVariant} => ${result}`]);
+  output(() => ['rewriteLink', `${link} + ${variant} ==${normalizationTargetVariant}=> ${result}`]);
   return result;
 }
 
@@ -97,7 +97,7 @@ function rewriteAnchors(): void {
         const anchor = target.closest('a');
 
         if (anchor) {
-          output(() => ['redirectAnchors', `Event ${ev.type} on ${anchor.href}`]);
+          output(() => ['rewriteAnchors', `Event ${ev.type} on ${anchor.href}`]);
 
           // Prevent variant dropdown/list links being overridden
           // Vector/Vector 2022: in #p-variants
@@ -105,7 +105,7 @@ function rewriteAnchors(): void {
           // Minerva/MobileFrontend: in .suggested-languages
           // Monobook: in .pBody
           if (anchor.closest('#p-variants, #p-variants-desktop, .suggested-languages, .pBody')) {
-            output(() => ['redirectAnchors', `Anchor is in variant dropdown list. Stop.`]);
+            output(() => ['rewriteAnchors', `Anchor is in variant dropdown list. Stop.`]);
             return;
           }
 
@@ -118,7 +118,7 @@ function rewriteAnchors(): void {
               ev.dataTransfer!.setData(type, newLink);
             });
 
-            output(() => ['redirectAnchors', 'dragHandler', `Drop data changed!`]);
+            output(() => ['rewriteAnchors', 'dragHandler', `Drop data changed!`]);
           } else {
             // Use a mutex to avoid being overwritten by overlapped handler calls
             if (anchor.dataset.vaMutex === undefined) {
@@ -129,7 +129,7 @@ function rewriteAnchors(): void {
             anchor.href = newLink;
 
             output(() => [
-              'redirectAnchors',
+              'rewriteAnchors',
               'clickHandler',
               `href ${anchor.href}, origLink ${origLink}`,
             ]);
@@ -139,7 +139,7 @@ function rewriteAnchors(): void {
             ['mouseover', 'mouseleave', 'keyup'].forEach((innerName) => {
               anchor.addEventListener(innerName, (innerEv) => {
                 output(() => [
-                  'redirectAnchors',
+                  'rewriteAnchors',
                   'clickHandler',
                   'restorationHandler',
                   `Event ${innerEv.type} on ${anchor.href}, origLink ${origLink}`,
