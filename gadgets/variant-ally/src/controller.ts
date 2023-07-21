@@ -38,7 +38,7 @@ function rewriteLink(
 
       if (
         searchQuery !== null
-        && searchParams.get('title')?.startsWith('Special:')
+        && (searchParams.get('title') || '').startsWith('Special:')
         && searchParams.get('fulltext') !== '1'
       ) {
         url.pathname = `/${variant}/${searchQuery}`;
@@ -99,8 +99,11 @@ function rewriteAnchors(
 ): void {
   ['click', 'auxclick', 'dragstart'].forEach((name) => {
     document.addEventListener(name, (ev) => {
-      if (ev.target instanceof Element) {
-        const anchor = ev.target.closest('a');
+      const target = ev.target;
+
+      if (target instanceof Element) {
+        const anchor = target.closest('a');
+
         if (anchor) {
           output(() => ['redirectAnchors', `Event ${ev.type} on ${anchor.href}`]);
 
@@ -115,20 +118,24 @@ function rewriteAnchors(
           }
 
           const newLink = rewriteLink(anchor.href, variant, normalizationTargetVariant);
+
           if (ev instanceof DragEvent && ev.dataTransfer) {
             // Modify drag data directly because setting href has no effect in drag event
             ev.dataTransfer.types.forEach((type) => {
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               ev.dataTransfer!.setData(type, newLink);
             });
+
             output(() => ['redirectAnchors', 'dragHandler', `Drop data changed!`]);
           } else {
             // Use a mutex to avoid being overwritten by overlapped handler calls
             if (anchor.dataset.vaMutex === undefined) {
               anchor.dataset.vaMutex = '';
             }
+
             const origLink = anchor.href;
             anchor.href = newLink;
+
             output(() => [
               'redirectAnchors',
               'clickHandler',

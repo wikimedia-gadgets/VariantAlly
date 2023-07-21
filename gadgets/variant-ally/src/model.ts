@@ -45,13 +45,9 @@ function getLocalVariant(): string | null {
  * @returns browser variant
  */
 function getBrowserVariant(): string | null {
-  for (const lang of navigator.languages) {
-    const result = lang.toLowerCase();
-    if (VALID_VARIANTS.includes(result)) {
-      return result;
-    }
-  }
-  return null;
+  return navigator.languages.find(
+    (lang) => VALID_VARIANTS.includes(lang.toLowerCase()),
+  ) || null;
 }
 
 /**
@@ -64,7 +60,7 @@ function getBrowserVariant(): string | null {
  * @returns variant
  */
 function getMediaWikiVariant(): string | null {
-  return getAccountVariant() ?? getBrowserVariant();
+  return getAccountVariant() || getBrowserVariant();
 }
 
 /**
@@ -75,19 +71,7 @@ function getMediaWikiVariant(): string | null {
  * @returns preferred variant
  */
 function calculatePreferredVariant(): string | null {
-  const browserVariant = getBrowserVariant();
-  const localVariant = getLocalVariant();
-  const accountVariant = getAccountVariant();
-
-  if (accountVariant !== null) {
-    return accountVariant;
-  }
-
-  if (localVariant !== null) {
-    return localVariant;
-  }
-
-  return browserVariant;
+  return getAccountVariant() || getLocalVariant() || getBrowserVariant();
 }
 
 function setLocalVariant(variant: string): void {
