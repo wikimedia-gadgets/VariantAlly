@@ -57,14 +57,15 @@ function rewriteLink(link: string, variant: string): string {
   }
 
   const result = url.toString();
-  output(() => ['rewriteLink', `${link} + ${variant} ==${normalizationTargetVariant}=> ${result}`]);
+  output(() => ['rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => ${result}`]);
   return result;
 }
 
-function redirect(preferredVariant: string): void {
+function redirect(preferredVariant: string, link?: string): void {
   sessionStorage.setItem(REDIRECTED_FROM_KEY, preferredVariant);
+
   // Use replace() to prevent navigating back
-  location.replace(rewriteLink(location.href, preferredVariant));
+  location.replace(rewriteLink(link || location.href, preferredVariant));
 }
 
 function checkThisPage(preferredVariant: string): void {
@@ -76,12 +77,27 @@ function checkThisPage(preferredVariant: string): void {
     return;
   }
 
-  if (getPageVariant() !== preferredVariant) {
-    output(() => ['checkThisPage', `Redirecting to ${preferredVariant}...`]);
-    redirect(preferredVariant);
-  } else {
+  if (getPageVariant() === preferredVariant) {
     output(() => ['checkThisPage', 'Variant is correct :)']);
+    return;
   }
+
+  output(() => ['checkThisPage', `Redirecting to ${preferredVariant}...`]);
+
+  const redirectionOrigin: string | null = mw.config.get('wgRedirectedFrom');
+  if (redirectionOrigin === null) {
+    redirect(preferredVariant);
+    return;
+  }
+
+  // If current page is redirected from another page, rewrite link to point to
+  // the original redirect so the "redirected from XXX" hint is correctly displayed
+  output(() => ['checkThisPage', `Detected redirection from ${redirectionOrigin}`]);
+
+  // Use URL to reserve other parts of the link
+  const redirectionURL = new URL(location.href);
+  redirectionURL.pathname = `/wiki/${redirectionOrigin}`;
+  redirect(preferredVariant, redirectionURL.toString());
 }
 
 function rewriteAnchors(): void {
