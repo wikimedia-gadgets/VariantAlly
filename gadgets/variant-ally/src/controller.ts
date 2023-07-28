@@ -136,6 +136,12 @@ function rewriteAnchors(pageVariant: string): void {
             // Use a mutex to avoid being overwritten by overlapped handler calls
             if (anchor.dataset.vaMutex === undefined) {
               anchor.dataset.vaMutex = '';
+
+              output(() => [
+                'rewriteAnchors',
+                'clickHandler',
+                'Anchor locked.',
+              ]);
             }
 
             const origLink = anchor.href;
@@ -161,6 +167,13 @@ function rewriteAnchors(pageVariant: string): void {
                 if (anchor.dataset.vaMutex !== undefined) {
                   anchor.href = origLink;
                   delete anchor.dataset.vaMutex;
+
+                  output(() => [
+                    'rewriteAnchors',
+                    'clickHandler',
+                    'restorationHandler',
+                    'Anchor unlocked.',
+                  ]);
                 }
               }, { once: true });
             });
