@@ -45,9 +45,10 @@ function getLocalVariant(): string | null {
  * @returns browser variant
  */
 function getBrowserVariant(): string | null {
-  return navigator.languages.find(
-    (lang) => VALID_VARIANTS.includes(lang.toLowerCase()),
-  ) || null;
+  return navigator.languages
+    .map((lang) => lang.toLowerCase())
+    .find((lang) => VALID_VARIANTS.includes(lang))
+    || null;
 }
 
 /**

@@ -1,5 +1,5 @@
 import { output } from './debug';
-import { getMediaWikiVariant, getPageVariant } from './model';
+import { getMediaWikiVariant } from './model';
 
 // Including:
 // - w.wiki
@@ -68,7 +68,7 @@ function redirect(preferredVariant: string, link?: string): void {
   location.replace(rewriteLink(link || location.href, preferredVariant));
 }
 
-function checkThisPage(preferredVariant: string): void {
+function checkThisPage(preferredVariant: string, pageVariant: string): void {
   const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
   if (referrerHostname === location.hostname
     || BLOCKED_REFERRER_HOST.test(referrerHostname)
@@ -77,7 +77,7 @@ function checkThisPage(preferredVariant: string): void {
     return;
   }
 
-  if (getPageVariant() === preferredVariant) {
+  if (pageVariant === preferredVariant) {
     output(() => ['checkThisPage', 'Variant is correct :)']);
     return;
   }
@@ -100,10 +100,7 @@ function checkThisPage(preferredVariant: string): void {
   redirect(preferredVariant, redirectionURL.toString());
 }
 
-function rewriteAnchors(): void {
-  // Null value is rejected by isWikitextPage()
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const pageVariant = getPageVariant()!;
+function rewriteAnchors(pageVariant: string): void {
 
   ['click', 'auxclick', 'dragstart'].forEach((name) => {
     document.addEventListener(name, (ev) => {

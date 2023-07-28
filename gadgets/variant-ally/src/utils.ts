@@ -20,8 +20,4 @@ function isLoggedIn(): boolean {
   return mw.config.exists('wgUserId');
 }
 
-function isWikitextPage(): boolean {
-  return mw.config.get('wgPageContentModel') === 'wikitext';
-}
-
-export { isExperiencedUser, isLoggedIn, isWikitextPage };
+export { isExperiencedUser, isLoggedIn };
