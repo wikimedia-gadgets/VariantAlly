@@ -36,7 +36,7 @@ function rewriteLink(link: string, variant: string): string {
 
       if (
         searchQuery !== null
-        && (searchParams.get('title') || '').startsWith('Special:')
+        && searchParams.get('title')?.startsWith('Special:')
         && searchParams.get('fulltext') !== '1'
       ) {
         url.pathname = `/${variant}/${searchQuery}`;
@@ -65,7 +65,7 @@ function redirect(preferredVariant: string, link?: string): void {
   sessionStorage.setItem(REDIRECTED_FROM_KEY, preferredVariant);
 
   // Use replace() to prevent navigating back
-  location.replace(rewriteLink(link || location.href, preferredVariant));
+  location.replace(rewriteLink(link ?? location.href, preferredVariant));
 }
 
 function checkThisPage(preferredVariant: string, pageVariant: string): void {
