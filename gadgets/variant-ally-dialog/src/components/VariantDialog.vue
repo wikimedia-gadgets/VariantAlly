@@ -176,7 +176,8 @@ function close() {
             </p>
             <p>
               <!-- Disable link because it's unfinished -->
-              {{ msg('footer.2') }}{{ msg('space') }}<a href="#">{{ msg('footer.2.btn') }}</a>
+              {{ msg('footer.2') }}{{ msg('space')
+              }}<!-- <a href="#">{{ msg('footer.2.btn') }}</a> -->
             </p>
           </footer>
         </LangSwitchTransition>
