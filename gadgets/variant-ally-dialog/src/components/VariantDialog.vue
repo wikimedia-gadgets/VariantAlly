@@ -97,7 +97,7 @@ function close() {
               :id="titleId"
               :key="currentLang"
               :lang="currentLang"
-              class="variant-dialog__header__title"
+              class="title variant-dialog__header__title"
             >
               {{ msg('title') }}
             </h2>
@@ -127,11 +127,12 @@ function close() {
             <div class="variant-dialog__body__desc-group">
               <p
                 :id="descId"
-                class="variant-dialog__body__desc-group__desc"
+                class="paragraph variant-dialog__body__desc-group__desc"
               >
                 {{ msg('desc') }}{{ msg('space') }}<a
+                  class="link"
                   href="#"
-                  @click="isDescExtended = !isDescExtended"
+                  @click.prevent="isDescExtended = !isDescExtended"
                 >{{ msg('desc.btn') }}</a>
               </p>
               <ExpandTransition>
@@ -139,13 +140,13 @@ function close() {
                   v-if="isDescExtended"
                   class="variant-dialog__body__desc-group__ext"
                 >
-                  <p class="variant-dialog__body__desc-group__ext__text">
+                  <p class="paragraph variant-dialog__body__desc-group__ext__text">
                     {{ msg('desc.ext.1') }}
                   </p>
-                  <p class="variant-dialog__body__desc-group__ext__text">
+                  <p class="paragraph variant-dialog__body__desc-group__ext__text">
                     {{ msg('desc.ext.2') }}
                   </p>
-                  <p class="variant-dialog__body__desc-group__ext__text">
+                  <p class="paragraph variant-dialog__body__desc-group__ext__text">
                     {{ msg('desc.ext.3') }}
                   </p>
                 </div>
@@ -171,13 +172,16 @@ function close() {
             class="variant-dialog__footer"
             :lang="currentLang"
           >
-            <p>
+            <p class="paragraph">
               {{ msg('footer.1') }}
             </p>
-            <p>
+            <p class="paragraph">
               <!-- Disable link because it's unfinished -->
               {{ msg('footer.2') }}{{ msg('space')
-              }}<!-- <a href="#">{{ msg('footer.2.btn') }}</a> -->
+              }}<!-- <a
+                class="link"
+                href="#"
+              >{{ msg('footer.2.btn') }}</a> -->
             </p>
           </footer>
         </LangSwitchTransition>
@@ -196,9 +200,26 @@ function close() {
 @import (reference) '../styles/mixins.less';
 @import (reference) '../styles/tokens.less';
 
-/* Global normalization */
-:deep {
-  @import '../styles/normalize.less';
+.link {
+  .link-base();
+}
+
+.title {
+  border: 0; // Reset
+  padding: 0; // Reset
+  overflow-wrap: break-word;
+
+  font-size: @font-size-xx-large;
+  font-weight: @font-weight-bold;
+  margin: @spacing-75 @spacing-0;
+  color: @color-base;
+}
+
+.paragraph {
+  overflow-wrap: break-word;
+  margin-top: @spacing-0;
+  margin-bottom: @spacing-75;
+  color: @color-base;
 }
 
 .variant-dialog-backdrop {
@@ -217,6 +238,7 @@ function close() {
 }
 
 .variant-dialog {
+  box-sizing: border-box;
   z-index: @z-index-overlay;
   padding: @spacing-125 @spacing-200;
   width: calc(100% - 2em);
@@ -231,6 +253,7 @@ function close() {
   box-shadow: @box-shadow-drop-medium;
 
   font-family: @font-family-system-sans;
+  font-size: 1rem; // Reset
 
   &__focus-keeper {
     position: absolute;
