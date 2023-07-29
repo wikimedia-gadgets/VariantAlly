@@ -1,5 +1,5 @@
 import { output } from './debug';
-import { getMediaWikiVariant, getPageVariant } from './model';
+import { getMediaWikiVariant } from './model';
 
 // Including:
 // - w.wiki
@@ -36,7 +36,7 @@ function rewriteLink(link: string, variant: string): string {
 
       if (
         searchQuery !== null
-        && (searchParams.get('title') || '').startsWith('Special:')
+        && searchParams.get('title')?.startsWith('Special:')
         && searchParams.get('fulltext') !== '1'
       ) {
         url.pathname = `/${variant}/${searchQuery}`;
@@ -65,10 +65,10 @@ function redirect(preferredVariant: string, link?: string): void {
   sessionStorage.setItem(REDIRECTED_FROM_KEY, preferredVariant);
 
   // Use replace() to prevent navigating back
-  location.replace(rewriteLink(link || location.href, preferredVariant));
+  location.replace(rewriteLink(link ?? location.href, preferredVariant));
 }
 
-function checkThisPage(preferredVariant: string): void {
+function checkThisPage(preferredVariant: string, pageVariant: string): void {
   const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
   if (referrerHostname === location.hostname
     || BLOCKED_REFERRER_HOST.test(referrerHostname)
@@ -77,7 +77,7 @@ function checkThisPage(preferredVariant: string): void {
     return;
   }
 
-  if (getPageVariant() === preferredVariant) {
+  if (pageVariant === preferredVariant) {
     output(() => ['checkThisPage', 'Variant is correct :)']);
     return;
   }
@@ -100,10 +100,7 @@ function checkThisPage(preferredVariant: string): void {
   redirect(preferredVariant, redirectionURL.toString());
 }
 
-function rewriteAnchors(): void {
-  // Null value is rejected by isWikitextPage()
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const pageVariant = getPageVariant()!;
+function rewriteAnchors(pageVariant: string): void {
 
   ['click', 'auxclick', 'dragstart'].forEach((name) => {
     document.addEventListener(name, (ev) => {
@@ -139,6 +136,12 @@ function rewriteAnchors(): void {
             // Use a mutex to avoid being overwritten by overlapped handler calls
             if (anchor.dataset.vaMutex === undefined) {
               anchor.dataset.vaMutex = '';
+
+              output(() => [
+                'rewriteAnchors',
+                'clickHandler',
+                'Anchor locked.',
+              ]);
             }
 
             const origLink = anchor.href;
@@ -164,6 +167,13 @@ function rewriteAnchors(): void {
                 if (anchor.dataset.vaMutex !== undefined) {
                   anchor.href = origLink;
                   delete anchor.dataset.vaMutex;
+
+                  output(() => [
+                    'rewriteAnchors',
+                    'clickHandler',
+                    'restorationHandler',
+                    'Anchor unlocked.',
+                  ]);
                 }
               }, { once: true });
             });

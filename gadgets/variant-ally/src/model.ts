@@ -45,9 +45,10 @@ function getLocalVariant(): string | null {
  * @returns browser variant
  */
 function getBrowserVariant(): string | null {
-  return navigator.languages.find(
-    (lang) => VALID_VARIANTS.includes(lang.toLowerCase()),
-  ) || null;
+  return navigator.languages
+    .map((lang) => lang.toLowerCase())
+    .find((lang) => VALID_VARIANTS.includes(lang))
+    ?? null;
 }
 
 /**
@@ -60,7 +61,7 @@ function getBrowserVariant(): string | null {
  * @returns variant
  */
 function getMediaWikiVariant(): string | null {
-  return getAccountVariant() || getBrowserVariant();
+  return getAccountVariant() ?? getBrowserVariant();
 }
 
 /**
@@ -71,7 +72,7 @@ function getMediaWikiVariant(): string | null {
  * @returns preferred variant
  */
 function calculatePreferredVariant(): string | null {
-  return getAccountVariant() || getLocalVariant() || getBrowserVariant();
+  return getAccountVariant() ?? getLocalVariant() ?? getBrowserVariant();
 }
 
 function setLocalVariant(variant: string): void {

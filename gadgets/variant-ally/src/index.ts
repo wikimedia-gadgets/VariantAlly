@@ -1,12 +1,14 @@
 import { output, showDebugInformation } from './debug';
 import { checkThisPage, rewriteAnchors, showDialog } from './controller';
-import { calculatePreferredVariant } from './model';
-import { isExperiencedUser, isWikitextPage } from './utils';
+import { calculatePreferredVariant, getPageVariant } from './model';
+import { isExperiencedUser } from './utils';
 
 showDebugInformation();
 
-if (!isWikitextPage()) {
-  output(() => ['index', 'Non-wikitext page. Stop.']);
+const pageVariant = getPageVariant();
+
+if (pageVariant === null) {
+  output(() => ['index', 'Non-article page. Stop.']);
 } else {
   const preferredVariant = calculatePreferredVariant();
 
@@ -14,10 +16,10 @@ if (!isWikitextPage()) {
     output(() => ['index', 'Preferred variant is null, show variant dialog']);
     showDialog();
   } else if (!isExperiencedUser()) {
-    checkThisPage(preferredVariant);
+    checkThisPage(preferredVariant, pageVariant);
   }
 
-  rewriteAnchors();
+  rewriteAnchors(pageVariant);
 }
 
 // Expose for VariantAllyDialog's use
