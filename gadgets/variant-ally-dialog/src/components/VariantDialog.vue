@@ -103,12 +103,14 @@ function close() {
             </h2>
           </LangSwitchTransition>
           <IconButton
+            class="variant-dialog__header__lang-button"
             icon="lang"
             title="切换语言 / 切換語言 / Switch languages"
             aria-label="切换语言 / 切換語言 / Switch languages"
             @click="cycleLocale"
           />
           <IconButton
+            class="variant-dialog__header__close-button"
             icon="close"
             :title="msg('close')"
             :aria-label="msg('close')"
@@ -216,8 +218,9 @@ function close() {
 .variant-dialog {
   z-index: @z-index-overlay;
   padding: @spacing-125 @spacing-200;
-  width: 100%;
+  width: calc(100% - 2em);
   max-width: 42em;
+  max-height: calc(100vh - 2em);
 
   overflow: auto;
   overscroll-behavior: none;
@@ -236,31 +239,23 @@ function close() {
     }
   }
 
-  &__lang-button {
-    float: right;
-    margin-right: -(@spacing-back-button + 1px);
-    margin-top: @spacing-75;
-
-    @media screen and (max-width: @max-width-breakpoint-mobile) {
-      float: none;
-      margin-top: @spacing-0;
-      align-self: center;
-    }
-  }
-
   &__header {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    margin-right: -(@spacing-back-button + 1px);
-
-    @media screen and (max-width: @max-width-breakpoint-mobile) {
-      text-align: center;
-      margin: @spacing-50 0;
-      font-size: @font-size-x-large;
-    }
+    justify-content: center;
+    margin-right: -(@spacing-icon-button + 1px);
 
     &__title {
       flex: 1;
+    }
+
+    &__lang-button {
+      order: 1;
+    }
+
+    &__close-button {
+      order: 3;
     }
   }
 
@@ -289,10 +284,26 @@ function close() {
       grid-auto-flow: column;
       grid-template: 1fr 1fr 1fr / 1fr 1fr;
       margin: @spacing-100 0;
+    }
+  }
 
-      @media screen and (max-width: @max-width-breakpoint-mobile) {
-        grid-template: 1fr 1fr / 1fr 1fr 1fr;
+
+  @media screen and (max-width: @max-width-breakpoint-mobile) {
+    padding: @spacing-125;
+
+    &__header {
+      margin-left: -(@spacing-icon-button + 1px);
+
+      &__title {
+        font-size: @font-size-large;
+        text-align: center;
+        order: 2;
       }
+    }
+
+    &__body__options {
+      grid-auto-flow: row;
+      grid-template: 1fr 1fr / 1fr 1fr 1fr;
     }
   }
 }
@@ -307,14 +318,6 @@ function close() {
 
 .dialog-enter-from,
 .dialog-leave-to {
-  @media screen {
-    @media (min-width: @min-width-breakpoint-tablet) {
-      opacity: 0;
-    }
-
-    @media (max-width: @max-width-breakpoint-mobile) {
-      transform: translateY(100%);
-    }
-  }
+  opacity: 0;
 }
 </style>

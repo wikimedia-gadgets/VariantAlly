@@ -38,15 +38,13 @@ const props = defineProps<{
 <style scoped lang="less">
 @import (reference) '../styles/mixins.less';
 
-// TODO: Cleanup
-
 .icon-button {
   .button-base();
 
   background-color: @background-color-transparent;
   color: @color-base;
   border-color: @border-color-transparent;
-  padding: @spacing-lang-button;
+  padding: @spacing-icon-button;
 
   display: flex;
   align-items: center;
@@ -54,19 +52,7 @@ const props = defineProps<{
   &__icon {
     vertical-align: middle;
     fill: currentColor;
-
-    @media screen and (max-width: @max-width-breakpoint-mobile) {
-      margin-right: @spacing-25;
-    }
   }
-
-  /* &__text {
-    @media screen and (min-width: @min-width-breakpoint-tablet) {
-      display: none;
-    }
-
-    font-size: @font-size-small;
-  } */
 
   &:hover {
     background-color: @background-color-button-quiet--hover;

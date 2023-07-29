@@ -42,13 +42,6 @@ defineEmits(['click']);
   display: flex;
   align-items: center;
 
-  @media screen and (max-width: @max-width-breakpoint-mobile) {
-    font-size: @font-size-small;
-    padding: @spacing-vertical-variant-button--mobile @spacing-horizontal-variant-button--mobile;
-    text-align: center;
-    justify-content: center;
-  }
-
   &:hover {
     color: @color-progressive--hover;
     background-color: @background-color-progressive-subtle;
@@ -72,8 +65,15 @@ defineEmits(['click']);
   &__icon {
     margin-right: @spacing-25;
     fill: currentColor;
+  }
 
-    @media screen and (max-width: @max-width-breakpoint-mobile) {
+  @media screen and (max-width: @max-width-breakpoint-mobile) {
+    font-size: @font-size-small;
+    padding: @spacing-vertical-variant-button--mobile @spacing-horizontal-variant-button--mobile;
+    text-align: center;
+    justify-content: center;
+
+    &__icon {
       display: none;
     }
   }

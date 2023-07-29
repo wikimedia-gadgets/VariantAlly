@@ -19,7 +19,7 @@
 
 .expand-enter-from,
 .expand-leave-to {
-  transform: scale(90%);
+  transform: scale(0.95);
   max-height: 0;
 }
 

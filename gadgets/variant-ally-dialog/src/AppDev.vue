@@ -43,10 +43,10 @@ function onSelect(variant: string) {
   </Teleport>
 </template>
 
-<style>
+<style lang="less">
 .high {
   position: relative;
-  z-index: calc(400 + 1);
+  //z-index: calc(400 + 1);
   width: fit-content;
 }
 </style>
