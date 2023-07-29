@@ -23,7 +23,7 @@ function rewriteLink(link: string, variant: string): string {
     if (WIKIURL_REGEX.test(pathname)) {
       url.pathname = `/${variant}/${url.pathname.replace(WIKIURL_REGEX, '')}`;
       searchParams.delete('variant'); // For things like /zh-cn/A?variant=zh-hk
-    } else if (pathname.startsWith('/w/index.php')) {
+    } else {
       // HACK: workaround search box redirection not respecting `variant` URL param
       // This should be eventually fixed in MediaWiki itself
       //
@@ -33,9 +33,9 @@ function rewriteLink(link: string, variant: string): string {
       // Note that the "search for pages containing XXX" link is not covered by this hack
       // since the `variant` URL param works there
       const searchQuery = searchParams.get('search');
-
       if (
-        searchQuery !== null
+        pathname.startsWith('/w/index.php')
+        && searchQuery !== null
         && searchParams.get('title')?.startsWith('Special:')
         && searchParams.get('fulltext') !== '1'
       ) {
