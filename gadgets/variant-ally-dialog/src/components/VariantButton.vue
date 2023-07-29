@@ -55,11 +55,11 @@ defineEmits(['click']);
 
   &:focus {
     outline: @outline-base--focus;
-  }
 
-  &:focus:not(:active) {
-    border-color: @border-color-progressive--focus;
-    box-shadow: @box-shadow-progressive--focus;
+    &:not(:active) {
+      border-color: @border-color-progressive--focus;
+      box-shadow: @box-shadow-progressive--focus;
+    }
   }
 
   &__icon {

@@ -2,8 +2,9 @@
 import { setLocalVariant, redirect } from 'ext.gadget.VariantAlly';
 import { ref } from 'vue';
 import VariantDialog from './components/VariantDialog.vue';
+import syncRef from './sync';
 
-const isDialogOpen = ref(true);
+const isDialogOpen = syncRef(ref(true));
 
 function setVariantAndRedirect(variant: string) {
   setLocalVariant(variant);

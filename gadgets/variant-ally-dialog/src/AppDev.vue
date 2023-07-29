@@ -4,9 +4,9 @@
 import { ref } from 'vue';
 import { currentLocale } from './message';
 import VariantDialog from './components/VariantDialog.vue';
+import syncRef from './sync';
 
-const isDialogOpen = ref(false);
-const variantDialog = ref<InstanceType<typeof VariantDialog> | null>(null);
+const isDialogOpen = syncRef(ref(false));
 
 function onSelect(variant: string) {
   alert(`Selected ${variant}`);
@@ -46,7 +46,7 @@ function onSelect(variant: string) {
 <style lang="less">
 .high {
   position: relative;
-  //z-index: calc(400 + 1);
+  // z-index: calc(400 + 1);
   width: fit-content;
 }
 </style>
