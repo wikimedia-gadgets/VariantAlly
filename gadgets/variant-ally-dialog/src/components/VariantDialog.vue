@@ -125,7 +125,7 @@ function close() {
             <div class="variant-dialog__body__desc-group">
               <p
                 :id="descId"
-                class="variant-dialog__body__desc"
+                class="variant-dialog__body__desc-group__desc"
               >
                 {{ msg('desc') }}{{ msg('space') }}<a
                   href="#"
@@ -135,15 +135,15 @@ function close() {
               <ExpandTransition>
                 <div
                   v-if="isExtendedDescriptionVisible"
-                  class="variant-dialog__body__desc-ext"
+                  class="variant-dialog__body__desc-group__ext"
                 >
-                  <p class="variant-dialog__body__desc-ext__text">
+                  <p class="variant-dialog__body__desc-group__ext__text">
                     {{ msg('desc.ext.1') }}
                   </p>
-                  <p class="variant-dialog__body__desc-ext__text">
+                  <p class="variant-dialog__body__desc-group__ext__text">
                     {{ msg('desc.ext.2') }}
                   </p>
-                  <p class="variant-dialog__body__desc-ext__text">
+                  <p class="variant-dialog__body__desc-group__ext__text">
                     {{ msg('desc.ext.3') }}
                   </p>
                 </div>
@@ -265,14 +265,21 @@ function close() {
   }
 
   &__body {
-    &__desc-ext {
-      font-size: @font-size-small;
-      color: @color-subtle;
-      margin: @spacing-35 @spacing-0;
+    &__desc-group {
+      &__desc {
+        margin-bottom: @spacing-0;
+      }
 
-      &__text {
+      &__ext {
+        font-size: @font-size-small;
         color: @color-subtle;
-        margin-bottom: @spacing-35;
+        margin: @spacing-75 @spacing-0;
+        overflow-y: hidden;
+
+        &__text {
+          color: @color-subtle;
+          margin-bottom: @spacing-35;
+        }
       }
     }
 

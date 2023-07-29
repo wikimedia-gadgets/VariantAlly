@@ -20,8 +20,11 @@
 .expand-enter-from,
 .expand-leave-to {
   transform: scale(90%);
+  max-height: 0;
 }
 
 .expand-enter-to,
-.expand-leave-from {}
+.expand-leave-from {
+  max-height: 500px;
+}
 </style>
