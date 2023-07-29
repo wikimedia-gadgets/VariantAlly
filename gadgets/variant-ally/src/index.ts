@@ -15,7 +15,9 @@ if (pageVariant === null) {
   if (preferredVariant === null) {
     output(() => ['index', 'Preferred variant is null, show variant dialog']);
     showDialog();
-  } else if (!isExperiencedUser()) {
+  } else if (isExperiencedUser()) {
+    output(() => ['index', 'User is experienced. Stop.']);
+  } else {
     checkThisPage(preferredVariant, pageVariant);
   }
 
