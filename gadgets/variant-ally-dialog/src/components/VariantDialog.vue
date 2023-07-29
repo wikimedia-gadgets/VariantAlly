@@ -1,46 +1,34 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
-import MainPanel from './panels/MainPanel.vue';
-import MoreInfoPanel from './panels/MoreInfoPanel.vue';
-import TroubleshootPanel from './panels/TroubleshootPanel.vue';
-import QuitPanel from './panels/QuitPanel.vue';
-import LangButton from './buttons/LangButton.vue';
-import { currentLocale } from '../msg';
+import { currentLocale, cycleLocale } from '../message';
+import { msg } from '../message';
+import LangSwitchTransition from './LangSwitchTransition.vue';
+import ExpandTransition from './ExpandTransition.vue';
+import VariantButton from './VariantButton.vue';
+import IconButton from './IconButton.vue';
 import useUniqueId from '../composables/useUniqueId';
 
-const enum Page {
-  MAIN,
-  MORE,
-  TROUBLESHOOT,
-  QUIT
-}
-const currentPage = ref(Page.MAIN);
-const titleIdList = {
-  [Page.MAIN]: useUniqueId(),
-  [Page.MORE]: useUniqueId(),
-  [Page.TROUBLESHOOT]: useUniqueId(),
-  [Page.QUIT]: useUniqueId(),
-};
-const descriptionIdList = {
-  [Page.MAIN]: useUniqueId(),
-  [Page.MORE]: useUniqueId(),
-  [Page.TROUBLESHOOT]: useUniqueId(),
-  [Page.QUIT]: useUniqueId(),
-};
+
+const VARIANTS = ['cn', 'sg', 'my', 'hk', 'mo', 'tw'];
+
 const dialog = ref<HTMLElement | null>(null);
-const focusHolder = ref<HTMLElement | null>(null);
+const focusKeeper = ref<HTMLElement | null>(null);
+
+const titleId = useUniqueId();
+const descId = useUniqueId();
+const isExtendedDescriptionVisible = ref(false);
 
 const props = defineProps<{
   open: boolean,
 }>();
-
-defineEmits<{
+const emit = defineEmits<{
   (e: 'select', variant: string): void;
+  (e: 'update:open', value: boolean): void;
 }>();
 
 watchEffect(() => {
   if (props.open) {
-    focusHolder.value?.focus();
+    focusKeeper.value?.focus();
   }
 });
 
@@ -57,18 +45,18 @@ function focusInsideDialog(last: boolean) {
     focusableElements = focusableElements.reverse();
   }
   for (const element of focusableElements) {
-    // Try focus, may fail
+    // Try focus the element, may fail
     element.focus();
 
     if (document.activeElement === element) {
-      // Succeeded
       return;
     }
   }
 }
 
-// For debugging purpose
-defineExpose({ currentPage });
+function close() {
+  emit('update:open', false);
+}
 
 </script>
 
@@ -79,71 +67,124 @@ defineExpose({ currentPage });
   >
     <div
       v-if="open"
-      ref="dialog"
-      class="variant-dialog"
-      role="dialog"
-      aria-model="false"
-      :aria-labelledby="titleIdList[currentPage]"
-      :aria-describedby="descriptionIdList[currentPage]"
+      class="variant-dialog-backdrop"
+      @click="close"
+      @keyup.escape="close"
     >
       <div
-        class="variant-dialog__focus-holder"
-        tabindex="0"
-        @focus="focusInsideDialog(true)"
-      />
-      <div
-        ref="focusHolder"
-        class="variant-dialog__focus-holder"
-        tabindex="-1"
-      />
-      <LangButton class="variant-dialog__lang-button" />
-      <Transition
-        name="panel"
-        mode="out-in"
+        ref="dialog"
+        class="variant-dialog"
+        role="dialog"
+        aria-model="false"
+        :aria-labelledby="titleId"
+        :aria-describedby="descId"
+        @click.stop
       >
+        <!-- Focus trap start & keeper -->
         <div
-          :key="currentLocale"
-          :lang="currentLocale"
-          class="variant-dialog__content"
-        >
-          <Transition
-            name="panel"
-            mode="out-in"
-          >
-            <MainPanel
-              v-if="currentPage === Page.MAIN"
-              :title-id="titleIdList[Page.MAIN]"
-              :desc-id="descriptionIdList[Page.MAIN]"
-              @more="currentPage = Page.MORE"
-              @troubleshoot="currentPage = Page.TROUBLESHOOT"
-              @select="(variant) => { $emit('select', variant); }"
-            />
-            <MoreInfoPanel
-              v-else-if="currentPage === Page.MORE"
-              :title-id="titleIdList[Page.MORE]"
-              :desc-id="descriptionIdList[Page.MORE]"
-              @main="currentPage = Page.MAIN"
-            />
-            <TroubleshootPanel
-              v-else-if="currentPage === Page.TROUBLESHOOT"
-              :title-id="titleIdList[Page.TROUBLESHOOT]"
-              :desc-id="descriptionIdList[Page.TROUBLESHOOT]"
-              @main="currentPage = Page.MAIN"
-            />
-            <QuitPanel
-              v-else
-              :title-id="titleIdList[Page.QUIT]"
-              :desc-id="descriptionIdList[Page.QUIT]"
-              @main="currentPage = Page.MAIN"
-            />
-          </Transition>
+          tabindex="0"
+          @focus="focusInsideDialog(true)"
+        />
+        <div
+          ref="focusKeeper"
+          class="variant-dialog__focus-keeper"
+          tabindex="-1"
+        />
+
+        <div class="variant-dialog__header">
+          <LangSwitchTransition>
+            <h2
+              :id="titleId"
+              :key="currentLocale"
+              :lang="currentLocale"
+              class="variant-dialog__header__title"
+            >
+              {{ msg('title') }}
+            </h2>
+          </LangSwitchTransition>
+          <IconButton
+            icon="lang"
+            title="切换语言 / 切換語言 / Switch languages"
+            aria-label="切换语言 / 切換語言 / Switch languages"
+            @click="cycleLocale"
+          />
+          <IconButton
+            icon="close"
+            :title="msg('close')"
+            :aria-label="msg('close')"
+            @click="close"
+          />
         </div>
-      </Transition>
-      <div
-        class="variant-dialog__focus-holder"
-        tabindex="0"
-        @focus="focusInsideDialog(false)"
-      />
+
+        <LangSwitchTransition>
+          <div
+            :key="currentLocale"
+            class="variant-dialog__body"
+            :lang="currentLocale"
+          >
+            <div class="variant-dialog__body__desc-group">
+              <p
+                :id="descId"
+                class="variant-dialog__body__desc"
+              >
+                {{ msg('desc') }}{{ msg('space') }}<a
+                  href="#"
+                  @click="isExtendedDescriptionVisible = !isExtendedDescriptionVisible"
+                >{{ msg('desc.btn') }}</a>
+              </p>
+              <ExpandTransition>
+                <div
+                  v-if="isExtendedDescriptionVisible"
+                  class="variant-dialog__body__desc-ext"
+                >
+                  <p class="variant-dialog__body__desc-ext__text">
+                    {{ msg('desc.ext.1') }}
+                  </p>
+                  <p class="variant-dialog__body__desc-ext__text">
+                    {{ msg('desc.ext.2') }}
+                  </p>
+                  <p class="variant-dialog__body__desc-ext__text">
+                    {{ msg('desc.ext.3') }}
+                  </p>
+                </div>
+              </ExpandTransition>
+            </div>
+
+            <div class="variant-dialog__body__options">
+              <VariantButton
+                v-for="variant in VARIANTS"
+                :key="variant"
+                :lang="currentLocale === 'en' ? 'en' : `zh-${variant}`"
+                @click="$emit('select', `zh-${variant}`)"
+              >
+                {{ msg(`vb.${variant}`) }}
+              </VariantButton>
+            </div>
+          </div>
+        </LangSwitchTransition>
+
+        <LangSwitchTransition>
+          <footer
+            :key="currentLocale"
+            class="variant-dialog__footer"
+            :lang="currentLocale"
+          >
+            <p>
+              {{ msg('footer.1') }}
+            </p>
+            <p>
+              <!-- Disable link because it's unfinished -->
+              {{ msg('footer.2') }}{{ msg('space') }}<a href="#">{{ msg('footer.2.btn') }}</a>
+            </p>
+          </footer>
+        </LangSwitchTransition>
+
+        <!-- Focus trap end -->
+        <div
+          tabindex="0"
+          @focus="focusInsideDialog(false)"
+        />
+      </div>
     </div>
   </Transition>
 </template>
@@ -153,112 +194,41 @@ defineExpose({ currentPage });
 @import (reference) '../styles/tokens.less';
 
 /* Global normalization */
-
-*,
-:deep(:not(svg, g, path)) {
-  all: revert;
-  box-sizing: border-box;
-  margin: 0;
+:deep {
+  @import '../styles/normalize.less';
 }
 
-:deep(h2) {
-  font-size: @font-size-xx-large;
-  margin-top: @spacing-75;
-  margin-bottom: @spacing-75;
-  color: @color-base;
-}
+.variant-dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-:deep(p) {
-  margin-bottom: @spacing-75;
-  color: @color-base;
-}
+  z-index: @z-index-overlay-backdrop;
+  background-color: @background-color-backdrop-light;
 
-:deep(input),
-:deep(button),
-:deep(textarea),
-:deep(select) {
-  font: inherit;
-  text-transform: none;
-  touch-action: manipulation;
-}
-
-:deep(button) {
-  appearance: none;
-  user-select: none;
-  cursor: pointer;
-}
-
-:deep(*::-moz-focus-inner) {
-  border: 0;
-  padding: 0;
-}
-
-:deep(p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6) {
-  overflow-wrap: break-word;
-}
-
-:deep(a) {
-  .link-base();
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .variant-dialog {
-  position: fixed;
-
   z-index: @z-index-overlay;
   padding: @spacing-125 @spacing-200;
+  width: 100%;
+  max-width: 42em;
+
   overflow: auto;
   overscroll-behavior: none;
-
   background-color: @background-color-base;
   border: @border-base;
   border-radius: @border-radius-base;
   box-shadow: @box-shadow-drop-medium;
+
   font-family: @font-family-system-sans;
 
-  @media screen {
-    @media (min-width: @min-width-breakpoint-tablet) {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-
-      max-width: 640px;
-      width: 100%;
-    }
-
-    @media (max-width: @max-width-breakpoint-mobile) {
-      left: @spacing-35;
-      right: @spacing-35;
-      bottom: @spacing-35;
-
-      padding: @spacing-100;
-
-      display: flex;
-      flex-direction: column-reverse;
-    }
-
-    /* Styles for thin screens */
-
-    @media (max-height: @max-height-breakpoint-mobile) {
-      top: @spacing-0;
-      bottom: @spacing-0;
-      transform: translateX(-50%);
-
-      @media (max-width: @max-width-breakpoint-mobile) {
-        left: @spacing-0;
-        right: @spacing-0;
-        transform: none;
-        min-height: auto;
-      }
-    }
-  }
-
-  &__focus-holder {
+  &__focus-keeper {
     position: absolute;
 
     &:focus {
@@ -277,27 +247,53 @@ defineExpose({ currentPage });
       align-self: center;
     }
   }
-}
 
-/* Panel switch transition effect */
+  &__header {
+    display: flex;
+    align-items: center;
+    margin-right: -(@spacing-back-button + 1px);
 
-.panel-enter-active,
-.panel-leave-active {
-  transition-property: @transition-property-fade;
-  transition-duration: @transition-duration-medium;
-  transition-timing-function: @transition-timing-function-user;
-}
+    @media screen and (max-width: @max-width-breakpoint-mobile) {
+      text-align: center;
+      margin: @spacing-50 0;
+      font-size: @font-size-x-large;
+    }
 
-.panel-enter-from,
-.panel-leave-to {
-  opacity: 0;
+    &__title {
+      flex: 1;
+    }
+  }
+
+  &__body {
+    &__desc-ext {
+      font-size: @font-size-small;
+      color: @color-subtle;
+      margin: @spacing-35 @spacing-0;
+
+      &__text {
+        color: @color-subtle;
+        margin-bottom: @spacing-35;
+      }
+    }
+
+    &__options {
+      display: grid;
+      gap: @spacing-35;
+      grid-auto-flow: column;
+      grid-template: 1fr 1fr 1fr / 1fr 1fr;
+      margin: @spacing-100 0;
+
+      @media screen and (max-width: @max-width-breakpoint-mobile) {
+        grid-template: 1fr 1fr / 1fr 1fr 1fr;
+      }
+    }
+  }
 }
 
 /* Dialog transition effect */
-
 .dialog-enter-active,
 .dialog-leave-active {
-  transition-property: @transition-property-fade, @transition-property-popup;
+  transition-property: @transition-property-fade, @transition-property-layout;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
 }

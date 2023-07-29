@@ -14,6 +14,7 @@ export default defineConfig({
   output: {
     file: 'dist/Gadget-VariantAlly.js',
     format: 'cjs',
+    generatedCode: 'es5', // Keep in sync with tsconfig.json
     banner: readFileSync('assets/intro.js').toString(),
     footer: readFileSync('assets/outro.js').toString(),
   },
@@ -28,7 +29,7 @@ export default defineConfig({
       format: {
         // Reserve intro && outro
         comments: /(^\*!|nowiki|SPDX-License-Identifier)/i,
-        ecma: 5,
+        ecma: 5, // Keep in sync with tsconfig.json
       },
     }),
     mwGadget({

@@ -1,7 +1,5 @@
-// Dialog i18n logic.
-
 import { Ref, ref } from 'vue';
-import msgsByLocale from '../assets/msg.json';
+import msgsByLocale from '../assets/messages.json';
 
 const LANG_CYCLE = {
   'zh-hans': 'en',
@@ -9,18 +7,20 @@ const LANG_CYCLE = {
   'zh-hant': 'zh-hans',
 } as const;
 
+type Locale = keyof typeof msgsByLocale;
+
 /**
  * Get default locale. Has a 50% chance of zh-hans and otherwise zh-hant.
  * @returns default locale
  */
-function getDefaultLocale(): keyof typeof msgsByLocale {
+function getDefaultLocale(): Locale {
   if (Math.random() > 0.5) {
     return 'zh-hans';
   }
   return 'zh-hant';
 }
 
-const currentLocale: Ref<keyof typeof msgsByLocale> = ref(getDefaultLocale());
+const currentLocale: Ref<Locale> = ref(getDefaultLocale());
 
 function cycleLocale(): void {
   currentLocale.value = LANG_CYCLE[currentLocale.value];

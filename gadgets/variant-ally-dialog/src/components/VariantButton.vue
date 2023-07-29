@@ -25,7 +25,7 @@ defineEmits(['click']);
 </template>
 
 <style scoped lang="less">
-@import (reference) '../../styles/mixins.less';
+@import (reference) '../styles/mixins.less';
 
 .variant-button {
   .button-base();
@@ -72,8 +72,6 @@ defineEmits(['click']);
   &__icon {
     margin-right: @spacing-25;
     fill: currentColor;
-    transition-property: fill;
-    transition-duration: @transition-duration-base;
 
     @media screen and (max-width: @max-width-breakpoint-mobile) {
       display: none;

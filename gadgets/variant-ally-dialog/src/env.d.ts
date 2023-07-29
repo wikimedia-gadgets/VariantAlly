@@ -1,3 +1,5 @@
+// Additional types (ambient modules).
+
 /// <reference types="vite/client" />
 
 declare module 'ext.gadget.VariantAlly' {

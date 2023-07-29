@@ -1,0 +1,51 @@
+:not(svg, g, path) {
+  all: revert;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+h2 {
+  font-size: @font-size-xx-large;
+  margin-top: @spacing-75;
+  margin-bottom: @spacing-75;
+  color: @color-base;
+}
+
+p {
+  margin-bottom: @spacing-75;
+  color: @color-base;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  text-transform: none;
+  touch-action: manipulation;
+}
+
+button {
+  appearance: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+*::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+a {
+  .link-base();
+}

@@ -1,7 +1,7 @@
 let counter = 0;
 
 /**
- * Return a unique ID on each call.
+ * Return a unique element ID on each call.
  * @returns id
  */
 function useUniqueId(): string {

@@ -1,17 +1,12 @@
+<!-- Vite dev server. This script is never run in the browser! -->
+
 <script setup lang="ts">
 import { ref } from 'vue';
-import VariantDialog from './VariantDialog.vue';
-import { currentLocale } from '../msg';
+import { currentLocale } from './message';
+import VariantDialog from './components/VariantDialog.vue';
 
-const isDialogVisible = ref(false);
+const isDialogOpen = ref(false);
 const variantDialog = ref<InstanceType<typeof VariantDialog> | null>(null);
-
-function setPage(page: number) {
-  if (variantDialog.value === null) {
-    return;
-  }
-  variantDialog.value.currentPage = page;
-}
 
 function onSelect(variant: string) {
   alert(`Selected ${variant}`);
@@ -22,11 +17,11 @@ function onSelect(variant: string) {
 <template>
   <h1>VariantAllyDialog dev server</h1>
 
-  <button @click="isDialogVisible = !isDialogVisible">
-    Toggle dialog
-  </button>
+  <div class="high">
+    <button @click="isDialogOpen = !isDialogOpen">
+      Toggle dialog
+    </button>
 
-  <div>
     <p>currentLocale: {{ currentLocale }}</p>
     <button @click="currentLocale = 'zh-hans'">
       Set locale to zh-hans
@@ -39,28 +34,19 @@ function onSelect(variant: string) {
     </button>
   </div>
 
-  <div>
-    <button @click="setPage(0)">
-      Set page to MAIN
-    </button>
-    <button @click="setPage(1)">
-      Set page to MORE
-    </button>
-    <button @click="setPage(2)">
-      Set page to TROUBLESHOOT
-    </button>
-    <button @click="setPage(3)">
-      Set page to QUIT
-    </button>
-  </div>
-
   <Teleport to="body">
     <VariantDialog
       ref="variantDialog"
-      :open="isDialogVisible"
+      v-model:open="isDialogOpen"
       @select="onSelect"
     />
   </Teleport>
 </template>
 
-<style></style>
+<style>
+.high {
+  position: relative;
+  z-index: calc(400 + 1);
+  width: fit-content;
+}
+</style>
