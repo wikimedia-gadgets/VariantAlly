@@ -1,16 +1,17 @@
 <!-- Vite dev server. This script is never run in the browser! -->
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { currentLocale } from './message';
+import { currentLang } from './message';
 import VariantDialog from './components/VariantDialog.vue';
-import syncRef from './sync';
+import useSyncedRef from './composables/useSyncedRef';
+import { watch } from 'vue';
 
-const isDialogOpen = syncRef(ref(false));
+const isDialogOpen = useSyncedRef('open', false);
+const selectedVariant = useSyncedRef('var', '');
 
-function onSelect(variant: string) {
-  alert(`Selected ${variant}`);
-}
+watch(selectedVariant, (newValue) => {
+  alert(`Selected ${newValue}`);
+});
 
 </script>
 
@@ -22,14 +23,14 @@ function onSelect(variant: string) {
       Toggle dialog
     </button>
 
-    <p>currentLocale: {{ currentLocale }}</p>
-    <button @click="currentLocale = 'zh-hans'">
+    <p>currentLang: {{ currentLang }}</p>
+    <button @click="currentLang = 'zh-hans'">
       Set locale to zh-hans
     </button>
-    <button @click="currentLocale = 'zh-hant'">
+    <button @click="currentLang = 'zh-hant'">
       Set locale to zh-hant
     </button>
-    <button @click="currentLocale = 'en'">
+    <button @click="currentLang = 'en'">
       Set locale to en
     </button>
   </div>
@@ -38,7 +39,7 @@ function onSelect(variant: string) {
     <VariantDialog
       ref="variantDialog"
       v-model:open="isDialogOpen"
-      @select="onSelect"
+      @select="(variant) => { selectedVariant = variant; }"
     />
   </Teleport>
 </template>

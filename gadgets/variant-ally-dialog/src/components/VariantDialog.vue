@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
-import { currentLocale, cycleLocale } from '../message';
+import { currentLang, cycleThroughLangs } from '../message';
 import { msg } from '../message';
 import LangSwitchTransition from './LangSwitchTransition.vue';
 import ExpandTransition from './ExpandTransition.vue';
 import VariantButton from './VariantButton.vue';
 import IconButton from './IconButton.vue';
 import useUniqueId from '../composables/useUniqueId';
-
+import useSyncedRef from '../composables/useSyncedRef';
 
 const VARIANTS = ['cn', 'sg', 'my', 'hk', 'mo', 'tw'];
 
@@ -16,7 +16,7 @@ const focusKeeper = ref<HTMLElement | null>(null);
 
 const titleId = useUniqueId();
 const descId = useUniqueId();
-const isExtendedDescriptionVisible = ref(false);
+const isDescExtended = useSyncedRef('ext', false);
 
 const props = defineProps<{
   open: boolean,
@@ -95,8 +95,8 @@ function close() {
           <LangSwitchTransition>
             <h2
               :id="titleId"
-              :key="currentLocale"
-              :lang="currentLocale"
+              :key="currentLang"
+              :lang="currentLang"
               class="variant-dialog__header__title"
             >
               {{ msg('title') }}
@@ -107,7 +107,7 @@ function close() {
             icon="lang"
             title="切换语言 / 切換語言 / Switch languages"
             aria-label="切换语言 / 切換語言 / Switch languages"
-            @click="cycleLocale"
+            @click="cycleThroughLangs"
           />
           <IconButton
             class="variant-dialog__header__close-button"
@@ -120,9 +120,9 @@ function close() {
 
         <LangSwitchTransition>
           <div
-            :key="currentLocale"
+            :key="currentLang"
             class="variant-dialog__body"
-            :lang="currentLocale"
+            :lang="currentLang"
           >
             <div class="variant-dialog__body__desc-group">
               <p
@@ -131,12 +131,12 @@ function close() {
               >
                 {{ msg('desc') }}{{ msg('space') }}<a
                   href="#"
-                  @click="isExtendedDescriptionVisible = !isExtendedDescriptionVisible"
+                  @click="isDescExtended = !isDescExtended"
                 >{{ msg('desc.btn') }}</a>
               </p>
               <ExpandTransition>
                 <div
-                  v-if="isExtendedDescriptionVisible"
+                  v-if="isDescExtended"
                   class="variant-dialog__body__desc-group__ext"
                 >
                   <p class="variant-dialog__body__desc-group__ext__text">
@@ -156,7 +156,7 @@ function close() {
               <VariantButton
                 v-for="variant in VARIANTS"
                 :key="variant"
-                :lang="currentLocale === 'en' ? 'en' : `zh-${variant}`"
+                :lang="currentLang === 'en' ? 'en' : `zh-${variant}`"
                 @click="$emit('select', `zh-${variant}`)"
               >
                 {{ msg(`vb.${variant}`) }}
@@ -167,9 +167,9 @@ function close() {
 
         <LangSwitchTransition>
           <footer
-            :key="currentLocale"
+            :key="currentLang"
             class="variant-dialog__footer"
-            :lang="currentLocale"
+            :lang="currentLang"
           >
             <p>
               {{ msg('footer.1') }}

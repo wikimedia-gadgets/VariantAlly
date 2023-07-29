@@ -1,5 +1,6 @@
-import { Ref, ref } from 'vue';
-import msgsByLocale from '../assets/messages.json';
+import { Ref } from 'vue';
+import msgsByLang from '../assets/messages.json';
+import useSyncedRef from './composables/useSyncedRef';
 
 const LANG_CYCLE = {
   'zh-hans': 'en',
@@ -7,29 +8,29 @@ const LANG_CYCLE = {
   'zh-hant': 'zh-hans',
 } as const;
 
-type Locale = keyof typeof msgsByLocale;
+type Lang = keyof typeof msgsByLang;
 
 /**
- * Get default locale. Has a 50% chance of zh-hans and otherwise zh-hant.
- * @returns default locale
+ * Get default language. Has a 50% chance of zh-hans and otherwise zh-hant.
+ * @returns default language
  */
-function getDefaultLocale(): Locale {
+function getDefaultLang(): Lang {
   if (Math.random() > 0.5) {
     return 'zh-hans';
   }
   return 'zh-hant';
 }
 
-const currentLocale: Ref<Locale> = ref(getDefaultLocale());
+const currentLang: Ref<Lang> = useSyncedRef('lang', getDefaultLang());
 
-function cycleLocale(): void {
-  currentLocale.value = LANG_CYCLE[currentLocale.value];
+function cycleThroughLangs(): void {
+  currentLang.value = LANG_CYCLE[currentLang.value];
 }
 
 function msg(key: string): string {
-  const currentMsgsGroup: Record<string, string> = msgsByLocale[currentLocale.value];
+  const currentMsgsGroup: Record<string, string> = msgsByLang[currentLang.value];
   return currentMsgsGroup[key] ?? key;
 }
 
-// Export currentLocale for debugging purposes
-export { currentLocale, msg, cycleLocale };
+// Export currentLang for debugging purposes
+export { currentLang, msg, cycleThroughLangs };
