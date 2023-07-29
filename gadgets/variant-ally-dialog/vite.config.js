@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { readFileSync } from 'fs';
 import mwGadget from 'rollup-plugin-mediawiki-gadget';
+import autoprefixer from 'autoprefixer';
 
 export default defineConfig(({ command }) => {
   const production = command === 'build';
@@ -15,6 +16,13 @@ export default defineConfig(({ command }) => {
     },
     define: {
       DEBUG: JSON.stringify(!production),
+    },
+    css: {
+      postcss: {
+        plugins: [
+          autoprefixer(),
+        ],
+      },
     },
     build: {
       outDir: 'dist',

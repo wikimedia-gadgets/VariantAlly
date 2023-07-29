@@ -1,0 +1,8 @@
+defaults
+chrome >= 83 # Last three years' versions
+edge >= 79 # Last three years' versions
+opera >= 66 # Last three years' versions
+firefox >= 78 # Last three years' versions
+safari >= 11.1
+ios >= 11.3
+android >= 5
