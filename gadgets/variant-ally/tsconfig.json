@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES5", // Default gadget still requires ES5
-    "module": "esnext",
+    "target": "ESNext",
+    "module": "ESNext",
     "lib": [
       "ESNext",
       "DOM"
@@ -19,6 +19,8 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.d.ts",
     "node_modules/types-mediawiki",
   ],
   "exclude": []

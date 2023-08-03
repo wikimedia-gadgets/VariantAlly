@@ -56,7 +56,11 @@ export default defineConfig({
       DEBUG: JSON.stringify(!production),
       BUILD_HASH: JSON.stringify(computeMetaHash(['src/'])),
     }),
-    typescript(),
+    typescript({
+      compilerOptions: {
+        target: 'ES5', // Default gadget requires ES5
+      },
+    }),
     terser({
       format: {
         // Reserve intro && outro
