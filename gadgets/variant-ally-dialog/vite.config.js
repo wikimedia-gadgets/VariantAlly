@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue';
 import { readFileSync } from 'fs';
 import mwGadget from 'rollup-plugin-mediawiki-gadget';
 import autoprefixer from 'autoprefixer';
+import browserslistToEsbuild from './scripts/browserslist-to-esbuild';
 
 export default defineConfig(({ command }) => {
   const production = command === 'build';
@@ -31,6 +32,7 @@ export default defineConfig(({ command }) => {
         formats: ['cjs'],
       },
       target: ['es2016'], // MediaWiki's JavaScript minifier supports up to ES2016
+      cssTarget: browserslistToEsbuild(), // Tell esbuild not to use too modern CSS features
       rollupOptions: {
         output: {
           entryFileNames: 'Gadget-VariantAllyDialog.js',
