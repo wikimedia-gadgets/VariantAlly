@@ -235,6 +235,13 @@ function close() {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (prefers-reduced-motion) {
+    &,
+    & :deep(*) {
+      transition-duration: 0s !important;
+    }
+  }
 }
 
 .variant-dialog {
@@ -338,10 +345,6 @@ function close() {
   transition-property: @transition-property-fade, @transition-property-layout;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
-
-  @media (prefers-reduced-motion) {
-    transition-duration: 0s;
-  }
 }
 
 .dialog-enter-from,
