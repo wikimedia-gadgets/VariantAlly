@@ -15,11 +15,15 @@
   transition-property: @transition-property-layout;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
+
+  @media (prefers-reduced-motion) {
+    transition-duration: 0s;
+  }
 }
 
 .expand-enter-from,
 .expand-leave-to {
-  transform: scale(0.95);
+  transform: scale(0.97);
   max-height: 0;
 }
 

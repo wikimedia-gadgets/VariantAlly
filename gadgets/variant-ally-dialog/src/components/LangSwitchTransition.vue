@@ -15,6 +15,10 @@
   transition-property: @transition-property-fade;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
+
+  @media (prefers-reduced-motion) {
+    transition-duration: 0s;
+  }
 }
 
 .lang-switch-enter-from,
