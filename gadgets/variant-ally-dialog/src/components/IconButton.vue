@@ -8,11 +8,11 @@ const props = defineProps<{
 
 <template>
   <button
-    class="icon-button"
+    class="va-icon-button"
     @click="$emit('click')"
   >
     <svg
-      class="icon-button__icon"
+      class="va-icon-button__icon"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       width="20"
@@ -38,7 +38,7 @@ const props = defineProps<{
 <style scoped lang="less">
 @import (reference) '../styles/mixins.less';
 
-.icon-button {
+.va-icon-button {
   .button-base();
 
   background-color: @background-color-transparent;

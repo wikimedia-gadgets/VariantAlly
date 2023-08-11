@@ -4,11 +4,11 @@ defineEmits(['click']);
 
 <template>
   <button
-    class="variant-button"
+    class="va-variant-button"
     @click="$emit('click')"
   >
     <svg
-      class="variant-button__icon"
+      class="va-variant-button__icon"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       width="18"
@@ -27,7 +27,7 @@ defineEmits(['click']);
 <style scoped lang="less">
 @import (reference) '../styles/mixins.less';
 
-.variant-button {
+.va-variant-button {
   .button-base();
 
   background-color: @background-color-base;

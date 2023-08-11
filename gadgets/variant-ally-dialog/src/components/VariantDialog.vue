@@ -62,18 +62,18 @@ function close() {
 
 <template>
   <Transition
-    name="dialog"
+    name="va-dialog"
     appear
   >
     <div
       v-if="open"
-      class="variant-dialog-backdrop"
+      class="va-dialog-backdrop"
       @click="close"
       @keyup.escape="close"
     >
       <div
         ref="dialog"
-        class="variant-dialog"
+        class="va-dialog"
         role="dialog"
         aria-model="false"
         :aria-labelledby="titleId"
@@ -87,30 +87,30 @@ function close() {
         />
         <div
           ref="focusKeeper"
-          class="variant-dialog__focus-keeper"
+          class="va-dialog__focus-keeper"
           tabindex="-1"
         />
 
-        <div class="variant-dialog__header">
+        <div class="va-dialog__header">
           <LangSwitchTransition>
             <h2
               :id="titleId"
               :key="currentLang"
               :lang="currentLang"
-              class="title variant-dialog__header__title"
+              class="va-title va-dialog__header__title"
             >
               {{ msg('title') }}
             </h2>
           </LangSwitchTransition>
           <IconButton
-            class="variant-dialog__header__lang-button"
+            class="va-dialog__header__lang-button"
             icon="lang"
             title="切换语言 / 切換語言 / Switch languages"
             aria-label="切换语言 / 切換語言 / Switch languages"
             @click="cycleThroughLangs"
           />
           <IconButton
-            class="variant-dialog__header__close-button"
+            class="va-dialog__header__close-button"
             icon="close"
             :title="msg('close')"
             :aria-label="msg('close')"
@@ -121,16 +121,16 @@ function close() {
         <LangSwitchTransition>
           <div
             :key="currentLang"
-            class="variant-dialog__body"
+            class="va-dialog__body"
             :lang="currentLang"
           >
-            <div class="variant-dialog__body__desc-group">
+            <div class="va-dialog__body__main">
               <p
                 :id="descId"
-                class="paragraph variant-dialog__body__desc-group__desc"
+                class="va-para va-dialog__body__main__desc"
               >
                 {{ msg('desc') }}{{ msg('space') }}<a
-                  class="link"
+                  class="va-link"
                   href="#"
                   @click.prevent="isDescExtended = !isDescExtended"
                 >{{ msg('desc.btn') }}</a>
@@ -138,22 +138,22 @@ function close() {
               <ExpandTransition>
                 <div
                   v-if="isDescExtended"
-                  class="variant-dialog__body__desc-group__ext"
+                  class="va-dialog__body__main__ext"
                 >
-                  <p class="paragraph variant-dialog__body__desc-group__ext__text">
+                  <p class="va-para va-dialog__body__main__ext__text">
                     {{ msg('desc.ext.1') }}
                   </p>
-                  <p class="paragraph variant-dialog__body__desc-group__ext__text">
+                  <p class="va-para va-dialog__body__main__ext__text">
                     {{ msg('desc.ext.2') }}
                   </p>
-                  <p class="paragraph variant-dialog__body__desc-group__ext__text">
+                  <p class="va-para va-dialog__body__main__ext__text">
                     {{ msg('desc.ext.3') }}
                   </p>
                 </div>
               </ExpandTransition>
             </div>
 
-            <div class="variant-dialog__body__options">
+            <div class="va-dialog__body__opts">
               <VariantButton
                 v-for="variant in VARIANTS"
                 :key="variant"
@@ -169,17 +169,17 @@ function close() {
         <LangSwitchTransition>
           <footer
             :key="currentLang"
-            class="variant-dialog__footer"
+            class="va-dialog__footer"
             :lang="currentLang"
           >
-            <p class="paragraph">
+            <p class="va-para">
               {{ msg('footer.1') }}
             </p>
-            <p class="paragraph">
+            <p class="va-para">
               <!-- Disable link because it's unfinished -->
               {{ msg('footer.2') }}{{ msg('space')
               }}<!-- <a
-                class="link"
+                class="va-link"
                 href="#"
               >{{ msg('footer.2.btn') }}</a> -->
             </p>
@@ -200,11 +200,11 @@ function close() {
 @import (reference) '../styles/mixins.less';
 @import (reference) '../styles/tokens.less';
 
-.link {
+.va-link {
   .link-base();
 }
 
-.title {
+.va-title {
   border: 0; // Reset
   padding: 0; // Reset
   overflow-wrap: break-word;
@@ -215,14 +215,14 @@ function close() {
   color: @color-base;
 }
 
-.paragraph {
+.va-para {
   overflow-wrap: break-word;
   margin-top: @spacing-0;
   margin-bottom: @spacing-75;
   color: @color-base;
 }
 
-.variant-dialog-backdrop {
+.va-dialog-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -237,6 +237,7 @@ function close() {
   justify-content: center;
 
   @media (prefers-reduced-motion) {
+
     &,
     & :deep(*) {
       transition-duration: 0s !important;
@@ -244,7 +245,7 @@ function close() {
   }
 }
 
-.variant-dialog {
+.va-dialog {
   box-sizing: border-box;
   z-index: @z-index-overlay;
   padding: @spacing-125 @spacing-200;
@@ -291,7 +292,7 @@ function close() {
   }
 
   &__body {
-    &__desc-group {
+    &__main {
       &__desc {
         margin-bottom: @spacing-0;
       }
@@ -309,7 +310,7 @@ function close() {
       }
     }
 
-    &__options {
+    &__opts {
       display: grid;
       gap: @spacing-35;
       grid-auto-flow: column;
@@ -332,7 +333,7 @@ function close() {
       }
     }
 
-    &__body__options {
+    &__body__opts {
       grid-auto-flow: row;
       grid-template: 1fr 1fr / 1fr 1fr 1fr;
     }
@@ -340,15 +341,15 @@ function close() {
 }
 
 /* Dialog transition effect */
-.dialog-enter-active,
-.dialog-leave-active {
+.va-dialog-enter-active,
+.va-dialog-leave-active {
   transition-property: @transition-property-fade, @transition-property-layout;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
 }
 
-.dialog-enter-from,
-.dialog-leave-to {
+.va-dialog-enter-from,
+.va-dialog-leave-to {
   opacity: 0;
 }
 </style>

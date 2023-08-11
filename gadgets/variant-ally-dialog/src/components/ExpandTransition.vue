@@ -1,6 +1,6 @@
 <template>
   <Transition
-    name="expand"
+    name="va-expand"
     mode="out-in"
   >
     <slot />
@@ -10,21 +10,21 @@
 <style scoped lang="less">
 @import (reference) '../styles/mixins.less';
 
-.expand-enter-active,
-.expand-leave-active {
+.va-expand-enter-active,
+.va-expand-leave-active {
   transition-property: @transition-property-layout;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
 }
 
-.expand-enter-from,
-.expand-leave-to {
+.va-expand-enter-from,
+.va-expand-leave-to {
   transform: scale(0.97);
   max-height: 0;
 }
 
-.expand-enter-to,
-.expand-leave-from {
+.va-expand-enter-to,
+.va-expand-leave-from {
   max-height: 500px;
 }
 </style>
