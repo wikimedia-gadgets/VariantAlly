@@ -53,7 +53,7 @@ export default defineConfig(({ command }) => {
       {
         enforce: 'pre',
         ...mwGadget({
-          gadgetDef: 'gadget-def.txt',
+          gadgetDef: '.gadgetdefinition',
         }),
       },
     ],

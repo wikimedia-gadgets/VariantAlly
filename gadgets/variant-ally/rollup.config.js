@@ -69,7 +69,7 @@ export default defineConfig({
       },
     }),
     mwGadget({
-      gadgetDef: 'gadget-def.txt',
+      gadgetDef: '.gadgetdefinition',
       softDependencies: ['ext.gadget.VariantAllyDialog'],
       legacy: true,
     }),
