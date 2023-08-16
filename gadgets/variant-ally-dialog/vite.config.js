@@ -8,12 +8,13 @@ import autoprefixer from 'autoprefixer';
 import browserslistToEsbuild from './scripts/browserslist-to-esbuild';
 
 export default defineConfig(({ command }) => {
-  const production = command === 'build';
+  const production = command === 'build'
+    && process.env.NODE_ENV === 'production';
 
   return {
     esbuild: {
-      banner: readFileSync('assets/intro.js').toString(),
-      footer: readFileSync('assets/outro.js').toString(),
+      banner: readFileSync('assets/intro.js').toString().trim(),
+      footer: readFileSync('assets/outro.js').toString().trim(),
     },
     define: {
       DEBUG: JSON.stringify(!production),
@@ -40,7 +41,7 @@ export default defineConfig(({ command }) => {
           assetFileNames: 'Gadget-VariantAllyDialog.css',
         },
       },
-      minify: 'terser', // Use terser for smaller bundle size
+      minify: production && 'terser', // Use terser in production for smaller bundle size
       terserOptions: {
         format: {
           // Reserve intro && outro

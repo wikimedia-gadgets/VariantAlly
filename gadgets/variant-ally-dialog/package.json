@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "dev:host": "vite --host",
-    "build": "vite build"
+    "build": "pnpm run build:prod",
+    "build:prod": "NODE_ENV=production vite build",
+    "build:debug": "NODE_ENV=development vite build"
   },
   "author": "See AUTHORS",
   "license": "BSD-3-Clause",

@@ -9,9 +9,6 @@ import {
 import { isLoggedIn, isExperiencedUser } from './utils';
 
 function showDebugInformation(): void {
-  if (!DEBUG) {
-    return;
-  }
   console.log(`[VariantAlly]
 Build: ${BUILD_HASH}
 Referrer: ${document.referrer || '(empty)'}
@@ -26,11 +23,7 @@ Calculated preferred variant: ${calculatePreferredVariant()}
 `);
 }
 
-function output(outputFunc: () => string[]): void {
-  if (!DEBUG) {
-    return;
-  }
-  const outputs = outputFunc();
+function output(...outputs: string[]): void {
   console.log(`[VariantAlly] ${outputs.slice(0, -1).join('/')}: ${outputs.pop()}`);
 }
 

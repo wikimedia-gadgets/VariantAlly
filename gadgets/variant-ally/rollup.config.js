@@ -7,11 +7,15 @@ import replace from '@rollup/plugin-replace';
 import mwGadget from 'rollup-plugin-mediawiki-gadget';
 import { createHash } from 'crypto';
 import { join } from 'path';
+import strip from '@rollup/plugin-strip';
 
 const production = process.env.NODE_ENV === 'production';
 
 /**
  * Compute a meta hash based on metadata of files inside paths.
+ *
+ * From https://stackoverflow.com/a/76425794
+ *
  * @param {string[]} paths
  * @param {import('crypto').Hash} [inputHash]
  * @returns
@@ -44,34 +48,42 @@ function computeMetaHash(paths, inputHash) {
 export default defineConfig({
   input: 'src/index.ts',
   output: {
-    file: 'dist/Gadget-VariantAlly.js',
+    dir: 'dist',
+    entryFileNames: 'Gadget-VariantAllyDialog.js',
     format: 'cjs',
-    generatedCode: 'es5', // Keep in sync with tsconfig.json
-    banner: readFileSync('assets/intro.js').toString(),
-    footer: readFileSync('assets/outro.js').toString(),
+    generatedCode: 'es5', // Keep in sync with TS target
+    banner: readFileSync('assets/intro.js').toString().trim(),
+    footer: readFileSync('assets/outro.js').toString().trim(),
   },
   plugins: [
     replace({
       preventAssignment: true,
-      DEBUG: JSON.stringify(!production),
       BUILD_HASH: JSON.stringify(computeMetaHash(['src/'])),
     }),
     typescript({
       compilerOptions: {
-        target: 'ES5', // Default gadget requires ES5
-      },
-    }),
-    terser({
-      format: {
-        // Reserve intro && outro
-        comments: /(^\*!|nowiki|SPDX-License-Identifier)/i,
-        ecma: 5, // Keep in sync with tsconfig.json
+        // Default gadget requires ES5
+        // Specify here so tests can be run without transpilation
+        target: 'ES5',
       },
     }),
     mwGadget({
       gadgetDef: '.gadgetdefinition',
       softDependencies: ['ext.gadget.VariantAllyDialog'],
+      // Generate ES5 compliant code
       legacy: true,
+    }),
+    production && terser({
+      format: {
+        // Reserve intro && outro
+        comments: /(^\*!|nowiki|SPDX-License-Identifier)/i,
+        ecma: 5, // Keep in sync with TS target
+      },
+    }),
+    production && strip({
+      include: ['**/*.ts'],
+      // Remove calls to debug functions to save bundle size
+      functions: ['console.*', 'assert.*', 'output'],
     }),
   ],
 });

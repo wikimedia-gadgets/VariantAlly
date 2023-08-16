@@ -57,7 +57,7 @@ function rewriteLink(link: string, variant: string): string {
   }
 
   const result = url.toString();
-  output(() => ['rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => ${result}`]);
+  output('rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => ${result}`);
   return result;
 }
 
@@ -73,16 +73,16 @@ function checkThisPage(preferredVariant: string, pageVariant: string): void {
   if (referrerHostname === location.hostname
     || BLOCKED_REFERRER_HOST.test(referrerHostname)
   ) {
-    output(() => ['checkThisPage', `Referrer is in blocklist. Stop.`]);
+    output('checkThisPage', `Referrer is in blocklist. Stop.`);
     return;
   }
 
   if (pageVariant === preferredVariant) {
-    output(() => ['checkThisPage', 'Variant is correct :)']);
+    output('checkThisPage', 'Variant is correct :)');
     return;
   }
 
-  output(() => ['checkThisPage', `Redirecting to ${preferredVariant}...`]);
+  output('checkThisPage', `Redirecting to ${preferredVariant}...`);
 
   const redirectionOrigin: string | null = mw.config.get('wgRedirectedFrom');
   if (redirectionOrigin === null) {
@@ -92,7 +92,7 @@ function checkThisPage(preferredVariant: string, pageVariant: string): void {
 
   // If current page is redirected from another page, rewrite link to point to
   // the original redirect so the "redirected from XXX" hint is correctly displayed
-  output(() => ['checkThisPage', `Detected redirection from ${redirectionOrigin}`]);
+  output('checkThisPage', `Detected redirection from ${redirectionOrigin}`);
 
   // Use URL to reserve other parts of the link
   const redirectionURL = new URL(location.href);
@@ -110,7 +110,7 @@ function rewriteAnchors(pageVariant: string): void {
         const anchor = target.closest('a');
 
         if (anchor) {
-          output(() => ['rewriteAnchors', `Event ${ev.type} on ${anchor.href}`]);
+          output('rewriteAnchors', `Event ${ev.type} on ${anchor.href}`);
 
           // Prevent variant dropdown/list links being overridden
           // Vector/Vector 2022: in #p-variants
@@ -118,7 +118,7 @@ function rewriteAnchors(pageVariant: string): void {
           // Minerva/MobileFrontend: in .suggested-languages
           // Monobook: in .pBody
           if (anchor.closest('#p-variants, #p-variants-desktop, .suggested-languages, .pBody')) {
-            output(() => ['rewriteAnchors', `Anchor is in variant dropdown list. Stop.`]);
+            output('rewriteAnchors', `Anchor is in variant dropdown list. Stop.`);
             return;
           }
 
@@ -131,49 +131,36 @@ function rewriteAnchors(pageVariant: string): void {
               ev.dataTransfer!.setData(type, newLink);
             });
 
-            output(() => ['rewriteAnchors', 'dragHandler', `Drop data changed!`]);
+            output('rewriteAnchors', 'dragHandler', `Drop data changed!`);
           } else {
             // Use a mutex to avoid being overwritten by overlapped handler calls
             if (anchor.dataset.vaMutex === undefined) {
               anchor.dataset.vaMutex = '';
 
-              output(() => [
-                'rewriteAnchors',
-                'clickHandler',
-                'Anchor locked.',
-              ]);
+              output('rewriteAnchors', 'clickHandler', 'Anchor locked.');
             }
 
             const origLink = anchor.href;
             anchor.href = newLink;
 
-            output(() => [
-              'rewriteAnchors',
-              'clickHandler',
-              `href ${anchor.href}, origLink ${origLink}`,
-            ]);
+            output('rewriteAnchors', 'clickHandler', `href ${anchor.href}, origLink ${origLink}`);
 
             // HACK: workaround popups not working on modified links
             // Add handler to <a> directly so it was triggered before anything else
             ['mouseover', 'mouseleave', 'keyup'].forEach((innerName) => {
               anchor.addEventListener(innerName, (innerEv) => {
-                output(() => [
+                output(
                   'rewriteAnchors',
                   'clickHandler',
                   'restorationHandler',
                   `Event ${innerEv.type} on ${anchor.href}, origLink ${origLink}`,
-                ]);
+                );
 
                 if (anchor.dataset.vaMutex !== undefined) {
                   anchor.href = origLink;
                   delete anchor.dataset.vaMutex;
 
-                  output(() => [
-                    'rewriteAnchors',
-                    'clickHandler',
-                    'restorationHandler',
-                    'Anchor unlocked.',
-                  ]);
+                  output('rewriteAnchors', 'clickHandler', 'restorationHandler', 'Anchor unlocked.');
                 }
               }, { once: true });
             });

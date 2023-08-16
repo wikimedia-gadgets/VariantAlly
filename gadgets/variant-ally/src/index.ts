@@ -8,15 +8,15 @@ showDebugInformation();
 const pageVariant = getPageVariant();
 
 if (pageVariant === null) {
-  output(() => ['index', 'Non-article page. Stop.']);
+  output('index', 'Non-article page. Stop.');
 } else {
   const preferredVariant = calculatePreferredVariant();
 
   if (preferredVariant === null) {
-    output(() => ['index', 'Preferred variant is null, show variant dialog']);
+    output('index', 'Preferred variant is null, show variant dialog');
     showDialog();
   } else if (isExperiencedUser()) {
-    output(() => ['index', 'User is experienced. Stop.']);
+    output('index', 'User is experienced. Stop.');
   } else {
     checkThisPage(preferredVariant, pageVariant);
   }

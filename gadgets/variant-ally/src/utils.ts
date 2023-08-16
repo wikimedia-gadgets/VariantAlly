@@ -1,6 +1,5 @@
 // Trusted users who have activity in zh.wp but are not yet extendedconfirmed
 const EXPERIENCED_USERS = [
-  'TheresNoTime',
   'WMFOffice',
 ];
 
@@ -16,6 +15,7 @@ function isExperiencedUser(): boolean {
     ['sysop', 'extendedconfirmed'].some((i) => groups.includes(i))
     // WMF staffs
     || username.endsWith(' (WMF)')
+    || username.endsWith('-WMF')
     // WMDE members
     || username.endsWith(' (WMDE)')
     // Trusted users

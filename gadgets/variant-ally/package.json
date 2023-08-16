@@ -4,14 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "NODE_ENV=production rollup -c",
-    "build:debug": "rollup -c",
+    "build": "pnpm run build:prod",
+    "build:prod": "NODE_ENV=production rollup -c",
+    "build:debug": "NODE_ENV=development rollup -c",
     "test": "jest"
   },
   "author": "See AUTHORS",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.2",
+    "@rollup/plugin-strip": "^3.0.2",
     "@rollup/plugin-terser": "^0.4.3",
     "@rollup/plugin-typescript": "^11.1.2",
     "@types/jest": "^29.5.3",
