@@ -41,13 +41,7 @@ export default defineConfig(({ command }) => {
           assetFileNames: 'Gadget-VariantAllyDialog.css',
         },
       },
-      minify: production && 'terser', // Use terser in production for smaller bundle size
-      terserOptions: {
-        format: {
-          // Reserve intro && outro
-          comments: /(^\*!|nowiki|SPDX-License-Identifier)/i,
-        },
-      },
+      minify: false,
     },
     plugins: [
       vue(),

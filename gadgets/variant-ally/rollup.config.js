@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from 'rollup';
 import typescript from '@rollup/plugin-typescript';
-import terser from '@rollup/plugin-terser';
 import { readFileSync, readdirSync, statSync } from 'fs';
 import replace from '@rollup/plugin-replace';
 import mwGadget from 'rollup-plugin-mediawiki-gadget';
@@ -72,13 +71,6 @@ export default defineConfig({
       softDependencies: ['ext.gadget.VariantAllyDialog'],
       // Generate ES5 compliant code
       legacy: true,
-    }),
-    production && terser({
-      format: {
-        // Reserve intro && outro
-        comments: /(^\*!|nowiki|SPDX-License-Identifier)/i,
-        ecma: 5, // Keep in sync with TS target
-      },
     }),
     production && strip({
       include: ['**/*.ts'],
