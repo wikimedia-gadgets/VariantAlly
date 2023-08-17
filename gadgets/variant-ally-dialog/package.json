@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "dev:host": "vite --host",
-    "build": "pnpm run build:prod",
     "build:prod": "NODE_ENV=production vite build",
     "build:debug": "NODE_ENV=development vite build"
   },

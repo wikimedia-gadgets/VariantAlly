@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm run build:prod",
     "build:prod": "NODE_ENV=production rollup -c",
     "build:debug": "NODE_ENV=development rollup -c",
     "test": "jest"

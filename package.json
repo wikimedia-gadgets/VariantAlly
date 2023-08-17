@@ -8,7 +8,8 @@
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint .",
     "type-check": "pnpm -r exec tsc --noEmit",
-    "build": "pnpm -r run build"
+    "build:prod": "pnpm -r run build:prod",
+    "build:debug": "pnpm -r run build:debug"
   },
   "author": "See AUTHORS",
   "license": "BSD-3-Clause",
@@ -21,5 +22,10 @@
     "only-allow": "^1.1.1",
     "tslib": "^2.6.0",
     "typescript": "^5.1.6"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@vitejs/plugin-vue@4.2.3": "patches/@vitejs__plugin-vue@4.2.3.patch"
+    }
   }
 }
