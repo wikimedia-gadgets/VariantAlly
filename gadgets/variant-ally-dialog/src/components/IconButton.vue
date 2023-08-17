@@ -44,13 +44,12 @@ const props = defineProps<{
   background-color: @background-color-transparent;
   color: @color-base;
   border-color: @border-color-transparent;
-  padding: @spacing-icon-button;
+  padding: @spacing-shorthand-button-icon-only;
 
   display: flex;
   align-items: center;
 
   &__icon {
-    vertical-align: middle;
     fill: currentColor;
   }
 

@@ -87,7 +87,7 @@ function close() {
         />
         <div
           ref="focusKeeper"
-          class="va-dialog__focus-keeper"
+          class="va-focus-keeper"
           tabindex="-1"
         />
 
@@ -124,34 +124,29 @@ function close() {
             class="va-dialog__body"
             :lang="currentLang"
           >
-            <div class="va-dialog__body__main">
-              <p
-                :id="descId"
-                class="va-para va-dialog__body__main__desc"
-              >
-                {{ msg('desc') }}{{ msg('space') }}<a
-                  class="va-link"
-                  href="#"
-                  @click.prevent="isDescExtended = !isDescExtended"
-                >{{ msg('desc.btn') }}</a>
-              </p>
-              <ExpandTransition>
-                <div
-                  v-if="isDescExtended"
-                  class="va-dialog__body__main__ext"
-                >
-                  <p class="va-para va-dialog__body__main__ext__text">
-                    {{ msg('desc.ext.1') }}
-                  </p>
-                  <p class="va-para va-dialog__body__main__ext__text">
-                    {{ msg('desc.ext.2') }}
-                  </p>
-                  <p class="va-para va-dialog__body__main__ext__text">
-                    {{ msg('desc.ext.3') }}
-                  </p>
-                </div>
-              </ExpandTransition>
-            </div>
+            <p
+              :id="descId"
+              class="va-para va-dialog__body__desc"
+            >
+              {{ msg('desc') }}{{ msg('space') }}<a
+                class="va-link"
+                href="#"
+                @click.prevent="isDescExtended = !isDescExtended"
+              >{{ msg('desc.btn') }}</a>
+            </p>
+            <ExpandTransition :expand="isDescExtended">
+              <div class="va-dialog__body__ext">
+                <p class="va-para va-para--subtle">
+                  {{ msg('desc.ext.1') }}
+                </p>
+                <p class="va-para va-para--subtle">
+                  {{ msg('desc.ext.2') }}
+                </p>
+                <p class="va-para va-para--subtle">
+                  {{ msg('desc.ext.3') }}
+                </p>
+              </div>
+            </ExpandTransition>
 
             <div class="va-dialog__body__opts">
               <VariantButton
@@ -220,6 +215,12 @@ function close() {
   margin-top: @spacing-0;
   margin-bottom: @spacing-75;
   color: @color-base;
+
+  &--subtle {
+    color: @color-subtle;
+    font-size: @font-size-small;
+    margin-bottom: @spacing-35;
+  }
 }
 
 .va-dialog-backdrop {
@@ -245,6 +246,14 @@ function close() {
   }
 }
 
+.va-focus-keeper {
+  position: absolute;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
 .va-dialog {
   box-sizing: border-box;
   z-index: @z-index-overlay;
@@ -263,20 +272,12 @@ function close() {
   font-family: @font-family-system-sans;
   font-size: 1rem; // Reset
 
-  &__focus-keeper {
-    position: absolute;
-
-    &:focus {
-      outline: 0;
-    }
-  }
-
   &__header {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    margin-right: -(@spacing-icon-button + 1px);
+    margin-right: -(@spacing-horizontal-button-icon-only + 1px);
 
     &__title {
       flex: 1;
@@ -292,22 +293,12 @@ function close() {
   }
 
   &__body {
-    &__main {
-      &__desc {
-        margin-bottom: @spacing-0;
-      }
+    &__desc {
+      margin-bottom: @spacing-0;
+    }
 
-      &__ext {
-        font-size: @font-size-small;
-        color: @color-subtle;
-        margin: @spacing-75 @spacing-0;
-        overflow-y: hidden;
-
-        &__text {
-          color: @color-subtle;
-          margin-bottom: @spacing-35;
-        }
-      }
+    &__ext {
+      margin-top: @spacing-75;
     }
 
     &__opts {
@@ -324,7 +315,7 @@ function close() {
     padding: @spacing-125;
 
     &__header {
-      margin-left: -(@spacing-icon-button + 1px);
+      margin-left: -(@spacing-horizontal-button-icon-only + 1px);
 
       &__title {
         font-size: @font-size-large;

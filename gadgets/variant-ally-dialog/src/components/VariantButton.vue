@@ -34,8 +34,8 @@ defineEmits(['click']);
   color: @color-progressive;
   border-color: @border-color-progressive;
 
-  padding-top: @spacing-vertical-variant-button;
-  padding-bottom: @spacing-vertical-variant-button;
+  padding-top: @spacing-vertical-button;
+  padding-bottom: @spacing-vertical-button;
   font-size: @font-size-medium;
   text-align: left;
 
@@ -69,9 +69,18 @@ defineEmits(['click']);
 
   @media screen and (max-width: @max-width-breakpoint-mobile) {
     font-size: @font-size-small;
-    padding: @spacing-vertical-variant-button--mobile @spacing-horizontal-variant-button--mobile;
     text-align: center;
     justify-content: center;
+
+    padding-top: @spacing-vertical-button--mobile;
+    padding-bottom: @spacing-vertical-button--mobile;
+
+    /* &::before {
+      // HACK: force button's height to be a percent of its width
+      content: "";
+      display: block;
+      padding-top: 40%;
+    } */
 
     &__icon {
       display: none;
