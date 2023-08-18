@@ -148,12 +148,14 @@ function close() {
               </div>
             </ExpandTransition>
 
-            <div class="va-dialog__body__opts">
+            <div
+              class="va-dialog__body__opts"
+              :class="{ 'va-dialog__body__opts--shrunk': isDescExtended }"
+            >
               <VariantButton
                 v-for="variant in VARIANTS"
                 :key="variant"
                 :lang="currentLang === 'en' ? 'en' : `zh-${variant}`"
-                :shrink="isDescExtended"
                 @click="$emit('select', `zh-${variant}`)"
               >
                 {{ msg(`vb.${variant}`) }}
@@ -327,7 +329,15 @@ function close() {
 
     &__body__opts {
       grid-auto-flow: row;
-      grid-template: 1fr 1fr / 1fr 1fr 1fr;
+      grid-template: repeat(2, minmax(@size-variant-button--mobile, 1fr)) / 1fr 1fr 1fr;
+
+      transition-property: @transition-property-layout;
+      transition-duration: @transition-duration-medium;
+      transition-timing-function: @transition-timing-function-system;
+
+      &--shrunk {
+        grid-template: repeat(2, minmax(@size-variant-button--mobile-shrunk, 1fr)) / 1fr 1fr 1fr;
+      }
     }
   }
 }
