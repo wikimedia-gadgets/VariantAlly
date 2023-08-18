@@ -1,10 +1,12 @@
 <script setup lang="ts">
 defineEmits(['click']);
+defineProps<{ shrink: boolean }>();
 </script>
 
 <template>
   <button
     class="va-variant-button"
+    :class="{ 'va-variant-button--shrink': shrink }"
     @click="$emit('click')"
   >
     <svg
@@ -75,12 +77,14 @@ defineEmits(['click']);
     padding-top: @spacing-vertical-button--mobile;
     padding-bottom: @spacing-vertical-button--mobile;
 
-    /* &::before {
-      // HACK: force button's height to be a percent of its width
-      content: "";
-      display: block;
-      padding-top: 40%;
-    } */
+    transition-property: @transition-property-layout;
+    transition-duration: @transition-duration-medium;
+    transition-timing-function: @transition-timing-function-system;
+
+    &--shrink {
+      padding-top: @spacing-vertical-button--mobile-shrink;
+      padding-bottom: @spacing-vertical-button--mobile-shrink;
+    }
 
     &__icon {
       display: none;

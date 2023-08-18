@@ -153,6 +153,7 @@ function close() {
                 v-for="variant in VARIANTS"
                 :key="variant"
                 :lang="currentLang === 'en' ? 'en' : `zh-${variant}`"
+                :shrink="isDescExtended"
                 @click="$emit('select', `zh-${variant}`)"
               >
                 {{ msg(`vb.${variant}`) }}
