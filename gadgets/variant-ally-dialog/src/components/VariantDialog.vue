@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
-import { currentLang, cycleThroughLangs } from '../message';
-import { msg } from '../message';
+import useI18n, { currentLang, cycleThroughLangs } from '../composables/useI18n';
 import LangSwitchTransition from './LangSwitchTransition.vue';
 import ExpandTransition from './ExpandTransition.vue';
 import VariantButton from './VariantButton.vue';
@@ -99,7 +98,7 @@ function close() {
               :lang="currentLang"
               class="va-title va-dialog__header__title"
             >
-              {{ msg('title') }}
+              {{ useI18n('title') }}
             </h2>
           </LangSwitchTransition>
           <IconButton
@@ -112,8 +111,8 @@ function close() {
           <IconButton
             class="va-dialog__header__close-button"
             icon="close"
-            :title="msg('close')"
-            :aria-label="msg('close')"
+            :title="useI18n('close')"
+            :aria-label="useI18n('close')"
             @click="close"
           />
         </div>
@@ -128,22 +127,22 @@ function close() {
               :id="descId"
               class="va-para va-dialog__body__desc"
             >
-              {{ msg('desc') }}{{ msg('space') }}<a
+              {{ useI18n('desc') }}{{ useI18n('space') }}<a
                 class="va-link"
                 href="#"
                 @click.prevent="isDescExtended = !isDescExtended"
-              >{{ msg('desc.btn') }}</a>
+              >{{ useI18n('desc.btn') }}</a>
             </p>
             <ExpandTransition :expand="isDescExtended">
               <div class="va-dialog__body__ext">
                 <p class="va-para va-para--subtle">
-                  {{ msg('desc.ext.1') }}
+                  {{ useI18n('desc.ext.1') }}
                 </p>
                 <p class="va-para va-para--subtle">
-                  {{ msg('desc.ext.2') }}
+                  {{ useI18n('desc.ext.2') }}
                 </p>
                 <p class="va-para va-para--subtle">
-                  {{ msg('desc.ext.3') }}
+                  {{ useI18n('desc.ext.3') }}
                 </p>
               </div>
             </ExpandTransition>
@@ -158,7 +157,7 @@ function close() {
                 :lang="currentLang === 'en' ? 'en' : `zh-${variant}`"
                 @click="$emit('select', `zh-${variant}`)"
               >
-                {{ msg(`vb.${variant}`) }}
+                {{ useI18n(`vb.${variant}`) }}
               </VariantButton>
             </div>
           </div>
@@ -171,15 +170,15 @@ function close() {
             :lang="currentLang"
           >
             <p class="va-para">
-              {{ msg('footer.1') }}
+              {{ useI18n('footer.1') }}
             </p>
             <p class="va-para">
               <!-- Disable link because it's unfinished -->
-              {{ msg('footer.2') }}{{ msg('space')
+              {{ useI18n('footer.2') }}{{ useI18n('space')
               }}<!-- <a
                 class="va-link"
                 href="#"
-              >{{ msg('footer.2.btn') }}</a> -->
+              >{{ useI18n('footer.2.btn') }}</a> -->
             </p>
           </footer>
         </LangSwitchTransition>

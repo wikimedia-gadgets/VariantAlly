@@ -1,6 +1,6 @@
 import { Ref } from 'vue';
-import msgsByLang from '../assets/messages.json';
-import useSyncedRef from './composables/useSyncedRef';
+import msgsByLang from '../../assets/messages.json';
+import useSyncedRef from './useSyncedRef';
 
 const LANG_CYCLE = {
   'zh-hans': 'en',
@@ -27,10 +27,10 @@ function cycleThroughLangs(): void {
   currentLang.value = LANG_CYCLE[currentLang.value];
 }
 
-function msg(key: string): string {
+function useI18n(key: string): string {
   const currentMsgsGroup: Record<string, string> = msgsByLang[currentLang.value];
   return currentMsgsGroup[key] ?? key;
 }
 
 // Export currentLang for debugging purposes
-export { currentLang, msg, cycleThroughLangs };
+export { useI18n as default, currentLang, cycleThroughLangs };

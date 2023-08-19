@@ -1,7 +1,7 @@
 <!-- Vite dev server. This script is never run in the browser! -->
 
 <script setup lang="ts">
-import { currentLang } from './message';
+import { currentLang } from './composables/useI18n';
 import VariantDialog from './components/VariantDialog.vue';
 import useSyncedRef from './composables/useSyncedRef';
 import { watch } from 'vue';
