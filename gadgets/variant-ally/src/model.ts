@@ -32,15 +32,10 @@ function getAccountVariant(): string | null {
 function getLocalVariant(): string | null {
   const browserVariant = getBrowserVariant();
   const localVariant = localStorage.getItem(LOCAL_STORAGE_KEY);
-  // Sync local variant with browser variant when:
-  // 1. Browser variant is valid
-  // 2. Local variant is set but not the same as browser variant
-  if (
-    browserVariant !== null
-    && localVariant !== null
-    && browserVariant !== localVariant
-  ) {
+  if (browserVariant !== null && browserVariant !== localVariant) {
+    // Sync local variant with browser variant
     setLocalVariant(browserVariant);
+    // Return synced local variant (browser variant here)
     return browserVariant;
   }
   return localVariant;
