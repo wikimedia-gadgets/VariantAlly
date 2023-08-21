@@ -1,7 +1,7 @@
 import { output, showDebugInformation } from './debug';
 import { checkThisPage, rewriteAnchors, showDialog } from './controller';
 import { calculatePreferredVariant, getPageVariant } from './model';
-import { isExperiencedUser, isReferrerBlocked } from './utils';
+import { isExperiencedUser, isLangSpecified, isReferrerBlocked } from './utils';
 
 showDebugInformation();
 
@@ -19,6 +19,8 @@ if (pageVariant === null) {
     output('index', 'User is experienced. Stop.');
   } else if (isReferrerBlocked()) {
     output('index', `Referrer is in blocklist. Stop.`);
+  } else if (isLangSpecified()) {
+    output('index', `uselang is specified. Stop.`);
   } else {
     checkThisPage(preferredVariant, pageVariant);
   }

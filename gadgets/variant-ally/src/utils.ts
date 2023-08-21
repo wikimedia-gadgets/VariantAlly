@@ -40,4 +40,8 @@ function isReferrerBlocked(): boolean {
     || BLOCKED_REFERRER_HOST.test(referrerHostname);
 }
 
-export { isExperiencedUser, isLoggedIn, isReferrerBlocked };
+function isLangSpecified(): boolean {
+  return new URL(location.href).searchParams.has('uselang');
+}
+
+export { isExperiencedUser, isLoggedIn, isReferrerBlocked, isLangSpecified };
