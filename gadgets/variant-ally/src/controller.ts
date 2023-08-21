@@ -1,14 +1,7 @@
 import { output } from './debug';
 import { getMediaWikiVariant } from './model';
 
-// Including:
-// - w.wiki
-const BLOCKED_REFERRER_HOST = /^w\.wiki$/i;
-
 const WIKIURL_REGEX = /^\/(?:wiki|zh(?:-\w+)?)\//i;
-
-// Used to suppress exceptions of URL constructor
-const DUMMY_REFERRER = 'a:';
 
 const REDIRECTED_FROM_KEY = 'va-rf';
 
@@ -69,14 +62,6 @@ function redirect(preferredVariant: string, link?: string): void {
 }
 
 function checkThisPage(preferredVariant: string, pageVariant: string): void {
-  const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
-  if (referrerHostname === location.hostname
-    || BLOCKED_REFERRER_HOST.test(referrerHostname)
-  ) {
-    output('checkThisPage', `Referrer is in blocklist. Stop.`);
-    return;
-  }
-
   if (pageVariant === preferredVariant) {
     output('checkThisPage', 'Variant is correct :)');
     return;

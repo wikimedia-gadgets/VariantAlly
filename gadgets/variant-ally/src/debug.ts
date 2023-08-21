@@ -13,7 +13,7 @@ function showDebugInformation(): void {
 Build: ${BUILD_HASH}
 Referrer: ${document.referrer || '(empty)'}
 Browser variant: ${getBrowserVariant()}
-Local (cached) variant: ${getLocalVariant()}
+Local variant: ${getLocalVariant()}
 Account variant: ${getAccountVariant()}
 Page variant: ${getPageVariant()}
 MediaWiki variant: ${getMediaWikiVariant()}

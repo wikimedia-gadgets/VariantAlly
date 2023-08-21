@@ -3,6 +3,13 @@ const EXPERIENCED_USERS = [
   'WMFOffice',
 ];
 
+// Including:
+// - w.wiki
+const BLOCKED_REFERRER_HOST = /^w\.wiki$/i;
+
+// Used to suppress exceptions of URL constructor
+const DUMMY_REFERRER = 'a:';
+
 function isExperiencedUser(): boolean {
   if (!isLoggedIn()) {
     return false;
@@ -27,4 +34,10 @@ function isLoggedIn(): boolean {
   return mw.config.exists('wgUserId');
 }
 
-export { isExperiencedUser, isLoggedIn };
+function isReferrerBlocked(): boolean {
+  const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
+  return referrerHostname === location.hostname
+    || BLOCKED_REFERRER_HOST.test(referrerHostname);
+}
+
+export { isExperiencedUser, isLoggedIn, isReferrerBlocked };
