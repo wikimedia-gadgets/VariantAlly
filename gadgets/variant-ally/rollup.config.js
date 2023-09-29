@@ -48,7 +48,7 @@ export default defineConfig({
   input: 'src/index.ts',
   output: {
     dir: 'dist',
-    entryFileNames: 'Gadget-VariantAllyDialog.js',
+    entryFileNames: 'Gadget-VariantAlly.js',
     format: 'cjs',
     generatedCode: 'es5', // Keep in sync with TS target
     banner: readFileSync('assets/intro.js').toString().trim(),
