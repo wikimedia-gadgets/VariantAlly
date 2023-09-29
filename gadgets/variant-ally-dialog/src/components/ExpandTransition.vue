@@ -54,6 +54,8 @@ function deleteHeight(element: Element) {
 
 .va-expand-wrapper {
   overflow-y: hidden;
+  will-change: height;
+  transform: translateZ(0);
 }
 
 .va-expand-enter-active,
@@ -61,10 +63,5 @@ function deleteHeight(element: Element) {
   transition-property: @transition-property-layout;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
-}
-
-.va-expand-enter-from,
-.va-expand-leave-to {
-  transform: scale(0.97);
 }
 </style>
