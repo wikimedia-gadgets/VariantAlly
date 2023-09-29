@@ -1,6 +1,6 @@
 {
   "name": "variant-ally",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "private": true,
   "type": "module",
   "scripts": {
@@ -17,7 +17,7 @@
     "@types/jest": "^29.5.3",
     "jest": "^29.6.2",
     "rollup": "^3.26.2",
-    "rollup-plugin-mediawiki-gadget": "^1.0.5",
+    "rollup-plugin-mediawiki-gadget": "^1.1.0",
     "ts-jest": "^29.1.1",
     "types-mediawiki": "^1.4.0"
   }

@@ -69,8 +69,6 @@ export default defineConfig({
     mwGadget({
       gadgetDef: '.gadgetdefinition',
       softDependencies: ['ext.gadget.VariantAllyDialog'],
-      // Generate ES5 compliant code
-      legacy: true,
     }),
     production && strip({
       include: ['**/*.ts'],
