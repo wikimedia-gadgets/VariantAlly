@@ -4,6 +4,10 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  postcss@<8.4.31: '>=8.4.31'
+  '@babel/traverse@<7.23.2': '>=7.23.2'
+
 patchedDependencies:
   '@vitejs/plugin-vue@4.2.3':
     hash: 22itzytm2kypzdvhbvifji2nzi

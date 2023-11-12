@@ -26,6 +26,10 @@
   "pnpm": {
     "patchedDependencies": {
       "@vitejs/plugin-vue@4.2.3": "patches/@vitejs__plugin-vue@4.2.3.patch"
+    },
+    "overrides": {
+      "postcss@<8.4.31": ">=8.4.31",
+      "@babel/traverse@<7.23.2": ">=7.23.2"
     }
   }
 }
