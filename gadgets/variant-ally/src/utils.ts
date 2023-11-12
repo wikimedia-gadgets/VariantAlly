@@ -1,7 +1,5 @@
-// Trusted users who have activity in zh.wp but are not yet extendedconfirmed
-const EXPERIENCED_USERS = [
-  'WMFOffice',
-];
+// Additional trusted users
+const EXPERIENCED_USERS: string[] = [];
 
 // Including:
 // - w.wiki
@@ -16,16 +14,19 @@ function isExperiencedUser(): boolean {
   }
 
   const groups = mw.config.get('wgUserGroups');
+  const globalGroups = mw.config.get('wgGlobalGroups') as string[];
   const username = mw.config.get('wgUserName');
   return (
     // Extended confirmed users (sysops aren't extendedconfirmed!!!)
     ['sysop', 'extendedconfirmed'].some((i) => groups.includes(i))
-    // WMF staffs
-    || username.endsWith(' (WMF)')
-    || username.endsWith('-WMF')
-    // WMDE members
-    || username.endsWith(' (WMDE)')
-    // Trusted users
+    // Users with global privileges
+    || [
+      'founder', 'staff', 'steward',
+      'wmf-researcher', 'global-sysop',
+      'sysadmin', 'ombuds',
+      'global-interface-editor',
+    ].some((i) => globalGroups.includes(i))
+    // Additional trusted users
     || EXPERIENCED_USERS.includes(username)
   );
 }
