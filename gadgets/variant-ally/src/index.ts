@@ -1,7 +1,7 @@
 import { output, showDebugInformation } from './debug';
 import { checkThisPage, rewriteAnchors, showDialog } from './controller';
 import { calculatePreferredVariant, getPageVariant } from './model';
-import { isExperiencedUser, isLangSpecified, isReferrerBlocked } from './utils';
+import { isExperiencedUser, isLangChinese, isReferrerBlocked } from './utils';
 
 showDebugInformation();
 
@@ -9,6 +9,8 @@ const pageVariant = getPageVariant();
 
 if (pageVariant === null) {
   output('index', 'Non-article page. Stop.');
+} else if (!isLangChinese()) {
+  output('index', 'Page lang is not Chinese. Stop.');
 } else {
   const preferredVariant = calculatePreferredVariant();
 
@@ -19,8 +21,6 @@ if (pageVariant === null) {
     output('index', 'User is experienced. Stop.');
   } else if (isReferrerBlocked()) {
     output('index', `Referrer is in blocklist. Stop.`);
-  } else if (isLangSpecified()) {
-    output('index', `uselang is specified. Stop.`);
   } else {
     checkThisPage(preferredVariant, pageVariant);
   }

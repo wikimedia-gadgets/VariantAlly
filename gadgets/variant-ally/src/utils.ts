@@ -1,6 +1,3 @@
-// Additional trusted users
-const EXPERIENCED_USERS: string[] = [];
-
 // Including:
 // - w.wiki
 const BLOCKED_REFERRER_HOST = /^w\.wiki$/i;
@@ -15,7 +12,6 @@ function isExperiencedUser(): boolean {
 
   const groups = mw.config.get('wgUserGroups');
   const globalGroups = mw.config.get('wgGlobalGroups') as string[];
-  const username = mw.config.get('wgUserName');
   return (
     // Extended confirmed users (sysops aren't extendedconfirmed!!!)
     ['sysop', 'extendedconfirmed'].some((i) => groups.includes(i))
@@ -26,8 +22,6 @@ function isExperiencedUser(): boolean {
       'sysadmin', 'ombuds',
       'global-interface-editor',
     ].some((i) => globalGroups.includes(i))
-    // Additional trusted users
-    || EXPERIENCED_USERS.includes(username)
   );
 }
 
@@ -41,8 +35,8 @@ function isReferrerBlocked(): boolean {
     || BLOCKED_REFERRER_HOST.test(referrerHostname);
 }
 
-function isLangSpecified(): boolean {
-  return new URL(location.href).searchParams.has('uselang');
+function isLangChinese(): boolean {
+  return mw.config.get('wgUserLanguage').startsWith('zh');
 }
 
-export { isExperiencedUser, isLoggedIn, isReferrerBlocked, isLangSpecified };
+export { isExperiencedUser, isLoggedIn, isReferrerBlocked, isLangChinese };
