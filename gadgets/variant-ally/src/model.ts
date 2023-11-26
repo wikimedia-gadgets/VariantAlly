@@ -1,6 +1,7 @@
 import { isLoggedIn } from './utils';
 
-const LOCAL_STORAGE_KEY = 'va-var';
+const LOCAL_VARIANT_KEY = 'va-var';
+const OPTOUT_KEY = 'va-output';
 const VALID_VARIANTS = [
   'zh-cn',
   'zh-sg',
@@ -40,7 +41,7 @@ function getAccountVariant(): string | null {
 
 function getLocalVariant(): string | null {
   const browserVariant = getBrowserVariant();
-  const localVariant = localStorage.getItem(LOCAL_STORAGE_KEY);
+  const localVariant = localStorage.getItem(LOCAL_VARIANT_KEY);
   if (browserVariant !== null && browserVariant !== localVariant) {
     // Sync local variant with browser variant
     setLocalVariant(browserVariant);
@@ -87,8 +88,16 @@ function calculatePreferredVariant(): string | null {
 
 function setLocalVariant(variant: string): void {
   if (VALID_VARIANTS.includes(variant)) {
-    localStorage.setItem(LOCAL_STORAGE_KEY, variant);
+    localStorage.setItem(LOCAL_VARIANT_KEY, variant);
   }
+}
+
+function setOptOut(): void {
+  localStorage.setItem(OPTOUT_KEY, '');
+}
+
+function isOptOuted(): boolean {
+  return localStorage.getItem(OPTOUT_KEY) !== null;
 }
 
 export {
@@ -99,4 +108,6 @@ export {
   getMediaWikiVariant,
   calculatePreferredVariant,
   setLocalVariant,
+  setOptOut,
+  isOptOuted,
 };

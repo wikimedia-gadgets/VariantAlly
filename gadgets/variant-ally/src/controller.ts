@@ -160,12 +160,12 @@ function showDialog(): void {
   import('ext.gadget.VariantAllyDialog');
 }
 
-function setVariantFromURL(): void {
+function setLocalVariantFromURL(): void {
   const variant = new URL(location.href).searchParams.get(VARIANT_PARAM);
   if (variant !== null) {
-    output('setVariantFromURL', `${VARIANT_PARAM}=${variant}, setting local variant...`);
+    output('setLocalVariantFromURL', `${VARIANT_PARAM}=${variant}, setting local variant...`);
     setLocalVariant(variant);
   }
 }
 
-export { rewriteLink, redirect, checkThisPage, rewriteAnchors, showDialog, setVariantFromURL };
+export { rewriteLink, redirect, checkThisPage, rewriteAnchors, showDialog, setLocalVariantFromURL };

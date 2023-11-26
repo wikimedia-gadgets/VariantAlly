@@ -1,14 +1,16 @@
 import { output, showDebugInformation } from './debug';
-import { checkThisPage, rewriteAnchors, setVariantFromURL, showDialog } from './controller';
-import { calculatePreferredVariant, getPageVariant } from './model';
+import { checkThisPage, rewriteAnchors, setLocalVariantFromURL, showDialog } from './controller';
+import { calculatePreferredVariant, getPageVariant, isOptOuted } from './model';
 import { isExperiencedUser, isLangChinese, isReferrerBlocked } from './utils';
 
 showDebugInformation();
 
-setVariantFromURL();
+setLocalVariantFromURL();
 
 const pageVariant = getPageVariant();
-if (pageVariant === null) {
+if (isOptOuted()) {
+  output('index', 'Opt-outed. Stop.');
+} else if (pageVariant === null) {
   output('index', 'Non-article page. Stop.');
 } else if (!isLangChinese()) {
   output('index', 'Page lang is not Chinese. Stop.');
@@ -30,5 +32,5 @@ if (pageVariant === null) {
 }
 
 // Expose for VariantAllyDialog's use
-export { setLocalVariant } from './model';
+export { setLocalVariant, setOptOut } from './model';
 export { redirect } from './controller';
