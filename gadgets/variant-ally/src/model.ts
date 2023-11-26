@@ -9,6 +9,15 @@ const VALID_VARIANTS = [
   'zh-hk',
   'zh-mo',
 ];
+// Additional variants which are not recommended but recognized by MediaWiki
+const VALID_VARIANTS_BCP47 = [
+  'zh-hans-cn',
+  'zh-hans-sg',
+  'zh-hans-my',
+  'zh-hant-tw',
+  'zh-hant-hk',
+  'zh-hant-mo',
+];
 
 /**
  * Get current variant of the page (don't be misled by config naming).
@@ -48,7 +57,7 @@ function getLocalVariant(): string | null {
 function getBrowserVariant(): string | null {
   return navigator.languages
     .map((lang) => lang.toLowerCase())
-    .find((lang) => VALID_VARIANTS.includes(lang))
+    .find((lang) => [...VALID_VARIANTS, ...VALID_VARIANTS_BCP47].includes(lang))
     ?? null;
 }
 
@@ -77,7 +86,9 @@ function calculatePreferredVariant(): string | null {
 }
 
 function setLocalVariant(variant: string): void {
-  localStorage.setItem(LOCAL_STORAGE_KEY, variant);
+  if (VALID_VARIANTS.includes(variant)) {
+    localStorage.setItem(LOCAL_STORAGE_KEY, variant);
+  }
 }
 
 export {

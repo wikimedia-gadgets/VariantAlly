@@ -1,9 +1,9 @@
 import { output } from './debug';
-import { getMediaWikiVariant } from './model';
+import { getMediaWikiVariant, setLocalVariant } from './model';
 
 const WIKIURL_REGEX = /^\/(?:wiki|zh(?:-\w+)?)\//i;
-
 const REDIRECTED_FROM_KEY = 'va-rf';
+const VARIANT_PARAM = 'va-variant';
 
 function rewriteLink(link: string, variant: string): string {
   const normalizationTargetVariant = getMediaWikiVariant();
@@ -160,4 +160,12 @@ function showDialog(): void {
   import('ext.gadget.VariantAllyDialog');
 }
 
-export { rewriteLink, redirect, checkThisPage, rewriteAnchors, showDialog };
+function setVariantFromURL(): void {
+  const variant = new URL(location.href).searchParams.get(VARIANT_PARAM);
+  if (variant !== null) {
+    output('setVariantFromURL', `${VARIANT_PARAM}=${variant}, setting local variant...`);
+    setLocalVariant(variant);
+  }
+}
+
+export { rewriteLink, redirect, checkThisPage, rewriteAnchors, showDialog, setVariantFromURL };

@@ -1,12 +1,13 @@
 import { output, showDebugInformation } from './debug';
-import { checkThisPage, rewriteAnchors, showDialog } from './controller';
+import { checkThisPage, rewriteAnchors, setVariantFromURL, showDialog } from './controller';
 import { calculatePreferredVariant, getPageVariant } from './model';
 import { isExperiencedUser, isLangChinese, isReferrerBlocked } from './utils';
 
 showDebugInformation();
 
-const pageVariant = getPageVariant();
+setVariantFromURL();
 
+const pageVariant = getPageVariant();
 if (pageVariant === null) {
   output('index', 'Non-article page. Stop.');
 } else if (!isLangChinese()) {
