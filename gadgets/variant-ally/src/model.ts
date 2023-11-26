@@ -57,7 +57,7 @@ function getLocalVariant(): string | null {
 function getBrowserVariant(): string | null {
   return navigator.languages
     .map((lang) => lang.toLowerCase())
-    .find((lang) => [...VALID_VARIANTS, ...VALID_VARIANTS_BCP47].includes(lang))
+    .find((lang) => VALID_VARIANTS.includes(lang) || VALID_VARIANTS_BCP47.includes(lang))
     ?? null;
 }
 
