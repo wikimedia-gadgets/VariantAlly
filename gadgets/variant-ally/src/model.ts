@@ -11,6 +11,7 @@ const VALID_VARIANTS = [
   'zh-mo',
 ];
 // Additional variants which are not recommended but recognized by MediaWiki
+// Remember to convert lang codes to lowercase before comparing with this
 const VALID_VARIANTS_BCP47 = [
   'zh-hans-cn',
   'zh-hans-sg',
@@ -58,6 +59,7 @@ function getLocalVariant(): string | null {
 function getBrowserVariant(): string | null {
   return navigator.languages
     .map((lang) => lang.toLowerCase())
+    // FIXME: Use spread syntax once default gadget supports ES6
     .find((lang) => VALID_VARIANTS.includes(lang) || VALID_VARIANTS_BCP47.includes(lang))
     ?? null;
 }

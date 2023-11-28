@@ -2,7 +2,6 @@ import { output } from './debug';
 import { getMediaWikiVariant, setLocalVariant } from './model';
 
 const WIKIURL_REGEX = /^\/(?:wiki|zh(?:-\w+)?)\//i;
-const REDIRECTED_FROM_KEY = 'va-rf';
 const VARIANT_PARAM = 'va-variant';
 
 function rewriteLink(link: string, variant: string): string {
@@ -55,8 +54,6 @@ function rewriteLink(link: string, variant: string): string {
 }
 
 function redirect(preferredVariant: string, link?: string): void {
-  sessionStorage.setItem(REDIRECTED_FROM_KEY, preferredVariant);
-
   // Use replace() to prevent navigating back
   location.replace(rewriteLink(link ?? location.href, preferredVariant));
 }
@@ -160,6 +157,11 @@ function showDialog(): void {
   import('ext.gadget.VariantAllyDialog');
 }
 
+/**
+ * Set local variant according to URL query parameters.
+ *
+ * e.g. a URL with ?va-variant=zh-cn will set local variant to zh-cn
+ */
 function setLocalVariantFromURL(): void {
   const variant = new URL(location.href).searchParams.get(VARIANT_PARAM);
   if (variant !== null) {
@@ -168,4 +170,11 @@ function setLocalVariantFromURL(): void {
   }
 }
 
-export { rewriteLink, redirect, checkThisPage, rewriteAnchors, showDialog, setLocalVariantFromURL };
+export {
+  rewriteLink,
+  redirect,
+  checkThisPage,
+  rewriteAnchors,
+  showDialog,
+  setLocalVariantFromURL,
+};
