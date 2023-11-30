@@ -1,24 +1,26 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { setLocalVariant, redirect } from 'ext.gadget.VariantAlly';
-import { watch } from 'vue';
-import VariantDialog from './components/VariantDialog.vue';
-import useSyncedRef from './composables/useSyncedRef';
+import VAVariantPrompt from './components/VAVariantPrompt.vue';
 
-const isDialogOpen = useSyncedRef('open', true);
-const selectedVariant = useSyncedRef('var', '');
+const isDialogOpen = ref(true);
 
-watch(selectedVariant, (newValue) => {
-  setLocalVariant(newValue);
-  redirect(newValue);
+function setVariant(variant: string) {
+  setLocalVariant(variant);
+  redirect(variant);
+}
+
+addEventListener('scroll', () => {
+  isDialogOpen.value = false;
 });
-
 </script>
 
 <template>
   <Teleport to="body">
-    <VariantDialog
+    <VAVariantPrompt
       v-model:open="isDialogOpen"
-      @select="(variant) => { selectedVariant = variant; }"
+      :auto-close="true"
+      @select="setVariant"
     />
   </Teleport>
 </template>

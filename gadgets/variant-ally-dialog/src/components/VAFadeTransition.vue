@@ -1,6 +1,6 @@
 <template>
   <Transition
-    name="va-lang-switch"
+    name="va-fade"
     mode="out-in"
   >
     <slot />
@@ -10,15 +10,15 @@
 <style scoped lang="less">
 @import (reference) '../styles/mixins.less';
 
-.va-lang-switch-enter-active,
-.va-lang-switch-leave-active {
+.va-fade-enter-active,
+.va-fade-leave-active {
   transition-property: @transition-property-fade;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
 }
 
-.va-lang-switch-enter-from,
-.va-lang-switch-leave-to {
+.va-fade-enter-from,
+.va-fade-leave-to {
   opacity: 0;
 }
 </style>

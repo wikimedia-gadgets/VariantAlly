@@ -17,10 +17,12 @@
     "isolatedModules": true
   },
   "include": [
+    "src/**/*.js",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "../../node_modules/types-mediawiki"
   ],
   "exclude": []
 }

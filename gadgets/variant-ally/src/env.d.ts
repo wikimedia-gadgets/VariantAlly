@@ -7,6 +7,3 @@ const DEBUG: boolean;
 const BUILD_HASH: string;
 
 module 'ext.gadget.VariantAllyDialog';
-
-
-
