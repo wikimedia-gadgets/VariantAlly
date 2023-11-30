@@ -1,7 +1,7 @@
 import { rewriteLink } from '../src/controller';
 import { getMediaWikiVariant } from '../src/model';
 
-const VARIANTS = ['zh-cn', 'zh-sg', 'zh-my', 'zh-hk', 'zh-mo', 'zh-tw'];
+const VARIANTS = ['zh-cn', 'zh-sg', 'zh-my', 'zh-hk', 'zh-mo', 'zh-tw'] as const;
 
 jest.mock('../src/model');
 

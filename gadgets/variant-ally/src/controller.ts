@@ -1,8 +1,24 @@
 import { output } from './debug';
-import { getMediaWikiVariant, setLocalVariant } from './model';
+import { getMediaWikiVariant, isValidVariant, setLocalVariant } from './model';
 
 const WIKIURL_REGEX = /^\/(?:wiki|zh(?:-\w+)?)\//i;
+const WIKIURL_VARIANT_REGEX = /^\/zh(?:-\w+)?\//i;
 const VARIANT_PARAM = 'va-variant';
+
+function hasVariant(link: string): boolean {
+  const url = new URL(link);
+  // Only check same origin urls
+  if (url.host === location.host) {
+    if (WIKIURL_VARIANT_REGEX.test(url.pathname)) {
+      return true;
+    }
+    if (url.searchParams.has('variant')) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 function rewriteLink(link: string, variant: string): string {
   const normalizationTargetVariant = getMediaWikiVariant();
@@ -83,7 +99,6 @@ function checkThisPage(preferredVariant: string, pageVariant: string): void {
 }
 
 function rewriteAnchors(pageVariant: string): void {
-
   ['click', 'auxclick', 'dragstart'].forEach((name) => {
     document.addEventListener(name, (ev) => {
       const target = ev.target;
@@ -94,13 +109,9 @@ function rewriteAnchors(pageVariant: string): void {
         if (anchor) {
           output('rewriteAnchors', `Event ${ev.type} on ${anchor.href}`);
 
-          // Prevent variant dropdown/list links being overridden
-          // Vector/Vector 2022: in #p-variants
-          // Timeless: in #p-variants-desktop
-          // Minerva/MobileFrontend: in .suggested-languages
-          // Monobook: in .pBody
-          if (anchor.closest('#p-variants, #p-variants-desktop, .suggested-languages, .pBody')) {
-            output('rewriteAnchors', `Anchor is in variant dropdown list. Stop.`);
+          const oldLink = anchor.href;
+          if (hasVariant(oldLink)) {
+            output('rewriteAnchors', `Anchor has variant. Stop.`);
             return;
           }
 
@@ -153,7 +164,7 @@ function rewriteAnchors(pageVariant: string): void {
   });
 }
 
-function showDialog(): void {
+function showVariantPrompt(): void {
   import('ext.gadget.VariantAllyDialog');
 }
 
@@ -162,10 +173,10 @@ function showDialog(): void {
  *
  * e.g. a URL with ?va-variant=zh-cn will set local variant to zh-cn
  */
-function setLocalVariantFromURL(): void {
+function applyURLVariant(): void {
   const variant = new URL(location.href).searchParams.get(VARIANT_PARAM);
-  if (variant !== null) {
-    output('setLocalVariantFromURL', `${VARIANT_PARAM}=${variant}, setting local variant...`);
+  if (variant !== null && isValidVariant(variant)) {
+    output('applyURLVariant', `${VARIANT_PARAM}=${variant}, setting local variant...`);
     setLocalVariant(variant);
   }
 }
@@ -175,6 +186,6 @@ export {
   redirect,
   checkThisPage,
   rewriteAnchors,
-  showDialog,
-  setLocalVariantFromURL,
+  showVariantPrompt,
+  applyURLVariant,
 };

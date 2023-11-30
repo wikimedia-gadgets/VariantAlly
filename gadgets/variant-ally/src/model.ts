@@ -1,7 +1,7 @@
 import { isLoggedIn } from './utils';
 
 const LOCAL_VARIANT_KEY = 'va-var';
-const OPTOUT_KEY = 'va-output';
+const OPTOUT_KEY = 'va-optout';
 const VALID_VARIANTS = [
   'zh-cn',
   'zh-sg',
@@ -9,58 +9,72 @@ const VALID_VARIANTS = [
   'zh-tw',
   'zh-hk',
   'zh-mo',
-];
-// Additional variants which are not recommended but recognized by MediaWiki
-// Remember to convert lang codes to lowercase before comparing with this
-const VALID_VARIANTS_BCP47 = [
-  'zh-hans-cn',
-  'zh-hans-sg',
-  'zh-hans-my',
-  'zh-hant-tw',
-  'zh-hant-hk',
-  'zh-hant-mo',
-];
+] as const;
+const VARIANTS = [
+  'zh',
+  'zh-hans',
+  'zh-hant',
+  ...VALID_VARIANTS,
+] as const;
+// Maps additional lang codes to MediaWiki variants
+const BCP47_MAPPING: Record<string, ValidVariant> = {
+  'zh-hans-cn': 'zh-cn',
+  'zh-hans-sg': 'zh-sg',
+  'zh-hans-my': 'zh-my',
+  'zh-hant-tw': 'zh-tw',
+  'zh-hant-hk': 'zh-hk',
+  'zh-hant-mo': 'zh-mo',
+};
+
+type ValidVariant = typeof VALID_VARIANTS[number];
+type Variant = typeof VARIANTS[number];
+
+function isVariant(str: string): str is Variant {
+  return (VARIANTS as ReadonlyArray<string>).includes(str);
+}
+
+function isValidVariant(str: string): str is ValidVariant {
+  return (VALID_VARIANTS as ReadonlyArray<string>).includes(str);
+}
 
 /**
  * Get current variant of the page (don't be misled by config naming).
  * @returns variant, null for non-wikitext page
  */
-function getPageVariant(): string | null {
-  return mw.config.get('wgUserVariant');
+function getPageVariant(): Variant | null {
+  const result = mw.config.get('wgUserVariant');
+  return isVariant(result) ? result : null;
 }
 
 /**
  * Get account variant.
  * @returns account variant, null for anonymous user
  */
-function getAccountVariant(): string | null {
+function getAccountVariant(): Variant | null {
   if (isLoggedIn()) {
-    return mw.user.options.get('variant');
+    const result = mw.user.options.get('variant');
+    return isVariant(result) ? result : null;
   }
   return null;
 }
 
-function getLocalVariant(): string | null {
-  const browserVariant = getBrowserVariant();
-  const localVariant = localStorage.getItem(LOCAL_VARIANT_KEY);
-  if (browserVariant !== null && browserVariant !== localVariant) {
-    // Sync local variant with browser variant
-    setLocalVariant(browserVariant);
-    // Return synced local variant (browser variant here)
-    return browserVariant;
+function getLocalVariant(): Variant | null {
+  const result = localStorage.getItem(LOCAL_VARIANT_KEY);
+  if (result === null || !isVariant(result)) {
+    return null;
   }
-  return localVariant;
+  return result;
 }
 
 /**
- * Return browser variant if it's valid.
+ * Return browser language if it's a Chinese variant.
  * @returns browser variant
  */
-function getBrowserVariant(): string | null {
+function getBrowserVariant(): Variant | null {
   return navigator.languages
     .map((lang) => lang.toLowerCase())
-    // FIXME: Use spread syntax once default gadget supports ES6
-    .find((lang) => VALID_VARIANTS.includes(lang) || VALID_VARIANTS_BCP47.includes(lang))
+    .map((lang) => BCP47_MAPPING[lang] ?? lang)
+    .find((lang) => isVariant(lang)) as Variant
     ?? null;
 }
 
@@ -73,25 +87,31 @@ function getBrowserVariant(): string | null {
  *
  * @returns variant
  */
-function getMediaWikiVariant(): string | null {
+function getMediaWikiVariant(): Variant | null {
   return getAccountVariant() ?? getBrowserVariant();
 }
 
 /**
  * Calculate preferred variant from browser variant, local variant and account variant.
  *
- * Priority: account variant > local variant > browser variant
+ * Priority: account variant > browser variant > local variant
  *
  * @returns preferred variant
  */
-function calculatePreferredVariant(): string | null {
-  return getAccountVariant() ?? getLocalVariant() ?? getBrowserVariant();
+function calculatePreferredVariant(): ValidVariant | null {
+  const result = getAccountVariant() ?? getBrowserVariant() ?? getLocalVariant();
+  if (result === null || !isValidVariant(result)) {
+    return null;
+  }
+  // Optimistically set local variant to be equal to browser variant
+  // In case the user's browser language becomes invalid in the future,
+  // this reduces the possibility to show prompt to disrupt users.
+  setLocalVariant(result);
+  return result;
 }
 
-function setLocalVariant(variant: string): void {
-  if (VALID_VARIANTS.includes(variant)) {
-    localStorage.setItem(LOCAL_VARIANT_KEY, variant);
-  }
+function setLocalVariant(variant: Variant): void {
+  localStorage.setItem(LOCAL_VARIANT_KEY, variant);
 }
 
 function setOptOut(): void {
@@ -103,6 +123,8 @@ function isOptOuted(): boolean {
 }
 
 export {
+  isVariant,
+  isValidVariant,
   getPageVariant,
   getAccountVariant,
   getLocalVariant,

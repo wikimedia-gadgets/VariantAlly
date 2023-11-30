@@ -1,34 +1,44 @@
-import { output, showDebugInformation } from './debug';
-import { checkThisPage, rewriteAnchors, setLocalVariantFromURL, showDialog } from './controller';
+import { output, showDebugInfo } from './debug';
+import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt } from './controller';
 import { calculatePreferredVariant, getPageVariant, isOptOuted } from './model';
-import { isExperiencedUser, isLangChinese, isReferrerBlocked } from './utils';
+import { isLoggedIn, isLangChinese, isReferrerBlocked } from './utils';
 
-showDebugInformation();
+showDebugInfo();
+applyURLVariant();
 
-setLocalVariantFromURL();
-
-const pageVariant = getPageVariant();
 if (isOptOuted()) {
+  // Manually opt outed users: disable everything
   output('index', 'Opt-outed. Stop.');
-} else if (pageVariant === null) {
-  output('index', 'Non-article page. Stop.');
-} else if (!isLangChinese()) {
-  output('index', 'Page lang is not Chinese. Stop.');
 } else {
-  const preferredVariant = calculatePreferredVariant();
-
-  if (preferredVariant === null) {
-    output('index', 'Preferred variant is null, show variant dialog');
-    showDialog();
-  } else if (isExperiencedUser()) {
-    output('index', 'User is experienced. Stop.');
-  } else if (isReferrerBlocked()) {
-    output('index', `Referrer is in blocklist. Stop.`);
+  const pageVariant = getPageVariant();
+  if (pageVariant === null) {
+    // Non-article page (JS/CSS pages etc.): disable everything
+    output('index', 'Non-article page. Stop.');
   } else {
-    checkThisPage(preferredVariant, pageVariant);
-  }
+    const preferredVariant = calculatePreferredVariant();
+    if (preferredVariant === null) {
+      // Preferred variant unavailable: disable everything and show prompt
+      output('index', 'Preferred variant is null, show variant prompt');
+      showVariantPrompt();
+    } else {
+      if (isLoggedIn()) {
+        // Logged-in users: disable page redirection
+        // Anchor rewriting can be disabled by turning off the gadget itself
+        output('index', 'checkThisPage', 'Logged in. Stop.');
+      } else if (isReferrerBlocked()) {
+        // On-site navigation: disable page redirection
+        output('index', 'checkThisPage', `Referrer is in blocklist. Stop.`);
+      } else if (!isLangChinese()) {
+        // Non-Chinese pages/users: disable page redirection
+        output('index', 'Current lang is not Chinese. Stop.');
+      } else {
+        // The rest: run page redirection
+        checkThisPage(preferredVariant, pageVariant);
+      }
 
-  rewriteAnchors(pageVariant);
+      rewriteAnchors(pageVariant);
+    }
+  }
 }
 
 // Expose for VariantAllyDialog's use
