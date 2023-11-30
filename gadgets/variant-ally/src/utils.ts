@@ -2,17 +2,19 @@
 // - w.wiki
 const BLOCKED_REFERRER_HOST = /^w\.wiki$/i;
 
-// Used to suppress exceptions of URL constructor
-const DUMMY_REFERRER = 'a:';
-
 function isLoggedIn(): boolean {
   return mw.config.exists('wgUserId');
 }
 
 function isReferrerBlocked(): boolean {
-  const referrerHostname = new URL(document.referrer || DUMMY_REFERRER).hostname;
-  return referrerHostname === location.hostname
-    || BLOCKED_REFERRER_HOST.test(referrerHostname);
+  try {
+    const referrerHostname = new URL(document.referrer).hostname;
+    return referrerHostname === location.hostname
+      || BLOCKED_REFERRER_HOST.test(referrerHostname);
+  } catch {
+    // Invalid URL
+    return false;
+  }
 }
 
 /**

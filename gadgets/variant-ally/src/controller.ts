@@ -1,35 +1,41 @@
 import { output } from './debug';
 import { getMediaWikiVariant, isValidVariant, setLocalVariant } from './model';
 
-const WIKIURL_REGEX = /^\/(?:wiki|zh(?:-\w+)?)\//i;
-const WIKIURL_VARIANT_REGEX = /^\/zh(?:-\w+)?\//i;
+const REGEX_WIKI_URL = /^\/(?:wiki|zh(?:-\w+)?)\//i;
+const REGEX_VARIANT_URL = /^\/zh(?:-\w+)?\//i;
 const VARIANT_PARAM = 'va-variant';
 
-function hasVariant(link: string): boolean {
-  const url = new URL(link);
-  // Only check same origin urls
-  if (url.host === location.host) {
-    if (WIKIURL_VARIANT_REGEX.test(url.pathname)) {
-      return true;
+function isRewritingRequired(link: string): boolean {
+  try {
+    const url = new URL(link, location.origin);
+    // No rewriting if link itself has variant info
+    if (REGEX_VARIANT_URL.test(url.pathname)) {
+      return false;
     }
     if (url.searchParams.has('variant')) {
-      return true;
+      return false;
     }
-  }
+    // No rewriting for foreign origin URLs
+    if (url.host !== location.host) {
+      return false;
+    }
 
-  return false;
+    return true;
+  } catch {
+    output('isRewritingRequired', `Exception occurs when checking ${link}!`);
+    return false;
+  }
 }
 
 function rewriteLink(link: string, variant: string): string {
-  const normalizationTargetVariant = getMediaWikiVariant();
-  const url = new URL(link);
-  const pathname = url.pathname;
-  const searchParams = url.searchParams;
+  try {
+    const normalizationTargetVariant = getMediaWikiVariant();
+    const url = new URL(link, location.origin);
+    const pathname = url.pathname;
+    const searchParams = url.searchParams;
 
-  // Only handle same origin urls
-  if (url.host === location.host) {
-    if (WIKIURL_REGEX.test(pathname)) {
-      url.pathname = `/${variant}/${url.pathname.replace(WIKIURL_REGEX, '')}`;
+    if (REGEX_WIKI_URL.test(pathname)) {
+      url.pathname = `/${variant}/${url.pathname.replace(REGEX_WIKI_URL, '')}`;
       searchParams.delete('variant'); // For things like /zh-cn/A?variant=zh-hk
     } else {
       // HACK: workaround search box redirection not respecting `variant` URL param
@@ -59,14 +65,18 @@ function rewriteLink(link: string, variant: string): string {
       //
       // For example, for link /zh-tw/Title and normalization variant zh-tw, the result is /wiki/Title,
       // while for the same link and normalization variant zh-cn, the result is /zh-tw/Title (unchanged).
-      url.pathname = url.pathname.replace(WIKIURL_REGEX, '/wiki/');
+      url.pathname = url.pathname.replace(REGEX_WIKI_URL, '/wiki/');
       url.searchParams.delete('variant');
     }
-  }
 
-  const result = url.toString();
-  output('rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => ${result}`);
-  return result;
+    const result = url.toString();
+    output('rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => ${result}`);
+    return result;
+  } catch {
+    output('rewriteLink', `Exception occurs when rewriting ${link} + ${variant}!`);
+    // If anything fails, return the link as-is
+    return link;
+  }
 }
 
 function redirect(preferredVariant: string, link?: string): void {
@@ -109,15 +119,17 @@ function rewriteAnchors(pageVariant: string): void {
         if (anchor) {
           output('rewriteAnchors', `Event ${ev.type} on ${anchor.href}`);
 
-          const oldLink = anchor.href;
-          if (hasVariant(oldLink)) {
-            output('rewriteAnchors', `Anchor has variant. Stop.`);
+          const origLink = anchor.href;
+          if (!isRewritingRequired(origLink)) {
+            output('rewriteAnchors', 'Anchor does not require rewriting. Stop.');
             return;
           }
 
-          const newLink = rewriteLink(anchor.href, pageVariant);
+          const newLink = rewriteLink(origLink, pageVariant);
 
-          if (ev instanceof DragEvent && ev.dataTransfer) {
+          // Browser support: Safari < 14
+          // Fail silently when DragEvent is not present
+          if (window.DragEvent && ev instanceof DragEvent && ev.dataTransfer) {
             // Modify drag data directly because setting href has no effect in drag event
             ev.dataTransfer.types.forEach((type) => {
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -133,9 +145,7 @@ function rewriteAnchors(pageVariant: string): void {
               output('rewriteAnchors', 'clickHandler', 'Anchor locked.');
             }
 
-            const origLink = anchor.href;
             anchor.href = newLink;
-
             output('rewriteAnchors', 'clickHandler', `href ${anchor.href}, origLink ${origLink}`);
 
             // HACK: workaround popups not working on modified links
