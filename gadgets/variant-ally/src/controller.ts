@@ -8,6 +8,10 @@ const VARIANT_PARAM = 'va-variant';
 
 function isRewritingRequired(link: string): boolean {
   try {
+    // No rewriting for empty links
+    if (link === '') {
+      return false;
+    }
     const url = new URL(link, location.origin);
     // No rewriting if link itself has variant info
     if (REGEX_VARIANT_URL.test(url.pathname)) {
@@ -17,6 +21,7 @@ function isRewritingRequired(link: string): boolean {
       return false;
     }
     // No rewriting for foreign origin URLs
+    // Note that links like javascript:void(0) are blocked by this
     if (url.host !== location.host) {
       return false;
     }
@@ -115,9 +120,11 @@ function rewriteAnchors(pageVariant: string): void {
       const target = ev.target;
 
       if (target instanceof Element) {
-        const anchor = target.closest('a');
+        // Do not write <a> with hash only href or no href
+        // which is known to cause breakage in e.g. Visual Editor
+        const anchor: HTMLAnchorElement | null = target.closest('a[href]:not([href^="#"])');
 
-        if (anchor) {
+        if (anchor !== null) {
           output('rewriteAnchors', `Event ${ev.type} on ${anchor.href}`);
 
           const origLink = anchor.href;

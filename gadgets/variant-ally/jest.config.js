@@ -6,6 +6,6 @@ export default {
     './test/setup.ts',
   ],
   transform: {
-    '^.+\\.[t|j]sx?$': 'ts-jest',
+    '^.+\\.tsx?$': 'ts-jest',
   },
 };

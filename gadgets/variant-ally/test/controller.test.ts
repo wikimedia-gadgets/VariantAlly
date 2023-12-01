@@ -146,4 +146,12 @@ describe('isRewritingRequired', () => {
   test('return false for foreign links', () => {
     expect(isRewritingRequired('https://meta.wikimedia.org/wiki/Article')).toBe(false);
   });
+
+  test('return false for empty links', () => {
+    expect(isRewritingRequired('')).toBe(false);
+  });
+
+  test('return false for javascript links', () => {
+    expect(isRewritingRequired('javascript:void(0)')).toBe(false);
+  });
 });
