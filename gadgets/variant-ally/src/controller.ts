@@ -192,6 +192,7 @@ function applyURLVariant(): void {
 }
 
 export {
+  isRewritingRequired,
   rewriteLink,
   redirect,
   checkThisPage,

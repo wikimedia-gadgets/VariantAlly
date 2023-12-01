@@ -1,7 +1,17 @@
-import { rewriteLink } from '../src/controller';
+import { isRewritingRequired, rewriteLink } from '../src/controller';
 import { getMediaWikiVariant } from '../src/model';
 
-const VARIANTS = ['zh-cn', 'zh-sg', 'zh-my', 'zh-hk', 'zh-mo', 'zh-tw'] as const;
+const VARIANTS = [
+  'zh',
+  'zh-hans',
+  'zh-hant',
+  'zh-cn',
+  'zh-sg',
+  'zh-my',
+  'zh-hk',
+  'zh-mo',
+  'zh-tw',
+] as const;
 
 jest.mock('../src/model');
 
@@ -99,14 +109,6 @@ describe('rewriteLink', () => {
     });
   });
 
-  describe("leaves other wiki's links as-is", () => {
-    test.each(VARIANTS)('in %s', (variant) => {
-      mockedGetMediaWikiVariant.mockReturnValue(null);
-      expect(rewriteLink('https://meta.wikimedia.org/wiki/Article', variant))
-        .toMatch('https://meta.wikimedia.org/wiki/Article');
-    });
-  });
-
   describe('correctly handles search result links', () => {
     test.each(VARIANTS)('in %s', (variant) => {
       mockedGetMediaWikiVariant.mockReturnValue(null);
@@ -115,5 +117,33 @@ describe('rewriteLink', () => {
         variant,
       )).toMatch(`https://zh.wikipedia.org/${variant}/Article`);
     });
+  });
+});
+
+describe('isRewritingRequired', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test('return true for normal links', () => {
+    expect(isRewritingRequired('https://zh.wikipedia.org/wiki/Article')).toBe(true);
+  });
+
+  describe('return false for links with /variant/', () => {
+    test.each(VARIANTS)('for %s link', (variant) => {
+      expect(isRewritingRequired(`https://zh.wikipedia.org/${variant}/Article`))
+        .toBe(false);
+    });
+  });
+
+  describe('return false for links with ?variant', () => {
+    test.each(VARIANTS)('for %s link', (variant) => {
+      expect(isRewritingRequired(`https://zh.wikipedia.org/wiki/Article?variant=${variant}`))
+        .toBe(false);
+    });
+  });
+
+  test('return false for foreign links', () => {
+    expect(isRewritingRequired('https://meta.wikimedia.org/wiki/Article')).toBe(false);
   });
 });
