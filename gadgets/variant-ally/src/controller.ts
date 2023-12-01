@@ -92,7 +92,7 @@ function rewriteAnchors(pageVariant: string): void {
       const target = ev.target;
 
       if (target instanceof Element) {
-        const anchor = target.closest('a');
+        const anchor = target.closest('a[href]');
 
         if (anchor) {
           output('rewriteAnchors', `Event ${ev.type} on ${anchor.href}`);
