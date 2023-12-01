@@ -149,11 +149,8 @@ watch(prompt, () => {
   position: fixed;
   left: 1.25em;
   bottom: 1em;
-  width: calc(100% - 2em);
-
-  // Calculated from Vector 2022 source code
-  // In this width this prompt will not obscure article content
-  max-width: calc(15.75em + 36px);
+  width: calc(100% - $left * 2);
+  max-width: 18em;
   max-height: calc(100vh - 2em);
 
   overflow: auto;
