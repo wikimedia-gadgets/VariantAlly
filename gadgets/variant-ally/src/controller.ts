@@ -1,5 +1,6 @@
 import { output } from './debug';
 import { getMediaWikiVariant, isValidVariant, setLocalVariant } from './model';
+import stat from './stats';
 
 const REGEX_WIKI_URL = /^\/(?:wiki|zh(?:-\w+)?)\//i;
 const REGEX_VARIANT_URL = /^\/zh(?:-\w+)?\//i;
@@ -175,6 +176,7 @@ function rewriteAnchors(pageVariant: string): void {
 }
 
 function showVariantPrompt(): void {
+  stat('variant-prompt-show');
   import('ext.gadget.VariantAllyDialog');
 }
 

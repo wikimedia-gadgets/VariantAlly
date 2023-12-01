@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { ValidVariant } from 'ext.gadget.VariantAlly';
 import VAButton from './VAButton.vue';
 import VAFadeTransition from './VAFadeTransition.vue';
 import useI18n, { currentVariant } from '../composables/useI18n';
@@ -22,7 +23,7 @@ const props = withDefaults(defineProps<{
   autoClose: false,
 });
 const emit = defineEmits<{
-  (e: 'select', variant: string): void;
+  (e: 'select', variant: ValidVariant): void;
   (e: 'update:open', value: boolean): void;
 }>();
 

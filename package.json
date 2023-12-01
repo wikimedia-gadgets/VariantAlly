@@ -7,7 +7,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint .",
-    "type-check": "pnpm -r exec tsc --noEmit",
+    "type-check": "pnpm -r run type-check",
     "build:prod": "pnpm -r run build:prod",
     "build:debug": "pnpm -r run build:debug"
   },

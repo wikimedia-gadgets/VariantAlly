@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { setLocalVariant, redirect } from 'ext.gadget.VariantAlly';
+import { setLocalVariant, redirect, ValidVariant } from 'ext.gadget.VariantAlly';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
 
 const isDialogOpen = ref(true);
 
-function setVariant(variant: string) {
+function setVariant(variant: ValidVariant) {
   setLocalVariant(variant);
   redirect(variant);
 }

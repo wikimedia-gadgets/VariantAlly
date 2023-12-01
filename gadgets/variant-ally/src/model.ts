@@ -123,6 +123,8 @@ function isOptOuted(): boolean {
 }
 
 export {
+  type ValidVariant,
+  type Variant,
   isVariant,
   isValidVariant,
   getPageVariant,

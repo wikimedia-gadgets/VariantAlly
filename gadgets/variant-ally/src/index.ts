@@ -42,5 +42,6 @@ if (isOptOuted()) {
 }
 
 // Expose for VariantAllyDialog's use
-export { setLocalVariant, setOptOut } from './model';
+export { setLocalVariant, setOptOut, type ValidVariant, type Variant } from './model';
 export { redirect } from './controller';
+export { default as stat } from './stats';

@@ -137,3 +137,6 @@ dist
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Rollup cache
+.rollup.cache
