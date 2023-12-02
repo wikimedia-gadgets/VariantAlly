@@ -3,11 +3,12 @@ import { ref, watch } from 'vue';
 import { setLocalVariant, redirect, ValidVariant, setOptOut, stat } from 'ext.gadget.VariantAlly';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
 import VAVariantPromptMobile from './components/VAVariantPromptMobile.vue';
-import { isMobileSite } from './utils';
+import { getMountPoint, isMobileSite } from './utils';
 
 const isOpen = ref(true);
 const isDisabled = ref(false);
 const isMobile = isMobileSite();
+const desktopMountPoint = getMountPoint();
 
 function setVariant(variant: ValidVariant) {
   stat('variant-prompt-select');
@@ -34,15 +35,18 @@ watch(isOpen, (newValue) => {
 </script>
 
 <template>
-  <VAVariantPrompt
-    v-if="!isMobile"
-    v-model:open="isOpen"
-    v-model:disabled="isDisabled"
-    :auto-close="true"
-    @optout="onOptOut"
-    @select="setVariant"
-  />
+  <Teleport :to="desktopMountPoint">
+    <VAVariantPrompt
+      v-if="!isMobile"
+      v-model:open="isOpen"
+      v-model:disabled="isDisabled"
+      :auto-close="true"
+      @optout="onOptOut"
+      @select="setVariant"
+    />
+  </Teleport>
 
+  <!-- Teleport to body because they are always floated at bottom -->
   <Teleport to="body">
     <VAVariantPromptMobile
       v-if="isMobile"
@@ -53,7 +57,6 @@ watch(isOpen, (newValue) => {
     />
   </Teleport>
 </template>
-
 
 <style lang="less">
 @import (reference) './styles/tokens.less';
