@@ -3,12 +3,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
+import VASelect from './components/VASelect.vue';
 import { onMounted } from 'vue';
 import { wgUserVariant } from './composables/useI18n';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
 
 const isVariantPromptOpen = ref(false);
 const isVariantPromptDisabled = ref(false);
+const isVariantPromptMobile = ref(false);
 const closeOnMouseLeave = ref(false);
 const closeOnScroll = ref(false);
 const variantPrompt = ref<InstanceType<typeof VAVariantPrompt> | null>(null);
@@ -67,6 +69,13 @@ function onVariantPromptSelect(variant: ValidVariant) {
     </label>
     <label>
       <input
+        v-model="isVariantPromptMobile"
+        type="checkbox"
+      >
+      Mobile
+    </label>
+    <label>
+      <input
         v-model="closeOnMouseLeave"
         type="checkbox"
       >
@@ -86,6 +95,7 @@ function onVariantPromptSelect(variant: ValidVariant) {
       ref="variantPrompt"
       v-model:open="isVariantPromptOpen"
       v-model:disabled="isVariantPromptDisabled"
+      :mobile="isVariantPromptMobile"
       :auto-close="closeOnMouseLeave"
       @optout="onVariantPromptOptOut"
       @select="onVariantPromptSelect"

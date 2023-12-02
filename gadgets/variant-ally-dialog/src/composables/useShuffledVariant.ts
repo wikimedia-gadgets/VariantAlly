@@ -1,21 +1,21 @@
 import { Ref, ref } from 'vue';
+import { ValidVariant } from 'ext.gadget.VariantAlly';
+import { VALID_VARIANTS } from '../constants';
 
-const VARIANTS = ['cn', 'sg', 'my', 'hk', 'mo', 'tw'] as const;
 const INTERVAL = 5 * 1000;
 
-type Variant = typeof VARIANTS[number];
 
-function updateRef(ref: Ref<Variant>) {
-  const randomIndex = Math.floor(Math.random() * VARIANTS.length);
-  ref.value = VARIANTS[randomIndex];
+function updateRef(ref: Ref<ValidVariant>) {
+  const randomIndex = Math.floor(Math.random() * VALID_VARIANTS.length);
+  ref.value = VALID_VARIANTS[randomIndex];
 }
 
 /**
  * Return a ref which shuffle between all possible variants.
  */
-function useShuffledVariant(): Ref<Variant> {
-  // 'cn' is a dummy value that is never used
-  const result = ref<Variant>('cn');
+function useShuffledVariant(): Ref<ValidVariant> {
+  // 'zh-cn' is a dummy value that is never used
+  const result = ref<ValidVariant>('zh-cn');
 
   setInterval(() => {
     updateRef(result);
