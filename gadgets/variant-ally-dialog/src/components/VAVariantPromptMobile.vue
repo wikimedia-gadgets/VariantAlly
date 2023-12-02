@@ -76,6 +76,7 @@ function select(variant: ValidVariant) {
           class="va-variant-prompt-mobile__main__select"
           :lang="selectedVariant"
           :disabled="disabled"
+          :aria-labelledby="titleId"
         >
           <option
             v-for="variant in VALID_VARIANTS"
