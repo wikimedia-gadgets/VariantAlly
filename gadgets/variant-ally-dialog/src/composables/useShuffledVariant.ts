@@ -4,10 +4,9 @@ import { VALID_VARIANTS } from '../constants';
 
 const INTERVAL = 5 * 1000;
 
-
-function updateRef(ref: Ref<ValidVariant>) {
+function shuffleVariant(): ValidVariant {
   const randomIndex = Math.floor(Math.random() * VALID_VARIANTS.length);
-  ref.value = VALID_VARIANTS[randomIndex];
+  return VALID_VARIANTS[randomIndex];
 }
 
 /**
@@ -18,11 +17,11 @@ function useShuffledVariant(): Ref<ValidVariant> {
   const result = ref<ValidVariant>('zh-cn');
 
   setInterval(() => {
-    updateRef(result);
+    result.value = shuffleVariant();
   }, INTERVAL);
-  updateRef(result);
+  result.value = shuffleVariant();
 
   return result;
 }
 
-export default useShuffledVariant;
+export { useShuffledVariant as default, shuffleVariant };

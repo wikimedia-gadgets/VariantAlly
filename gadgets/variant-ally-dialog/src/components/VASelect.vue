@@ -26,6 +26,7 @@ const modelValue = useModelWrapper(props, emit);
 
 .va-select {
   .select__handle();
+  font-size: @font-size-small;
   appearance: none;
   background-position: center right @spacing-75;
   background-repeat: no-repeat;

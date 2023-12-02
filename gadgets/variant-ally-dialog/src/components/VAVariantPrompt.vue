@@ -4,7 +4,7 @@ import { ValidVariant } from 'ext.gadget.VariantAlly';
 import VAButton from './VAButton.vue';
 import VAFadeTransition from './VAFadeTransition.vue';
 import VASelect from './VASelect.vue';
-import useI18n, { currentVariant } from '../composables/useI18n';
+import useI18n, { currentVariant, selectorDefault } from '../composables/useI18n';
 import useUniqueId from '../composables/useUniqueId';
 import useShuffledVariant from '../composables/useShuffledVariant';
 import { VALID_VARIANTS } from '../constants';
@@ -32,7 +32,7 @@ const prompt = ref<HTMLElement | null>(null);
 const titleId = useUniqueId();
 const descId = useUniqueId();
 const shuffledVariant = useShuffledVariant();
-const selectedVariant = ref<ValidVariant>('zh-cn');
+const selectedVariant = ref(selectorDefault.value);
 const isOpen = useModelWrapper(props, emit, 'open');
 const isDisabled = useModelWrapper(props, emit, 'disabled');
 
@@ -84,10 +84,7 @@ watch(prompt, () => {
         :disabled="disabled"
         @click="optOutAndClose"
       />
-      <h2
-        :id="titleId"
-        class="va-variant-prompt__header va-title"
-      >
+      <h2 class="va-variant-prompt__header va-title">
         {{ useI18n('vp.header') }}<br>
         <VAFadeTransition>
           <span
@@ -98,7 +95,7 @@ watch(prompt, () => {
         </VAFadeTransition>
       </h2>
       <p
-        :id="descId"
+        :id="titleId"
         class="va-variant-prompt__desc va-para"
       >
         {{ useI18n('vp.main') }}
@@ -135,12 +132,16 @@ watch(prompt, () => {
         <VAButton
           class="va-variant-prompt__mobile__action"
           action="progressive"
+          icon="arrowNext"
           :disabled="disabled"
           @click="() => { select(selectedVariant) }"
         >{{ useI18n('vp.button') }}</VAButton>
       </div>
       <footer class="va-variant-prompt__footer">
-        <p class="va-para va-para--subtle">
+        <p
+          :id="descId"
+          class="va-para va-para--subtle"
+        >
           {{ useI18n('vp.main.ext') }}
         </p>
       </footer>
@@ -253,6 +254,10 @@ watch(prompt, () => {
   .va-variant-prompt {
     &__close {
       margin-top: @spacing-0;
+    }
+
+    &__desc {
+      font-weight: @font-weight-bold;
     }
 
     &__header {

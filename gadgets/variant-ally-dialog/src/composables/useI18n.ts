@@ -1,5 +1,8 @@
 import { computed, ref } from 'vue';
 import messages from '../../assets/messages.json';
+import { VALID_VARIANTS } from '../utils';
+import { shuffleVariant } from './useShuffledVariant';
+import { ValidVariant } from 'ext.gadget.VariantAlly';
 
 // Wrap wgUserVariant in a ref for debugging purposes.
 // It has no reactivity in production. (changes to wgUserVariant will not be reflected)
@@ -18,10 +21,17 @@ const currentVariant = computed(() => {
   return 'hans';
 });
 
+const selectorDefault = computed(() => {
+  if ((VALID_VARIANTS as ReadonlyArray<string>).includes(wgUserVariant.value)) {
+    return wgUserVariant.value as ValidVariant;
+  }
+  return shuffleVariant();
+});
+
 function useI18n(key: string): string {
   const currentMsgsGroup: Record<string, string> = messages[currentVariant.value];
   return currentMsgsGroup[key] ?? key;
 }
 
 // Export wgUserVariant for debugging purposes
-export { useI18n as default, currentVariant, wgUserVariant };
+export { useI18n as default, currentVariant, wgUserVariant, selectorDefault };

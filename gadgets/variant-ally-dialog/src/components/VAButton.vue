@@ -24,6 +24,7 @@ defineProps<{
       v-if="icon !== undefined"
       class="va-button__icon"
       :icon="icon"
+      :size="16"
     />
     <span class="va-button__text">
       <slot />
@@ -123,6 +124,7 @@ defineProps<{
 
   &__icon {
     fill: currentColor;
+    margin-right: @spacing-25;
   }
 
   &__indicator {
