@@ -11,5 +11,4 @@
  *
  * See https://github.com/diskdance/VariantAlly/blob/main/CONTRIBUTING.md for build instructions.
  */
-// SPDX-License-Identifier: BSD-3-Clause
 // <nowiki>
