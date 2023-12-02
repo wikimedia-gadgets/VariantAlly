@@ -19,13 +19,16 @@ const shuffledVariant = useShuffledVariant();
 const props = withDefaults(defineProps<{
   open: boolean,
   autoClose?: boolean,
+  disabled?: boolean,
 }>(), {
   autoClose: false,
+  disabled: false,
 });
 const emit = defineEmits<{
   (e: 'select', variant: ValidVariant): void;
   (e: 'optout'): void;
   (e: 'update:open', value: boolean): void;
+  (e: 'update:disabled', value: boolean): void;
 }>();
 
 function optOutAndClose() {
@@ -33,12 +36,17 @@ function optOutAndClose() {
   emit('update:open', false);
 }
 
+function select(variant: ValidVariant) {
+  emit('update:disabled', true);
+  emit('select', variant);
+}
+
 watch(prompt, () => {
   const element = prompt.value;
   if (element !== null) {
     element.addEventListener('mouseleave', (ev) => {
       // Do not dismiss if any button is pressed
-      if (ev.buttons === 0 && props.autoClose) {
+      if (ev.buttons === 0 && props.autoClose && !props.disabled) {
         emit('update:open', false);
       }
     });
@@ -67,6 +75,7 @@ watch(prompt, () => {
         icon="close"
         :title="useI18n('close')"
         :aria-label="useI18n('close')"
+        :disabled="disabled"
         @click="optOutAndClose"
       />
       <h2
@@ -98,7 +107,8 @@ watch(prompt, () => {
             weight="quiet"
             action="progressive"
             :lang="`zh-${variant}`"
-            @click="$emit('select', `zh-${variant}`)"
+            :disabled="disabled"
+            @click="() => { select(`zh-${variant}`) }"
           >
             {{ messages.variants[variant] }}
           </VAButton>

@@ -3,7 +3,8 @@ import { ref, watch } from 'vue';
 import { setLocalVariant, redirect, ValidVariant, setOptOut, stat } from 'ext.gadget.VariantAlly';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
 
-const isDialogOpen = ref(true);
+const isOpen = ref(true);
+const isDisabled = ref(false);
 
 function setVariant(variant: ValidVariant) {
   stat('variant-prompt-select');
@@ -12,7 +13,9 @@ function setVariant(variant: ValidVariant) {
 }
 
 addEventListener('scroll', () => {
-  isDialogOpen.value = false;
+  if (!isDisabled.value) {
+    isOpen.value = false;
+  }
 });
 
 function onOptOut() {
@@ -20,7 +23,7 @@ function onOptOut() {
   setOptOut();
 }
 
-watch(isDialogOpen, (newValue) => {
+watch(isOpen, (newValue) => {
   if (!newValue) {
     stat('variant-prompt-dismiss');
   }
@@ -29,7 +32,8 @@ watch(isDialogOpen, (newValue) => {
 
 <template>
   <VAVariantPrompt
-    v-model:open="isDialogOpen"
+    v-model:open="isOpen"
+    v-model:disabled="isDisabled"
     :auto-close="true"
     @optout="onOptOut"
     @select="setVariant"
@@ -43,20 +47,22 @@ watch(isDialogOpen, (newValue) => {
 .va-variant-prompt {
 
   // Vector 2022 specific adjustments
-  .vector-toc-available.vector-feature-toc-pinned-clientpref-1 .skin-vector-2022 & {
-    @media screen and (min-width: 1000px) and (max-width: 1200px) {
-      left: unset;
+  .skin-vector-2022 & {
+    .vector-toc-available.vector-feature-toc-pinned-clientpref-1 & {
+      @media screen and (min-width: 1000px) and (max-width: 1200px) {
+        left: unset;
 
-      // Calculated from Vector 2022 source code
-      // In this width this prompt will not obscure article content
-      margin-left: -(2.75em / 2);
-      max-width: calc(12.25em + 36px);
-      padding: @spacing-100;
+        // Calculated from Vector 2022 source code
+        // In this width this prompt will not obscure article content
+        margin-left: -(2.75em / 3 * 2);
+        max-width: calc(12.25em + 36px);
+        padding: @spacing-100;
+      }
     }
 
     @media screen and (min-width: 1200px) {
       left: unset;
-      margin-left: -(3.25em / 2);
+      margin-left: -(3.25em / 3 * 2);
       max-width: calc(15.75em + 36px);
     }
   }

@@ -74,6 +74,13 @@ defineProps<{
     }
   }
 
+  &:disabled {
+    background-color: @background-color-disabled;
+    color: @color-inverted;
+    border-color: @border-color-transparent;
+    cursor: @cursor-not-allowed;
+  }
+
   &--weight-quiet {
     background-color: @background-color-transparent;
     border-color: @border-color-transparent;
@@ -100,6 +107,13 @@ defineProps<{
       color: @color-inverted;
       background-color: @background-color-progressive--active;
       border-color: @border-color-progressive--active;
+    }
+  }
+
+  &--weight-quiet {
+    &:disabled {
+      background-color: @background-color-transparent;
+      color: @color-disabled;
     }
   }
 

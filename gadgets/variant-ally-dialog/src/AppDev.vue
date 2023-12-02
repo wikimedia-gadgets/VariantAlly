@@ -1,17 +1,17 @@
 <!-- Vite dev server. This script is never run in the browser! -->
 
 <script setup lang="ts">
-import { watch, ref } from 'vue';
-import useSyncedRef from './composables/useSyncedRef';
+import { ref } from 'vue';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
 import { onMounted } from 'vue';
 import { wgUserVariant } from './composables/useI18n';
+import { ValidVariant } from 'ext.gadget.VariantAlly';
 
 const isVariantPromptOpen = ref(false);
+const isVariantPromptDisabled = ref(false);
 const closeOnMouseLeave = ref(false);
 const closeOnScroll = ref(false);
 const variantPrompt = ref<InstanceType<typeof VAVariantPrompt> | null>(null);
-const selectedVariant = useSyncedRef('var', '');
 const variantInput = ref<HTMLInputElement | null>(null);
 
 onMounted(() => {
@@ -20,30 +20,30 @@ onMounted(() => {
   }
 });
 
-watch(selectedVariant, (newValue) => {
-  alert(`Selected ${newValue}`);
-});
-
 addEventListener('scroll', () => {
-  if (closeOnScroll.value) {
+  if (closeOnScroll.value && !isVariantPromptDisabled.value) {
     isVariantPromptOpen.value = false;
   }
 });
-
-function onOptOut() {
-  alert('Opt outed!');
-}
 
 function setUserVariant() {
   if (variantInput.value !== null) {
     wgUserVariant.value = variantInput.value.value;
   }
 }
+
+function onVariantPromptOptOut() {
+  alert('Opt outed!');
+}
+
+
+function onVariantPromptSelect(variant: ValidVariant) {
+  alert(`Selected ${variant}`);
+}
 </script>
 
 <template>
   <h1>VariantAllyDialog dev server</h1>
-
   <div>
     <p>wgUserVariant: <input ref="variantInput">
       <button @click="setUserVariant">
@@ -58,6 +58,13 @@ function setUserVariant() {
     <button @click="isVariantPromptOpen = !isVariantPromptOpen">
       Toggle dialog
     </button>
+    <label>
+      <input
+        v-model="isVariantPromptDisabled"
+        type="checkbox"
+      >
+      Disabled
+    </label>
     <label>
       <input
         v-model="closeOnMouseLeave"
@@ -78,9 +85,10 @@ function setUserVariant() {
     <VAVariantPrompt
       ref="variantPrompt"
       v-model:open="isVariantPromptOpen"
+      v-model:disabled="isVariantPromptDisabled"
       :auto-close="closeOnMouseLeave"
-      @optout="onOptOut"
-      @select="(variant) => { selectedVariant = variant; }"
+      @optout="onVariantPromptOptOut"
+      @select="onVariantPromptSelect"
     />
   </Teleport>
 </template>
