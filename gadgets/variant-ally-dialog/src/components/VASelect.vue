@@ -1,5 +1,21 @@
+<script setup lang="ts">
+import useModelWrapper from '../composables/useModelWrapper';
+
+const props = defineProps<{
+  modelValue: string;
+}>();
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+}>();
+
+const modelValue = useModelWrapper(props, emit);
+</script>
+
 <template>
-  <select class="va-select">
+  <select
+    v-model="modelValue"
+    class="va-select"
+  >
     <slot />
   </select>
 </template>
@@ -15,7 +31,6 @@
   background-repeat: no-repeat;
   background-image: @icon-expand;
   background-size: @size-icon-x-small;
-  min-width: @size-1600;
 
   &:disabled {
     .select__handle--disabled();

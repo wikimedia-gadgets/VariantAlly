@@ -9,38 +9,40 @@ import useUniqueId from '../composables/useUniqueId';
 import useShuffledVariant from '../composables/useShuffledVariant';
 import { VALID_VARIANTS } from '../constants';
 import messages from '../../assets/messages.json';
+import useModelWrapper from '../composables/useModelWrapper';
+
+const props = withDefaults(defineProps<{
+  open: boolean,
+  disabled?: boolean,
+  mobile?: boolean,
+  autoClose?: boolean,
+}>(), {
+  disabled: false,
+  mobile: false,
+  autoClose: false,
+});
+const emit = defineEmits<{
+  (e: 'update:open', value: boolean): void;
+  (e: 'update:disabled', value: boolean): void;
+  (e: 'select', variant: ValidVariant): void;
+  (e: 'optout'): void;
+}>();
 
 const prompt = ref<HTMLElement | null>(null);
-
 const titleId = useUniqueId();
 const descId = useUniqueId();
 const shuffledVariant = useShuffledVariant();
 const selectedVariant = ref<ValidVariant>('zh-cn');
-
-const props = withDefaults(defineProps<{
-  open: boolean,
-  mobile?: boolean,
-  autoClose?: boolean,
-  disabled?: boolean,
-}>(), {
-  mobile: false,
-  autoClose: false,
-  disabled: false,
-});
-const emit = defineEmits<{
-  (e: 'select', variant: ValidVariant): void;
-  (e: 'optout'): void;
-  (e: 'update:open', value: boolean): void;
-  (e: 'update:disabled', value: boolean): void;
-}>();
+const isOpen = useModelWrapper(props, emit, 'open');
+const isDisabled = useModelWrapper(props, emit, 'disabled');
 
 function optOutAndClose() {
   emit('optout');
-  emit('update:open', false);
+  isOpen.value = false;
 }
 
 function select(variant: ValidVariant) {
-  emit('update:disabled', true);
+  isDisabled.value = true;
   emit('select', variant);
 }
 
@@ -50,7 +52,7 @@ watch(prompt, () => {
     element.addEventListener('mouseleave', (ev) => {
       // Do not dismiss if any button is pressed
       if (ev.buttons === 0 && props.autoClose && !props.disabled) {
-        emit('update:open', false);
+        isOpen.value = false;
       }
     });
   }
@@ -109,7 +111,7 @@ watch(prompt, () => {
           indicator="arrowNext"
           weight="quiet"
           action="progressive"
-          :lang="`zh-${variant}`"
+          :lang="variant"
           :disabled="disabled"
           @click="() => { select(variant) }"
         >
@@ -120,15 +122,18 @@ watch(prompt, () => {
         <VASelect
           v-model="selectedVariant"
           class="va-variant-prompt__mobile__select"
+          :lang="selectedVariant"
           :disabled="disabled"
         >
           <option
             v-for="variant in VALID_VARIANTS"
             :key="variant"
             :value="variant"
+            :lang="variant"
           >{{ messages.variants[variant] }}</option>
         </VASelect>
         <VAButton
+          class="va-variant-prompt__mobile__action"
           action="progressive"
           :disabled="disabled"
           @click="() => { select(selectedVariant) }"
@@ -264,6 +269,10 @@ watch(prompt, () => {
       &__select {
         margin-right: @spacing-75;
         flex: 1;
+      }
+
+      &__action {
+        flex-shrink: 0;
       }
     }
   }
