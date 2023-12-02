@@ -24,10 +24,12 @@ const props = withDefaults(defineProps<{
 });
 const emit = defineEmits<{
   (e: 'select', variant: ValidVariant): void;
+  (e: 'optout'): void;
   (e: 'update:open', value: boolean): void;
 }>();
 
-function close() {
+function optOutAndClose() {
+  emit('optout');
   emit('update:open', false);
 }
 
@@ -37,7 +39,7 @@ watch(prompt, () => {
     element.addEventListener('mouseleave', (ev) => {
       // Do not dismiss if any button is pressed
       if (ev.buttons === 0 && props.autoClose) {
-        close();
+        emit('update:open', false);
       }
     });
   }
@@ -65,7 +67,7 @@ watch(prompt, () => {
         icon="close"
         :title="useI18n('close')"
         :aria-label="useI18n('close')"
-        @click="close"
+        @click="optOutAndClose"
       />
       <h2
         :id="titleId"

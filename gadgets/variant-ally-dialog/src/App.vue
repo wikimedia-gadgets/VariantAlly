@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { setLocalVariant, redirect, ValidVariant } from 'ext.gadget.VariantAlly';
+import { ref, watch } from 'vue';
+import { setLocalVariant, redirect, ValidVariant, setOptOut, stat } from 'ext.gadget.VariantAlly';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
 
 const isDialogOpen = ref(true);
 
 function setVariant(variant: ValidVariant) {
+  stat('variant-prompt-select');
   setLocalVariant(variant);
   redirect(variant);
 }
@@ -13,12 +14,24 @@ function setVariant(variant: ValidVariant) {
 addEventListener('scroll', () => {
   isDialogOpen.value = false;
 });
+
+function onOptOut() {
+  stat('variant-prompt-optout');
+  setOptOut();
+}
+
+watch(isDialogOpen, (newValue) => {
+  if (!newValue) {
+    stat('variant-prompt-dismiss');
+  }
+});
 </script>
-s
+
 <template>
   <VAVariantPrompt
     v-model:open="isDialogOpen"
     :auto-close="true"
+    @optout="onOptOut"
     @select="setVariant"
   />
 </template>

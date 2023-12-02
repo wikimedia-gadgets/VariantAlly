@@ -30,6 +30,10 @@ addEventListener('scroll', () => {
   }
 });
 
+function onOptOut() {
+  alert('Opt outed!');
+}
+
 function setUserVariant() {
   if (variantInput.value !== null) {
     wgUserVariant.value = variantInput.value.value;
@@ -75,6 +79,7 @@ function setUserVariant() {
       ref="variantPrompt"
       v-model:open="isVariantPromptOpen"
       :auto-close="closeOnMouseLeave"
+      @optout="onOptOut"
       @select="(variant) => { selectedVariant = variant; }"
     />
   </Teleport>
