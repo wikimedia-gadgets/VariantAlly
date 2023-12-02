@@ -30,7 +30,7 @@ s
 .va-variant-prompt {
 
   // Vector 2022 specific adjustments
-  .skin-vector-2022 & {
+  .vector-toc-available.vector-feature-toc-pinned-clientpref-1 .skin-vector-2022 & {
     @media screen and (min-width: 1000px) and (max-width: 1200px) {
       left: unset;
 
