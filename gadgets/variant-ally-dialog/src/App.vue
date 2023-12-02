@@ -2,9 +2,12 @@
 import { ref, watch } from 'vue';
 import { setLocalVariant, redirect, ValidVariant, setOptOut, stat } from 'ext.gadget.VariantAlly';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
+import VAVariantPromptMobile from './components/VAVariantPromptMobile.vue';
+import { isMobileSite } from './utils';
 
 const isOpen = ref(true);
 const isDisabled = ref(false);
+const isMobile = isMobileSite();
 
 function setVariant(variant: ValidVariant) {
   stat('variant-prompt-select');
@@ -32,12 +35,23 @@ watch(isOpen, (newValue) => {
 
 <template>
   <VAVariantPrompt
+    v-if="!isMobile"
     v-model:open="isOpen"
     v-model:disabled="isDisabled"
     :auto-close="true"
     @optout="onOptOut"
     @select="setVariant"
   />
+
+  <Teleport to="body">
+    <VAVariantPromptMobile
+      v-if="isMobile"
+      v-model:open="isOpen"
+      v-model:disabled="isDisabled"
+      @optout="onOptOut"
+      @select="setVariant"
+    />
+  </Teleport>
 </template>
 
 

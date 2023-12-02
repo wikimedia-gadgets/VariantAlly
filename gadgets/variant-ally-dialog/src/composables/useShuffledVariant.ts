@@ -1,6 +1,6 @@
 import { Ref, ref } from 'vue';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
-import { VALID_VARIANTS } from '../constants';
+import { VALID_VARIANTS } from '../utils';
 
 const INTERVAL = 5 * 1000;
 

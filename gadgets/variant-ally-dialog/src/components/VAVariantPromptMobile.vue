@@ -2,10 +2,9 @@
 import { ref, watch } from 'vue';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
 import VAButton from './VAButton.vue';
-import VAFadeTransition from './VAFadeTransition.vue';
-import useI18n, { currentVariant } from '../composables/useI18n';
+import VASelect from './VASelect.vue';
+import useI18n, { currentVariant, selectorDefault } from '../composables/useI18n';
 import useUniqueId from '../composables/useUniqueId';
-import useShuffledVariant from '../composables/useShuffledVariant';
 import { VALID_VARIANTS } from '../utils';
 import messages from '../../assets/messages.json';
 import useModelWrapper from '../composables/useModelWrapper';
@@ -13,10 +12,8 @@ import useModelWrapper from '../composables/useModelWrapper';
 const props = withDefaults(defineProps<{
   open: boolean,
   disabled?: boolean,
-  autoClose?: boolean,
 }>(), {
   disabled: false,
-  autoClose: false,
 });
 const emit = defineEmits<{
   (e: 'update:open', value: boolean): void;
@@ -27,8 +24,7 @@ const emit = defineEmits<{
 
 const prompt = ref<HTMLElement | null>(null);
 const titleId = useUniqueId();
-const descId = useUniqueId();
-const shuffledVariant = useShuffledVariant();
+const selectedVariant = ref(selectorDefault.value);
 const isOpen = useModelWrapper(props, emit, 'open');
 const isDisabled = useModelWrapper(props, emit, 'disabled');
 
@@ -41,79 +37,62 @@ function select(variant: ValidVariant) {
   isDisabled.value = true;
   emit('select', variant);
 }
-
-watch(prompt, () => {
-  const element = prompt.value;
-  if (element !== null) {
-    element.addEventListener('mouseleave', (ev) => {
-      // Do not dismiss if any button is pressed or the prompt is disabled
-      if (ev.buttons === 0 && props.autoClose && !props.disabled) {
-        isOpen.value = false;
-      }
-    });
-  }
-});
 </script>
 
 <template>
   <Transition
-    name="va-variant-prompt"
+    name="va-variant-prompt-mobile"
     appear
   >
     <div
       v-if="open"
       ref="prompt"
       :lang="`zh-${currentVariant}`"
-      class="va-variant-prompt"
+      class="va-variant-prompt-mobile"
       role="dialog"
       aria-modal="false"
       :aria-labelledby="titleId"
-      :aria-describedby="descId"
     >
-      <VAButton
-        class="va-variant-prompt__close"
-        weight="quiet"
-        icon="close"
-        :title="useI18n('close')"
-        :aria-label="useI18n('close')"
-        :disabled="disabled"
-        @click="optOutAndClose"
-      />
-      <h2
-        :id="titleId"
-        class="va-variant-prompt__title va-title"
-      >
-        {{ useI18n('vp.header') }}<br>
-        <VAFadeTransition>
-          <span
-            :key="shuffledVariant"
-            :lang="`zh-${shuffledVariant}`"
-            class="va-variant-prompt__title__variant"
-          >{{ messages.variants[shuffledVariant] }}</span>
-        </VAFadeTransition>
-      </h2>
-      <p
-        :id="descId"
-        class="va-variant-prompt__desc va-para"
-      >
-        {{ useI18n('vp.main') }}
-      </p>
-      <div class="va-variant-prompt__btn-group">
-        <VAButton
-          v-for="variant in VALID_VARIANTS"
-          :key="variant"
-          class="va-variant-prompt__btn-group__btn"
-          indicator="arrowNext"
-          weight="quiet"
-          action="progressive"
-          :lang="variant"
-          :disabled="disabled"
-          @click="() => { select(variant) }"
+      <div class="va-variant-prompt-mobile__header">
+        <h2
+          :id="titleId"
+          class="va-variant-prompt-mobile__header__title va-title"
         >
-          {{ messages.variants[variant] }}
-        </VAButton>
+          {{ useI18n('vp.main') }}
+        </h2>
+        <VAButton
+          class="va-variant-prompt-mobile__header__close"
+          weight="quiet"
+          icon="close"
+          :title="useI18n('close')"
+          :aria-label="useI18n('close')"
+          :disabled="disabled"
+          @click="optOutAndClose"
+        />
       </div>
-      <footer class="va-variant-prompt__footer">
+      <div class="va-variant-prompt-mobile__main">
+        <VASelect
+          v-model="selectedVariant"
+          class="va-variant-prompt-mobile__main__select"
+          :lang="selectedVariant"
+          :disabled="disabled"
+        >
+          <option
+            v-for="variant in VALID_VARIANTS"
+            :key="variant"
+            :value="variant"
+            :lang="variant"
+          >{{ messages.variants[variant] }}</option>
+        </VASelect>
+        <VAButton
+          class="va-variant-prompt-mobile__main__action"
+          action="progressive"
+          icon="arrowNext"
+          :disabled="disabled"
+          @click="() => { select(selectedVariant) }"
+        >{{ useI18n('vp.button') }}</VAButton>
+      </div>
+      <footer class="va-variant-prompt-mobile__footer">
         <p class="va-para va-para--subtle">
           {{ useI18n('vp.main.ext') }}
         </p>
@@ -140,7 +119,6 @@ watch(prompt, () => {
 .va-para {
   overflow-wrap: break-word;
   margin-top: @spacing-50;
-  margin-bottom: @spacing-50;
   color: @color-base;
 
   &--subtle {
@@ -150,15 +128,17 @@ watch(prompt, () => {
   }
 }
 
-.va-variant-prompt {
+.va-variant-prompt-mobile {
   box-sizing: @box-sizing-base;
   z-index: @z-index-overlay;
-  padding: @spacing-100 @spacing-150;
+  padding: @spacing-50 @spacing-100;
   position: fixed;
-  left: 1.25em;
-  bottom: 1em;
-  width: calc(100% - $left * 2);
-  max-width: 18em;
+  left: @spacing-0;
+  right: @spacing-0;
+  bottom: @spacing-0;
+  margin: @spacing-0 auto;
+  width: 100%;
+  max-width: 600px;
   max-height: calc(100vh - 2em);
 
   overflow: auto;
@@ -171,14 +151,43 @@ watch(prompt, () => {
   font-size: 1rem; // Reset
   line-height: normal; // Reset
 
+  &__header {
+    display: flex;
+    align-items: center;
+
+    &__title {
+      flex: 1;
+      font-size: @font-size-medium;
+    }
+
+    &__close {
+      padding: @spacing-shorthand-button-icon-only;
+      margin-right: -(@spacing-horizontal-button-icon-only + 1px);
+    }
+  }
+
+
+  &__main {
+    display: flex;
+    margin-top: @spacing-25;
+
+    &__select {
+      margin-right: @spacing-75;
+      flex: 1;
+    }
+
+    &__action {
+      flex-shrink: 0;
+    }
+  }
+
   &__close {
     padding: @spacing-shorthand-button-icon-only;
     float: right;
-    margin-top: @spacing-50;
     margin-right: -(@spacing-horizontal-button-icon-only + 1px);
   }
 
-  &__title {
+  &__header {
     &__variant {
       color: @color-progressive;
     }
@@ -192,35 +201,20 @@ watch(prompt, () => {
 
     border: 1px solid @border-color-base;
     border-radius: @border-radius-base;
-
-    &__btn {
-      font-size: @font-size-small;
-      color: @color-base;
-      background-color: @background-color-interactive-subtle;
-      border-radius: 0;
-
-      &:hover,
-      &:active {
-        border-color: @border-color-transparent;
-      }
-    }
-  }
-
-  &__mobile {
-    display: none;
   }
 }
 
+
 /* Notice transition effect */
-.va-variant-prompt-enter-active,
-.va-variant-prompt-leave-active {
-  transition-property: @transition-property-fade;
+.va-variant-prompt-mobile-enter-active,
+.va-variant-prompt-mobile-leave-active {
+  transition-property: @transition-property-layout;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
 }
 
-.va-variant-prompt-enter-from,
-.va-variant-prompt-leave-to {
-  opacity: 0;
+.va-variant-prompt-mobile-enter-from,
+.va-variant-prompt-mobile-leave-to {
+  transform: translateY(100%);
 }
 </style>

@@ -1,30 +1,17 @@
 <!-- Vite dev server. This script is never run in the browser! -->
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
-import VASelect from './components/VASelect.vue';
-import { onMounted } from 'vue';
+import VAVariantPromptMobile from './components/VAVariantPromptMobile.vue';
 import { wgUserVariant } from './composables/useI18n';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
 
-const isVariantPromptOpen = ref(false);
-const isVariantPromptDisabled = ref(false);
-const isVariantPromptMobile = ref(false);
-const closeOnMouseLeave = ref(false);
-const closeOnScroll = ref(false);
-const variantPrompt = ref<InstanceType<typeof VAVariantPrompt> | null>(null);
 const variantInput = ref<HTMLInputElement | null>(null);
 
 onMounted(() => {
   if (variantInput.value !== null) {
     variantInput.value.value = wgUserVariant.value;
-  }
-});
-
-addEventListener('scroll', () => {
-  if (closeOnScroll.value && !isVariantPromptDisabled.value) {
-    isVariantPromptOpen.value = false;
   }
 });
 
@@ -34,14 +21,49 @@ function setUserVariant() {
   }
 }
 
-function onVariantPromptOptOut() {
+// VariantPrompt
+
+const isVPOpen = ref(false);
+const isVPDisabled = ref(false);
+const closeVPOnMouseLeave = ref(false);
+const closeVPOnScroll = ref(false);
+
+function onVPOptOut() {
   alert('Opt outed!');
 }
 
 
-function onVariantPromptSelect(variant: ValidVariant) {
+function onVPSelect(variant: ValidVariant) {
   alert(`Selected ${variant}`);
 }
+
+addEventListener('scroll', () => {
+  if (closeVPOnScroll.value && !isVPDisabled.value) {
+    isVPOpen.value = false;
+  }
+});
+
+// VariantPromptMobile
+
+const isVPMOpen = ref(false);
+const isVPMDisabled = ref(false);
+const closeVPMOnScroll = ref(false);
+
+function onVPMOptOut() {
+  alert('Opt outed!');
+}
+
+
+function onVPMSelect(variant: ValidVariant) {
+  alert(`Selected ${variant}`);
+}
+
+addEventListener('scroll', () => {
+  if (closeVPMOnScroll.value && !isVPMDisabled.value) {
+    isVPMOpen.value = false;
+  }
+});
+
 </script>
 
 <template>
@@ -56,34 +78,49 @@ function onVariantPromptSelect(variant: ValidVariant) {
 
   <div>
     <h2>VAVariantPrompt.vue</h2>
-    <p>Open: {{ isVariantPromptOpen }}</p>
-    <button @click="isVariantPromptOpen = !isVariantPromptOpen">
+    <p>Open: {{ isVPOpen }}</p>
+    <button @click="isVPOpen = !isVPOpen">
       Toggle dialog
     </button>
     <label>
       <input
-        v-model="isVariantPromptDisabled"
+        v-model="isVPDisabled"
         type="checkbox"
       >
       Disabled
     </label>
     <label>
       <input
-        v-model="isVariantPromptMobile"
-        type="checkbox"
-      >
-      Mobile
-    </label>
-    <label>
-      <input
-        v-model="closeOnMouseLeave"
+        v-model="closeVPOnMouseLeave"
         type="checkbox"
       >
       Close on mouse leave
     </label>
     <label>
       <input
-        v-model="closeOnScroll"
+        v-model="closeVPOnScroll"
+        type="checkbox"
+      >
+      Close on scroll
+    </label>
+  </div>
+
+  <div>
+    <h2>VAVariantPromptMobile.vue</h2>
+    <p>Open: {{ isVPMOpen }}</p>
+    <button @click="isVPMOpen = !isVPMOpen">
+      Toggle dialog
+    </button>
+    <label>
+      <input
+        v-model="isVPMDisabled"
+        type="checkbox"
+      >
+      Disabled
+    </label>
+    <label>
+      <input
+        v-model="closeVPMOnScroll"
         type="checkbox"
       >
       Close on scroll
@@ -92,13 +129,18 @@ function onVariantPromptSelect(variant: ValidVariant) {
 
   <Teleport to="body">
     <VAVariantPrompt
-      ref="variantPrompt"
-      v-model:open="isVariantPromptOpen"
-      v-model:disabled="isVariantPromptDisabled"
-      :mobile="isVariantPromptMobile"
-      :auto-close="closeOnMouseLeave"
-      @optout="onVariantPromptOptOut"
-      @select="onVariantPromptSelect"
+      v-model:open="isVPOpen"
+      v-model:disabled="isVPDisabled"
+      :auto-close="closeVPOnMouseLeave"
+      @optout="onVPOptOut"
+      @select="onVPSelect"
+    />
+
+    <VAVariantPromptMobile
+      v-model:open="isVPMOpen"
+      v-model:disabled="isVPMDisabled"
+      @optout="onVPMOptOut"
+      @select="onVPMSelect"
     />
   </Teleport>
 </template>

@@ -24,9 +24,11 @@ defineProps<{
       v-if="icon !== undefined"
       class="va-button__icon"
       :icon="icon"
-      :size="16"
     />
-    <span class="va-button__text">
+    <span
+      v-if="$slots.default"
+      class="va-button__text"
+    >
       <slot />
     </span>
     <VAIcon
@@ -50,11 +52,11 @@ defineProps<{
 
   padding-top: @spacing-vertical-button;
   padding-bottom: @spacing-vertical-button;
-  font-size: @font-size-small;
   text-align: left;
 
   display: flex;
   align-items: center;
+  gap: @spacing-25;
 
   &:hover {
     background-color: @background-color-base;
@@ -124,7 +126,6 @@ defineProps<{
 
   &__icon {
     fill: currentColor;
-    margin-right: @spacing-25;
   }
 
   &__indicator {
