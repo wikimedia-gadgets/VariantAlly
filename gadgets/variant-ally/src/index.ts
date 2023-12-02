@@ -1,9 +1,10 @@
-import { output, showDebugInfo } from './debug';
+import { checkDebugURLParam, output, showDebugInfo } from './debug';
 import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt } from './controller';
 import { calculatePreferredVariant, getPageVariant, isOptOuted } from './model';
 import { isLoggedIn, isLangChinese, isReferrerBlocked } from './utils';
 
 showDebugInfo();
+checkDebugURLParam();
 applyURLVariant();
 
 if (isOptOuted()) {

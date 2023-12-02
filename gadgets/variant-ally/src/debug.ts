@@ -1,4 +1,5 @@
 // Call to content in this fill will be striped in production build.
+import { showVariantPrompt } from './controller';
 import {
   getAccountVariant,
   getLocalVariant,
@@ -27,4 +28,11 @@ function output(...outputs: string[]): void {
   console.log(`[VariantAlly] ${outputs.slice(0, -1).join('/')}: ${outputs.pop()}`);
 }
 
-export { showDebugInfo, output };
+function checkDebugURLParam(): void {
+  const vaForceDialog = new URL(location.href).searchParams.get('va-force-dialog');
+  if (vaForceDialog !== null) {
+    showVariantPrompt();
+  }
+}
+
+export { showDebugInfo, output, checkDebugURLParam };
