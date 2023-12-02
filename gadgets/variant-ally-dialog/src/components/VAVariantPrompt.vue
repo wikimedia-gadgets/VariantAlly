@@ -205,13 +205,9 @@ watch(prompt, () => {
       }
     }
   }
-
-  &__mobile {
-    display: none;
-  }
 }
 
-/* Notice transition effect */
+/* Prompt transition effect */
 .va-variant-prompt-enter-active,
 .va-variant-prompt-leave-active {
   transition-property: @transition-property-fade;

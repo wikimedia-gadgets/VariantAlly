@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
 import VAButton from './VAButton.vue';
 import VASelect from './VASelect.vue';
@@ -186,26 +186,10 @@ function select(variant: ValidVariant) {
     float: right;
     margin-right: -(@spacing-horizontal-button-icon-only + 1px);
   }
-
-  &__header {
-    &__variant {
-      color: @color-progressive;
-    }
-  }
-
-  &__btn-group {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    margin: @spacing-75 @spacing-0;
-
-    border: 1px solid @border-color-base;
-    border-radius: @border-radius-base;
-  }
 }
 
 
-/* Notice transition effect */
+/* Prompt transition effect */
 .va-variant-prompt-mobile-enter-active,
 .va-variant-prompt-mobile-leave-active {
   transition-property: @transition-property-layout;
