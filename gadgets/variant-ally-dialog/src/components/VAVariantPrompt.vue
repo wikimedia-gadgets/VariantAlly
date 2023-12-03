@@ -155,9 +155,9 @@ watch(prompt, () => {
   z-index: @z-index-overlay;
   padding: @spacing-100 @spacing-150;
   position: fixed;
-  left: 1.25em;
-  bottom: 1em;
-  width: calc(100% - $left * 2);
+  left: @spacing-horizontal-dialog;
+  bottom: @spacing-vertical-dialog;
+  width: calc(100% - @spacing-horizontal-dialog * 2);
   max-width: 18em;
   max-height: calc(100vh - 2em);
 

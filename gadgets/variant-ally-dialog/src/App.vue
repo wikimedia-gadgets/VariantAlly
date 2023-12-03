@@ -65,21 +65,27 @@ watch(isOpen, (newValue) => {
 
   // Vector 2022 specific adjustments
   .skin-vector-2022 & {
+    // Calculated from Vector 2022 source code
+    @vector-2022-header-height: 50px + 2 * 8px;
+    max-height: calc(100% - @spacing-vertical-dialog - @vector-2022-header-height);
+
     .vector-toc-available.vector-feature-toc-pinned-clientpref-1 & {
       @media screen and (min-width: 1000px) and (max-width: 1200px) {
         left: unset;
 
         // Calculated from Vector 2022 source code
         // In this width this prompt will not obscure article content
-        margin-left: -(2.75em / 3 * 2);
+        @vector-2022-left-padding: 2.75em;
+        margin-left: -(@vector-2022-left-padding/ 3 * 2);
         max-width: calc(12.25em + 36px);
         padding: @spacing-100;
       }
     }
 
     @media screen and (min-width: 1200px) {
+      @vector-2022-left-padding: 3.25em;
       left: unset;
-      margin-left: -(3.25em / 3 * 2);
+      margin-left: -(@vector-2022-left-padding / 3 * 2);
       max-width: calc(15.75em + 36px);
     }
   }
