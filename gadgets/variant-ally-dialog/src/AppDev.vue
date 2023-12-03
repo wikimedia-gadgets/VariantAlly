@@ -6,8 +6,10 @@ import VAVariantPrompt from './components/VAVariantPrompt.vue';
 import VAVariantPromptMobile from './components/VAVariantPromptMobile.vue';
 import { wgUserVariant } from './composables/useI18n';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
+import { isMobileDevice } from './utils';
 
 const variantInput = ref<HTMLInputElement | null>(null);
+const isMobile = isMobileDevice();
 
 onMounted(() => {
   if (variantInput.value !== null) {
@@ -37,7 +39,7 @@ function onVPSelect(variant: ValidVariant) {
   alert(`Selected ${variant}`);
 }
 
-addEventListener('scroll', () => {
+addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
   if (closeVPOnScroll.value && !isVPDisabled.value) {
     isVPOpen.value = false;
   }
@@ -58,7 +60,7 @@ function onVPMSelect(variant: ValidVariant) {
   alert(`Selected ${variant}`);
 }
 
-addEventListener('scroll', () => {
+addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
   if (closeVPMOnScroll.value && !isVPMDisabled.value) {
     isVPMOpen.value = false;
   }

@@ -3,11 +3,11 @@ import { ref, watch } from 'vue';
 import { setLocalVariant, redirect, ValidVariant, setOptOut, stat } from 'ext.gadget.VariantAlly';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
 import VAVariantPromptMobile from './components/VAVariantPromptMobile.vue';
-import { getMountPoint, isMobileSite } from './utils';
+import { getMountPoint, isMobileDevice } from './utils';
 
 const isOpen = ref(true);
 const isDisabled = ref(false);
-const isMobile = isMobileSite();
+const isMobile = isMobileDevice();
 const desktopMountPoint = getMountPoint();
 
 function setVariant(variant: ValidVariant) {
@@ -16,7 +16,9 @@ function setVariant(variant: ValidVariant) {
   redirect(variant);
 }
 
-addEventListener('scroll', () => {
+// Browser support: iOS Safari < 15
+// Work around Safari firing scroll event at unexpected conditions (like popping up select)
+addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
   if (!isDisabled.value) {
     isOpen.value = false;
   }

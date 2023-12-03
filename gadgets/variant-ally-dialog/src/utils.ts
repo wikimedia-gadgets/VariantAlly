@@ -7,8 +7,11 @@ const VALID_VARIANTS = [
   'zh-mo',
 ] as const;
 
-function isMobileSite(): boolean {
-  return !!mw.config.get('wgMFMode');
+function isMobileDevice(): boolean {
+  // Browser support:
+  // Chromium on some Android device (e.g. Samsung) has "(hover: hover)" set
+  // So check pointer together
+  return matchMedia('(hover: none), (pointer: coarse)').matches;
 }
 
 function getMountPoint(): Element {
@@ -26,4 +29,4 @@ function getMountPoint(): Element {
 }
 
 
-export { VALID_VARIANTS, isMobileSite, getMountPoint };
+export { VALID_VARIANTS, isMobileDevice, getMountPoint };
