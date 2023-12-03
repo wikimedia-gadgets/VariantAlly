@@ -37,6 +37,10 @@ function isValidVariant(str: string): str is ValidVariant {
   return (VALID_VARIANTS as ReadonlyArray<string>).includes(str);
 }
 
+function isSpecialPage(): boolean {
+  return mw.config.get('wgCanonicalNamespace') === 'Special';
+}
+
 /**
  * Get current variant of the page (don't be misled by config naming).
  * @returns variant, null for non-wikitext page
@@ -127,6 +131,7 @@ export {
   type Variant,
   isVariant,
   isValidVariant,
+  isSpecialPage,
   getPageVariant,
   getAccountVariant,
   getLocalVariant,
