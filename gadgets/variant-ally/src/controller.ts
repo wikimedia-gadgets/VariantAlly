@@ -56,6 +56,7 @@ function rewriteLink(link: string, variant: string): string {
       if (
         pathname.startsWith('/w/index.php')
         && searchQuery !== null
+        && searchParams.get('wprov') !== null
         && searchParams.get('title')?.startsWith('Special:')
         && searchParams.get('fulltext') !== '1'
       ) {
