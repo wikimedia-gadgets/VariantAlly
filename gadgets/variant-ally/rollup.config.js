@@ -7,6 +7,7 @@ import mwGadget from 'rollup-plugin-mediawiki-gadget';
 import { createHash } from 'crypto';
 import { join } from 'path';
 import strip from '@rollup/plugin-strip';
+import filesize from 'rollup-plugin-filesize';
 
 const production = process.env.NODE_ENV === 'production';
 
@@ -55,6 +56,7 @@ export default defineConfig({
     footer: readFileSync('assets/outro.js').toString().trim(),
   },
   plugins: [
+    filesize(),
     replace({
       preventAssignment: true,
       BUILD_HASH: JSON.stringify(computeMetaHash(['src/'])),
