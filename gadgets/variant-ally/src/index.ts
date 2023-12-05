@@ -1,5 +1,5 @@
 import { checkDebugURLParam, output, showDebugInfo } from './debug';
-import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt } from './controller';
+import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt, isEligibleForRewriting } from './controller';
 import { calculatePreferredVariant, getPageVariant, isOptOuted } from './model';
 import { isLoggedIn, isLangChinese, isReferrerBlocked, isWikitextPage } from './utils';
 
@@ -48,9 +48,9 @@ function main() {
   }
 
   // On-site navigation
-  if (isReferrerBlocked()) {
-    output('main', 'checkThisPage', 'Referrer is in blocklist. No checking redirection.');
-    rewriteAnchors(pageVariant);
+  if (isReferrerBlocked() && !isEligibleForRewriting(location.href)) {
+    output('main', 'Referrer is in blocklist. No checking redirection.');
+    rewriteAnchors(preferredVariant);
     return;
   }
 

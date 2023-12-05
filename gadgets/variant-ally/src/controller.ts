@@ -6,7 +6,7 @@ const REGEX_WIKI_URL = /^\/(?:wiki|zh(?:-\w+)?)\//i;
 const REGEX_VARIANT_URL = /^\/zh(?:-\w+)?\//i;
 const VARIANT_PARAM = 'va-variant';
 
-function isRewritingRequired(link: string): boolean {
+function isEligibleForRewriting(link: string): boolean {
   try {
     // No rewriting for empty links
     if (link === '') {
@@ -28,7 +28,7 @@ function isRewritingRequired(link: string): boolean {
 
     return true;
   } catch {
-    output('isRewritingRequired', `Exception occurs when checking ${link}!`);
+    output('isEligibleForRewriting', `Exception occurs when checking ${link}!`);
     return false;
   }
 }
@@ -44,31 +44,7 @@ function rewriteLink(link: string, variant: Variant): string {
       url.pathname = `/${variant}/${url.pathname.replace(REGEX_WIKI_URL, '')}`;
       searchParams.delete('variant'); // For things like /zh-cn/A?variant=zh-hk
     } else {
-      // HACK: workaround search box redirection not respecting `variant` URL param
-      // This should be eventually fixed in MediaWiki itself
-      //
-      // Example url: https://zh.wikipedia.org/w/index.php?title=Special:Search&search=Foo&wprov=acrw1_0
-      // It should be replaced by https://zh.wikipedia.org/<variant>/Foo?wprov=acrw1_0.
-      //
-      // Note that the "search for pages containing XXX" link is not covered by this hack
-      // since the `variant` URL param works there
-      const searchQuery = searchParams.get('search');
-      const wprov = searchParams.get('wprov');
-      if (
-        pathname.startsWith('/w/index.php')
-        && searchQuery !== null
-        && wprov !== null
-        && searchParams.get('title')?.startsWith('Special:')
-        && searchParams.get('fulltext') !== '1'
-      ) {
-        url.pathname = `/${variant}/${searchQuery}`;
-        url.search = '';
-        // Keep wprov for analysis
-        // See https://wikitech.wikimedia.org/wiki/Provenance
-        searchParams.set('wprov', wprov);
-      } else {
-        searchParams.set('variant', variant);
-      }
+      searchParams.set('variant', variant);
     }
 
     if (variant === normalizationTargetVariant) {
@@ -133,7 +109,7 @@ function rewriteAnchors(variant: Variant): void {
           output('rewriteAnchors', `Event ${ev.type} on ${anchor.href}`);
 
           const origLink = anchor.href;
-          if (!isRewritingRequired(origLink)) {
+          if (!isEligibleForRewriting(origLink)) {
             output('rewriteAnchors', 'Anchor does not require rewriting. Stop.');
             return;
           }
@@ -206,7 +182,7 @@ function applyURLVariant(): void {
 }
 
 export {
-  isRewritingRequired,
+  isEligibleForRewriting,
   rewriteLink,
   redirect,
   checkThisPage,

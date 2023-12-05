@@ -1,4 +1,4 @@
-import { isRewritingRequired, rewriteLink } from '../src/controller';
+import { isEligibleForRewriting, rewriteLink } from '../src/controller';
 import { getMediaWikiVariant } from '../src/model';
 
 const VARIANTS = [
@@ -108,50 +108,40 @@ describe('rewriteLink', () => {
         .toEqual('https://zh.wikipedia.org/wiki/Article');
     });
   });
-
-  describe('correctly handles search result links', () => {
-    test.each(VARIANTS)('in %s', (variant) => {
-      mockedGetMediaWikiVariant.mockReturnValue(null);
-      expect(rewriteLink(
-        'https://zh.wikipedia.org/w/index.php?title=Special:Search&search=Article&wprov=acrw1_0',
-        variant,
-      )).toEqual(`https://zh.wikipedia.org/${variant}/Article?wprov=acrw1_0`);
-    });
-  });
 });
 
-describe('isRewritingRequired', () => {
+describe('isEligibleForRewriting', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
   test('return true for normal links', () => {
-    expect(isRewritingRequired('https://zh.wikipedia.org/wiki/Article')).toBe(true);
+    expect(isEligibleForRewriting('https://zh.wikipedia.org/wiki/Article')).toBe(true);
   });
 
   describe('return false for links with /variant/', () => {
     test.each(VARIANTS)('for %s link', (variant) => {
-      expect(isRewritingRequired(`https://zh.wikipedia.org/${variant}/Article`))
+      expect(isEligibleForRewriting(`https://zh.wikipedia.org/${variant}/Article`))
         .toBe(false);
     });
   });
 
   describe('return false for links with ?variant', () => {
     test.each(VARIANTS)('for %s link', (variant) => {
-      expect(isRewritingRequired(`https://zh.wikipedia.org/wiki/Article?variant=${variant}`))
+      expect(isEligibleForRewriting(`https://zh.wikipedia.org/wiki/Article?variant=${variant}`))
         .toBe(false);
     });
   });
 
   test('return false for foreign links', () => {
-    expect(isRewritingRequired('https://meta.wikimedia.org/wiki/Article')).toBe(false);
+    expect(isEligibleForRewriting('https://meta.wikimedia.org/wiki/Article')).toBe(false);
   });
 
   test('return false for empty links', () => {
-    expect(isRewritingRequired('')).toBe(false);
+    expect(isEligibleForRewriting('')).toBe(false);
   });
 
   test('return false for javascript links', () => {
-    expect(isRewritingRequired('javascript:void(0)')).toBe(false);
+    expect(isEligibleForRewriting('javascript:void(0)')).toBe(false);
   });
 });
