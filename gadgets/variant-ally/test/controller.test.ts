@@ -28,13 +28,13 @@ describe('rewriteLink', () => {
       mockedGetMediaWikiVariant.mockReturnValue(null);
 
       expect(rewriteLink('https://zh.wikipedia.org/zh/Article', variant))
-        .toMatch(`https://zh.wikipedia.org/${variant}/Article`);
+        .toEqual(`https://zh.wikipedia.org/${variant}/Article`);
       expect(rewriteLink('https://zh.wikipedia.org/wiki/Article', variant))
-        .toMatch(`https://zh.wikipedia.org/${variant}/Article`);
+        .toEqual(`https://zh.wikipedia.org/${variant}/Article`);
       expect(rewriteLink('https://zh.wikipedia.org/zh-hans/Article', variant))
-        .toMatch(`https://zh.wikipedia.org/${variant}/Article`);
+        .toEqual(`https://zh.wikipedia.org/${variant}/Article`);
       expect(rewriteLink('https://zh.wikipedia.org/zh-hant/Article', variant))
-        .toMatch(`https://zh.wikipedia.org/${variant}/Article`);
+        .toEqual(`https://zh.wikipedia.org/${variant}/Article`);
     });
   });
 
@@ -43,13 +43,13 @@ describe('rewriteLink', () => {
       mockedGetMediaWikiVariant.mockReturnValue(variant);
 
       expect(rewriteLink('https://zh.wikipedia.org/zh/Article', variant))
-        .toMatch(`https://zh.wikipedia.org/wiki/Article`);
+        .toEqual(`https://zh.wikipedia.org/wiki/Article`);
       expect(rewriteLink('https://zh.wikipedia.org/wiki/Article', variant))
-        .toMatch(`https://zh.wikipedia.org/wiki/Article`);
+        .toEqual(`https://zh.wikipedia.org/wiki/Article`);
       expect(rewriteLink('https://zh.wikipedia.org/zh-hans/Article', variant))
-        .toMatch(`https://zh.wikipedia.org/wiki/Article`);
+        .toEqual(`https://zh.wikipedia.org/wiki/Article`);
       expect(rewriteLink('https://zh.wikipedia.org/zh-hant/Article', variant))
-        .toMatch(`https://zh.wikipedia.org/wiki/Article`);
+        .toEqual(`https://zh.wikipedia.org/wiki/Article`);
     });
   });
 
@@ -59,7 +59,7 @@ describe('rewriteLink', () => {
       expect(
         new URL(rewriteLink('https://zh.wikipedia.org/w/index.php?title=Article&action=edit', variant))
           .searchParams.get('variant'),
-      ).toMatch(variant);
+      ).toEqual(variant);
     });
   });
 
@@ -79,7 +79,7 @@ describe('rewriteLink', () => {
       expect(
         new URL(rewriteLink('https://zh.wikipedia.org/?debug=1', variant))
           .searchParams.get('variant'),
-      ).toMatch(variant);
+      ).toEqual(variant);
     });
   });
 
@@ -97,7 +97,7 @@ describe('rewriteLink', () => {
     test.each(VARIANTS)('in %s', (variant) => {
       mockedGetMediaWikiVariant.mockReturnValue(null);
       expect(rewriteLink('https://zh.wikipedia.org/zh-cn/Article?variant=zh-hk', variant))
-        .toMatch(`https://zh.wikipedia.org/${variant}/Article`);
+        .toEqual(`https://zh.wikipedia.org/${variant}/Article`);
     });
   });
 
@@ -105,7 +105,7 @@ describe('rewriteLink', () => {
     test.each(VARIANTS)('in %s', (variant) => {
       mockedGetMediaWikiVariant.mockReturnValue(variant);
       expect(rewriteLink('https://zh.wikipedia.org/zh-cn/Article?variant=zh-hk', variant))
-        .toMatch('https://zh.wikipedia.org/wiki/Article');
+        .toEqual('https://zh.wikipedia.org/wiki/Article');
     });
   });
 
@@ -115,7 +115,7 @@ describe('rewriteLink', () => {
       expect(rewriteLink(
         'https://zh.wikipedia.org/w/index.php?title=Special:Search&search=Article&wprov=acrw1_0',
         variant,
-      )).toMatch(`https://zh.wikipedia.org/${variant}/Article`);
+      )).toEqual(`https://zh.wikipedia.org/${variant}/Article?wprov=acrw1_0`);
     });
   });
 });
