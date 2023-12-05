@@ -10,7 +10,7 @@ Normally, MediaWiki is able to infer a user's preferred Chinese language variant
 
 1. User may open a link with variant specified (e.g. `https://zh.wikipedia.org/zh-tw/<article>`) from external sites or browsers. If the variant is not what user expected, it may worsen user experience.
 2. User's browser language may not always be Chinese (for instance, Tor browser recommends to set browser language to English), resulting in seeing a mixture of Simplified and Traditional Chinese content.
-3. `zh-hant` and `zh-hans` do not have full conversion rules applied, and should be only used for technical purposes.
+3. `zh-hant` and `zh-hans` do not have full conversion rules applied, and should be only used for technical purposes. If a user opens link with this two variants, it will cause problems.
 4. Even the user manually specified a language variant, clicks on internal links still navigates user to unconverted pages.
 
 ## The solution
@@ -27,7 +27,7 @@ The gadget stores your language variant preference in the browser. If your brows
 To fix the problem, try these solutions:
 1. Add Chinese Wikipedia to the allow list of preserving site data.
 2. Add one of these links to your bookmark ([China Mainland (Simplified)](https://zh.wikipedia.org/?va-variant=zh-cn), [Singapore (Simplified)](https://zh.wikipedia.org/?va-variant=zh-sg), [Malaysia (Simplified)](https://zh.wikipedia.org/?va-variant=zh-my), [Taiwan (Traditional)](https://zh.wikipedia.org/?va-variant=zh-tw), [Hong Kong(Traditional)](https://zh.wikipedia.org/?va-variant=zh-hk), [Macau (Traditional)](https://zh.wikipedia.org/?va-variant=zh-mo)). When browsing in incognito, open the bookmark first and your variant preference is saved automatically.
-3. Click the "X" button when the prompt shows, this will close it for the rest of the browsing session.
+3. Click the "X" button when the prompt pops up. This will close it for the rest of the browsing session.
 4. Use an ad-blocker to block the prompt.
 
 ### I don't want to use this gadget.
