@@ -164,7 +164,6 @@ function rewriteAnchors(variant: Variant): void {
 }
 
 function showVariantPrompt(): void {
-  stat('variant-prompt-show');
   import('ext.gadget.VariantAllyDialog');
 }
 

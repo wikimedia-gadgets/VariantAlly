@@ -10,14 +10,16 @@ const isDisabled = ref(false);
 const isMobile = isMobileDevice();
 const desktopMountPoint = getMountPoint();
 
+stat(isMobile ? 'variant-prompt-mobile-show' : 'variant-prompt-show');
+
 function setVariant(variant: ValidVariant) {
-  stat('variant-prompt-select');
+  stat(isMobile ? 'variant-prompt-mobile-select' : 'variant-prompt-select');
   setLocalVariant(variant);
   redirect(variant);
 }
 
 // Browser support: iOS Safari < 15
-// Work around Safari firing scroll event at unexpected conditions (like popping up select)
+// Work around Safari firing scroll event at unexpected conditions (e.g. popping up select)
 addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
   if (!isDisabled.value) {
     isOpen.value = false;
@@ -25,13 +27,13 @@ addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
 });
 
 function onOptOut() {
-  stat('variant-prompt-optout');
+  stat(isMobile ? 'variant-prompt-mobile-optout' : 'variant-prompt-optout');
   setOptOut();
 }
 
 watch(isOpen, (newValue) => {
   if (!newValue) {
-    stat('variant-prompt-dismiss');
+    stat(isMobile ? 'variant-prompt-mobile-dismiss' : 'variant-prompt-dismiss');
   }
 });
 </script>

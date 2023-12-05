@@ -4,9 +4,8 @@
 import { ref, onMounted } from 'vue';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
 import VAVariantPromptMobile from './components/VAVariantPromptMobile.vue';
-import { wgUserVariant } from './composables/useI18n';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
-import { isMobileDevice } from './utils';
+import { isMobileDevice, wgUserVariant } from './utils';
 
 const variantInput = ref<HTMLInputElement | null>(null);
 const isMobile = isMobileDevice();
@@ -25,6 +24,7 @@ function setUserVariant() {
 
 // VariantPrompt
 
+const variantPrompt = ref<InstanceType<typeof VAVariantPrompt> | null>(null);
 const isVPOpen = ref(false);
 const isVPDisabled = ref(false);
 const closeVPOnMouseLeave = ref(false);
@@ -47,6 +47,7 @@ addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
 
 // VariantPromptMobile
 
+const variantPromptMobile = ref<InstanceType<typeof VAVariantPromptMobile> | null>(null);
 const isVPMOpen = ref(false);
 const isVPMDisabled = ref(false);
 const closeVPMOnScroll = ref(false);
@@ -131,6 +132,7 @@ addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
 
   <Teleport to="body">
     <VAVariantPrompt
+      ref="variantPrompt"
       v-model:open="isVPOpen"
       v-model:disabled="isVPDisabled"
       :auto-close="closeVPOnMouseLeave"
@@ -139,6 +141,7 @@ addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
     />
 
     <VAVariantPromptMobile
+      ref="variantPromptMobile"
       v-model:open="isVPMOpen"
       v-model:disabled="isVPMDisabled"
       @optout="onVPMOptOut"

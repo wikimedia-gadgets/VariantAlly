@@ -56,6 +56,7 @@ defineProps<{
 
   display: flex;
   align-items: center;
+  // Doesn't work in legacy browsers, but should not be a major problem
   gap: @spacing-25;
 
   &:hover {

@@ -1,7 +1,12 @@
-type StatName = 'variant-prompt-show'
+type StatName =
+  | 'variant-prompt-show'
   | 'variant-prompt-optout'
   | 'variant-prompt-dismiss'
-  | 'variant-prompt-select';
+  | 'variant-prompt-select'
+  | 'variant-prompt-mobile-show'
+  | 'variant-prompt-mobile-optout'
+  | 'variant-prompt-mobile-dismiss'
+  | 'variant-prompt-mobile-select';
 
 function stat(name: StatName) {
   mw.track(`counter.gadget_VariantAlly.${name}`);

@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
 import VAButton from './VAButton.vue';
 import VASelect from './VASelect.vue';
-import useI18n, { currentVariant, selectorDefault } from '../composables/useI18n';
+import useI18n, { i18nVariant } from '../composables/useI18n';
 import useUniqueId from '../composables/useUniqueId';
-import { VALID_VARIANTS } from '../utils';
+import { VALID_VARIANTS, inferredVariant, shuffleVariant } from '../utils';
 import messages from '../../assets/messages.json';
 import useModelWrapper from '../composables/useModelWrapper';
+import useDefault from '../composables/useDefault';
 
 const props = withDefaults(defineProps<{
   open: boolean,
@@ -24,7 +25,7 @@ const emit = defineEmits<{
 
 const prompt = ref<HTMLElement | null>(null);
 const titleId = useUniqueId();
-const selectedVariant = ref(selectorDefault.value);
+const selectedVariant = useDefault(computed(() => inferredVariant.value ?? shuffleVariant()));
 const isOpen = useModelWrapper(props, emit, 'open');
 const isDisabled = useModelWrapper(props, emit, 'disabled');
 
@@ -47,7 +48,7 @@ function select(variant: ValidVariant) {
     <div
       v-if="open"
       ref="prompt"
-      :lang="`zh-${currentVariant}`"
+      :lang="`zh-${i18nVariant}`"
       class="va-variant-prompt-mobile"
       role="dialog"
       aria-modal="false"
@@ -90,8 +91,8 @@ function select(variant: ValidVariant) {
           action="progressive"
           icon="arrowNext"
           :disabled="disabled"
-          @click="() => { select(selectedVariant) }"
-        >{{ useI18n('vp.button') }}</VAButton>
+          @click="select(selectedVariant)"
+        >{{ useI18n('vp.button.ok') }}</VAButton>
       </div>
       <footer class="va-variant-prompt-mobile__footer">
         <p class="va-para va-para--subtle">

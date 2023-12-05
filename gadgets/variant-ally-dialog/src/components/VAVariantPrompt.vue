@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
 import VAButton from './VAButton.vue';
 import VAFadeTransition from './VAFadeTransition.vue';
-import useI18n, { currentVariant } from '../composables/useI18n';
+import useI18n, { i18nVariant } from '../composables/useI18n';
 import useUniqueId from '../composables/useUniqueId';
 import useShuffledVariant from '../composables/useShuffledVariant';
-import { VALID_VARIANTS } from '../utils';
+import { VALID_VARIANTS, inferredVariant } from '../utils';
 import messages from '../../assets/messages.json';
 import useModelWrapper from '../composables/useModelWrapper';
+import useDefault from '../composables/useDefault';
 
 const props = withDefaults(defineProps<{
   open: boolean,
@@ -31,6 +32,7 @@ const descId = useUniqueId();
 const shuffledVariant = useShuffledVariant();
 const isOpen = useModelWrapper(props, emit, 'open');
 const isDisabled = useModelWrapper(props, emit, 'disabled');
+const isVariantNarrowed = useDefault(computed(() => inferredVariant.value !== null));
 
 function optOutAndClose() {
   emit('optout');
@@ -63,7 +65,7 @@ watch(prompt, () => {
     <div
       v-if="open"
       ref="prompt"
-      :lang="`zh-${currentVariant}`"
+      :lang="`zh-${i18nVariant}`"
       class="va-variant-prompt"
       role="dialog"
       aria-modal="false"
@@ -83,9 +85,10 @@ watch(prompt, () => {
         :id="titleId"
         class="va-variant-prompt__title va-title"
       >
-        {{ useI18n('vp.header') }}<br>
+        {{ useI18n(isVariantNarrowed ? 'vp.header.alt' : 'vp.header') }}<br>
         <VAFadeTransition>
           <span
+            v-if="!isVariantNarrowed"
             :key="shuffledVariant"
             :lang="`zh-${shuffledVariant}`"
             class="va-variant-prompt__title__variant"
@@ -96,21 +99,35 @@ watch(prompt, () => {
         :id="descId"
         class="va-variant-prompt__desc va-para"
       >
-        {{ useI18n('vp.main') }}
+        {{ useI18n(isVariantNarrowed ? 'vp.main.alt' : 'vp.main') }}
       </p>
-      <div class="va-variant-prompt__btn-group">
+      <div class="va-variant-prompt__options">
+        <!-- inferredVariant is non-null, guarded by isVariantNarrowed -->
         <VAButton
-          v-for="variant in VALID_VARIANTS"
+          v-for="variant in
+          (isVariantNarrowed && inferredVariant !== null ? [inferredVariant] : VALID_VARIANTS)"
           :key="variant"
-          class="va-variant-prompt__btn-group__btn"
+          class="va-variant-prompt__options__button"
+          :class="{ 'va-variant-prompt__options__button--primary': isVariantNarrowed }"
           indicator="arrowNext"
           weight="quiet"
           action="progressive"
           :lang="variant"
           :disabled="disabled"
-          @click="() => { select(variant) }"
+          @click="select(variant)"
         >
           {{ messages.variants[variant] }}
+        </VAButton>
+        <VAButton
+          v-if="isVariantNarrowed"
+          class="va-variant-prompt__options__button"
+          indicator="arrowNext"
+          weight="quiet"
+          action="progressive"
+          :disabled="disabled"
+          @click="isVariantNarrowed = false"
+        >
+          {{ useI18n('vp.button.other') }}
         </VAButton>
       </div>
       <footer class="va-variant-prompt__footer">
@@ -184,7 +201,7 @@ watch(prompt, () => {
     }
   }
 
-  &__btn-group {
+  &__options {
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -193,11 +210,15 @@ watch(prompt, () => {
     border: 1px solid @border-color-base;
     border-radius: @border-radius-base;
 
-    &__btn {
+    &__button {
       font-size: @font-size-small;
       color: @color-base;
       background-color: @background-color-interactive-subtle;
       border-radius: 0;
+
+      &--primary {
+        color: @color-progressive;
+      }
 
       &:hover,
       &:active {
