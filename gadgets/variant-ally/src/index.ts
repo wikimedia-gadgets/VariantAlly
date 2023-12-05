@@ -1,7 +1,7 @@
 import { checkDebugURLParam, output, showDebugInfo } from './debug';
 import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt } from './controller';
-import { calculatePreferredVariant, getPageVariant, isOptOuted, isSpecialPage } from './model';
-import { isLoggedIn, isLangChinese, isReferrerBlocked } from './utils';
+import { calculatePreferredVariant, getPageVariant, isOptOuted } from './model';
+import { isLoggedIn, isLangChinese, isReferrerBlocked, isWikitextPage } from './utils';
 
 showDebugInfo();
 checkDebugURLParam();
@@ -26,6 +26,20 @@ function main() {
   }
 
   const preferredVariant = calculatePreferredVariant();
+  const pageVariant = getPageVariant();
+
+  // Non-article page (JS/CSS pages, Special pages etc.)
+  if (pageVariant === null || !isWikitextPage()) {
+    output('main', 'Non-article page.');
+    // Such page can't have variant, but preferred variant may be available
+    // So still rewrite links
+    if (preferredVariant !== null) {
+      output('main', 'Preferred variant is not null, continue.');
+      rewriteAnchors(preferredVariant);
+    }
+    return;
+  }
+
   // Preferred variant unavailable
   if (preferredVariant === null) {
     output('main', 'Preferred variant is null, show variant prompt');
@@ -33,27 +47,15 @@ function main() {
     return;
   }
 
-  const pageVariant = getPageVariant();
-  // Non-article page (JS/CSS pages, Special pages etc.)
-  if (pageVariant === null || !isSpecialPage()) {
-    output('main', 'Non-article page. Stop.');
-    // Such page can't have variant, but if preferred variant can be calculated,
-    // then use it to rewrite links
-    if (preferredVariant !== null) {
-      rewriteAnchors(preferredVariant);
-    }
-    return;
-  }
-
   // On-site navigation
   if (isReferrerBlocked()) {
-    output('main', 'checkThisPage', 'Referrer is in blocklist. Stop.');
+    output('main', 'checkThisPage', 'Referrer is in blocklist. No checking redirection.');
     rewriteAnchors(pageVariant);
     return;
   }
 
   checkThisPage(preferredVariant, pageVariant);
-  rewriteAnchors(pageVariant);
+  rewriteAnchors(preferredVariant);
 }
 
 main();

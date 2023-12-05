@@ -16,8 +16,16 @@ const VARIANTS = [
   'zh-hant',
   ...VALID_VARIANTS,
 ] as const;
-// Maps additional lang codes to MediaWiki variants
-const BCP47_MAPPING: Record<string, ValidVariant> = {
+const EXT_VARIANTS = [
+  'zh-hans-cn',
+  'zh-hans-sg',
+  'zh-hans-my',
+  'zh-hant-tw',
+  'zh-hant-hk',
+  'zh-hant-mo',
+  ...VARIANTS,
+] as const;
+const EXT_MAPPING: Record<string, ValidVariant> = {
   'zh-hans-cn': 'zh-cn',
   'zh-hans-sg': 'zh-sg',
   'zh-hans-my': 'zh-my',
@@ -28,6 +36,7 @@ const BCP47_MAPPING: Record<string, ValidVariant> = {
 
 type ValidVariant = typeof VALID_VARIANTS[number];
 type Variant = typeof VARIANTS[number];
+type ExtVariant = typeof EXT_VARIANTS[number];
 
 function isVariant(str: string): str is Variant {
   return (VARIANTS as ReadonlyArray<string>).includes(str);
@@ -37,17 +46,26 @@ function isValidVariant(str: string): str is ValidVariant {
   return (VALID_VARIANTS as ReadonlyArray<string>).includes(str);
 }
 
-function isSpecialPage(): boolean {
-  return mw.config.get('wgCanonicalNamespace') === 'Special';
+function isExtVariant(str: string): str is ExtVariant {
+  return (EXT_VARIANTS as ReadonlyArray<string>).includes(str);
+}
+
+/**
+ * Maps additional lang codes to standard variants.
+ *
+ * @returns standard variant
+ */
+function normalizeVariant(extVariant: ExtVariant): Variant {
+  return EXT_MAPPING[extVariant] ?? extVariant;
 }
 
 /**
  * Get current variant of the page (don't be misled by config naming).
- * @returns variant, null for non-wikitext page
+ * @returns variant, null for non-wikitext page (but NOT all such pages returns null!)
  */
 function getPageVariant(): Variant | null {
-  const result = mw.config.get('wgUserVariant');
-  return isVariant(result) ? result : null;
+  const result = mw.config.get('wgUserVariant') as string | null;
+  return result !== null && isExtVariant(result) ? normalizeVariant(result) : null;
 }
 
 /**
@@ -57,17 +75,17 @@ function getPageVariant(): Variant | null {
 function getAccountVariant(): Variant | null {
   if (isLoggedIn()) {
     const result = mw.user.options.get('variant');
-    return isVariant(result) ? result : null;
+    return isExtVariant(result) ? normalizeVariant(result) : null;
   }
   return null;
 }
 
 function getLocalVariant(): Variant | null {
   const result = localStorage.getItem(LOCAL_VARIANT_KEY);
-  if (result === null || !isVariant(result)) {
+  if (result === null || !isExtVariant(result)) {
     return null;
   }
-  return result;
+  return normalizeVariant(result);
 }
 
 /**
@@ -77,8 +95,9 @@ function getLocalVariant(): Variant | null {
 function getBrowserVariant(): Variant | null {
   return navigator.languages
     .map((lang) => lang.toLowerCase())
-    .map((lang) => BCP47_MAPPING[lang] ?? lang)
-    .find((lang) => isVariant(lang)) as Variant
+    .filter(isExtVariant)
+    .map(normalizeVariant)
+    .find(isVariant)
     ?? null;
 }
 
@@ -131,7 +150,6 @@ export {
   type Variant,
   isVariant,
   isValidVariant,
-  isSpecialPage,
   getPageVariant,
   getAccountVariant,
   getLocalVariant,

@@ -1,5 +1,5 @@
 import { output } from './debug';
-import { getMediaWikiVariant, isValidVariant, setLocalVariant } from './model';
+import { Variant, getMediaWikiVariant, isValidVariant, setLocalVariant } from './model';
 import stat from './stats';
 
 const REGEX_WIKI_URL = /^\/(?:wiki|zh(?:-\w+)?)\//i;
@@ -33,7 +33,7 @@ function isRewritingRequired(link: string): boolean {
   }
 }
 
-function rewriteLink(link: string, variant: string): string {
+function rewriteLink(link: string, variant: Variant): string {
   try {
     const normalizationTargetVariant = getMediaWikiVariant();
     const url = new URL(link, location.origin);
@@ -48,20 +48,24 @@ function rewriteLink(link: string, variant: string): string {
       // This should be eventually fixed in MediaWiki itself
       //
       // Example url: https://zh.wikipedia.org/w/index.php?title=Special:Search&search=Foo&wprov=acrw1_0
-      // It should be replaced by https://zh.wikipedia.org/<variant>/Foo.
+      // It should be replaced by https://zh.wikipedia.org/<variant>/Foo?wprov=acrw1_0.
       //
       // Note that the "search for pages containing XXX" link is not covered by this hack
       // since the `variant` URL param works there
       const searchQuery = searchParams.get('search');
+      const wprov = searchParams.get('wprov');
       if (
         pathname.startsWith('/w/index.php')
         && searchQuery !== null
-        && searchParams.get('wprov') !== null
+        && wprov !== null
         && searchParams.get('title')?.startsWith('Special:')
         && searchParams.get('fulltext') !== '1'
       ) {
         url.pathname = `/${variant}/${searchQuery}`;
         url.search = '';
+        // Keep wprov for analysis
+        // See https://wikitech.wikimedia.org/wiki/Provenance
+        searchParams.set('wprov', wprov);
       } else {
         searchParams.set('variant', variant);
       }
@@ -86,12 +90,12 @@ function rewriteLink(link: string, variant: string): string {
   }
 }
 
-function redirect(preferredVariant: string, link?: string): void {
+function redirect(preferredVariant: Variant, link?: string): void {
   // Use replace() to prevent navigating back
   location.replace(rewriteLink(link ?? location.href, preferredVariant));
 }
 
-function checkThisPage(preferredVariant: string, pageVariant: string): void {
+function checkThisPage(preferredVariant: Variant, pageVariant?: Variant): void {
   if (pageVariant === preferredVariant) {
     output('checkThisPage', 'Variant is correct :)');
     return;
@@ -115,7 +119,7 @@ function checkThisPage(preferredVariant: string, pageVariant: string): void {
   redirect(preferredVariant, redirectionURL.toString());
 }
 
-function rewriteAnchors(pageVariant: string): void {
+function rewriteAnchors(variant: Variant): void {
   ['click', 'auxclick', 'dragstart'].forEach((name) => {
     document.addEventListener(name, (ev) => {
       const target = ev.target;
@@ -134,7 +138,7 @@ function rewriteAnchors(pageVariant: string): void {
             return;
           }
 
-          const newLink = rewriteLink(origLink, pageVariant);
+          const newLink = rewriteLink(origLink, variant);
 
           // Browser support: Safari < 14
           // Fail silently when DragEvent is not present

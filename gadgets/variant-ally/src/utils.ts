@@ -25,4 +25,9 @@ function isLangChinese(): boolean {
   return mw.config.get('wgUserLanguage').startsWith('zh');
 }
 
-export { isLoggedIn, isReferrerBlocked, isLangChinese };
+function isWikitextPage(): boolean {
+  return mw.config.get('wgCanonicalNamespace') !== 'Special'
+    && mw.config.get('wgPageContentModel') === 'wikitext';
+}
+
+export { isLoggedIn, isReferrerBlocked, isLangChinese, isWikitextPage };
