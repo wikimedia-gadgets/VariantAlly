@@ -1,53 +1,153 @@
 <!-- Vite dev server. This script is never run in the browser! -->
 
 <script setup lang="ts">
-import { currentLang } from './composables/useI18n';
-import VariantDialog from './components/VariantDialog.vue';
-import useSyncedRef from './composables/useSyncedRef';
-import { watch } from 'vue';
+import { ref, onMounted } from 'vue';
+import VAVariantPrompt from './components/VAVariantPrompt.vue';
+import VAVariantPromptMobile from './components/VAVariantPromptMobile.vue';
+import { ValidVariant } from 'ext.gadget.VariantAlly';
+import { isMobileDevice, wgUserVariant } from './utils';
 
-const isDialogOpen = useSyncedRef('open', false);
-const selectedVariant = useSyncedRef('var', '');
+const variantInput = ref<HTMLInputElement | null>(null);
+const isMobile = isMobileDevice();
 
-watch(selectedVariant, (newValue) => {
-  alert(`Selected ${newValue}`);
+onMounted(() => {
+  if (variantInput.value !== null) {
+    variantInput.value.value = wgUserVariant.value;
+  }
+});
+
+function setUserVariant() {
+  if (variantInput.value !== null) {
+    wgUserVariant.value = variantInput.value.value;
+  }
+}
+
+// VariantPrompt
+
+const variantPrompt = ref<InstanceType<typeof VAVariantPrompt> | null>(null);
+const isVPOpen = ref(false);
+const isVPDisabled = ref(false);
+const closeVPOnMouseLeave = ref(false);
+const closeVPOnScroll = ref(false);
+
+function onVPOptOut() {
+  alert('Opt outed!');
+}
+
+
+function onVPSelect(variant: ValidVariant) {
+  alert(`Selected ${variant}`);
+}
+
+addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
+  if (closeVPOnScroll.value && !isVPDisabled.value) {
+    isVPOpen.value = false;
+  }
+});
+
+// VariantPromptMobile
+
+const variantPromptMobile = ref<InstanceType<typeof VAVariantPromptMobile> | null>(null);
+const isVPMOpen = ref(false);
+const isVPMDisabled = ref(false);
+const closeVPMOnScroll = ref(false);
+
+function onVPMOptOut() {
+  alert('Opt outed!');
+}
+
+
+function onVPMSelect(variant: ValidVariant) {
+  alert(`Selected ${variant}`);
+}
+
+addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
+  if (closeVPMOnScroll.value && !isVPMDisabled.value) {
+    isVPMOpen.value = false;
+  }
 });
 
 </script>
 
 <template>
   <h1>VariantAllyDialog dev server</h1>
+  <div>
+    <p>wgUserVariant: <input ref="variantInput">
+      <button @click="setUserVariant">
+        Set
+      </button>
+    </p>
+  </div>
 
-  <div class="high">
-    <button @click="isDialogOpen = !isDialogOpen">
+  <div>
+    <h2>VAVariantPrompt.vue</h2>
+    <p>Open: {{ isVPOpen }}</p>
+    <button @click="isVPOpen = !isVPOpen">
       Toggle dialog
     </button>
+    <label>
+      <input
+        v-model="isVPDisabled"
+        type="checkbox"
+      >
+      Disabled
+    </label>
+    <label>
+      <input
+        v-model="closeVPOnMouseLeave"
+        type="checkbox"
+      >
+      Close on mouse leave
+    </label>
+    <label>
+      <input
+        v-model="closeVPOnScroll"
+        type="checkbox"
+      >
+      Close on scroll
+    </label>
+  </div>
 
-    <p>currentLang: {{ currentLang }}</p>
-    <button @click="currentLang = 'zh-hans'">
-      Set locale to zh-hans
+  <div>
+    <h2>VAVariantPromptMobile.vue</h2>
+    <p>Open: {{ isVPMOpen }}</p>
+    <button @click="isVPMOpen = !isVPMOpen">
+      Toggle dialog
     </button>
-    <button @click="currentLang = 'zh-hant'">
-      Set locale to zh-hant
-    </button>
-    <button @click="currentLang = 'en'">
-      Set locale to en
-    </button>
+    <label>
+      <input
+        v-model="isVPMDisabled"
+        type="checkbox"
+      >
+      Disabled
+    </label>
+    <label>
+      <input
+        v-model="closeVPMOnScroll"
+        type="checkbox"
+      >
+      Close on scroll
+    </label>
   </div>
 
   <Teleport to="body">
-    <VariantDialog
-      ref="variantDialog"
-      v-model:open="isDialogOpen"
-      @select="(variant) => { selectedVariant = variant; }"
+    <VAVariantPrompt
+      ref="variantPrompt"
+      v-model:open="isVPOpen"
+      v-model:disabled="isVPDisabled"
+      :auto-close="closeVPOnMouseLeave"
+      @optout="onVPOptOut"
+      @select="onVPSelect"
+    />
+
+    <VAVariantPromptMobile
+      ref="variantPromptMobile"
+      v-model:open="isVPMOpen"
+      v-model:disabled="isVPMDisabled"
+      @optout="onVPMOptOut"
+      @select="onVPMSelect"
     />
   </Teleport>
 </template>
 
-<style lang="less">
-.high {
-  position: relative;
-  // z-index: calc(400 + 1);
-  width: fit-content;
-}
-</style>
+<style lang="less"></style>

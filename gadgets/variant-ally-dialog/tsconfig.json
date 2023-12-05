@@ -6,6 +6,11 @@
       "ESNext",
       "DOM"
     ],
+    "paths": {
+      "ext.gadget.VariantAlly": [
+        "../variant-ally/src/index"
+      ]
+    },
     "outDir": "dist/",
     "rootDir": ".",
     "strict": true,
@@ -17,10 +22,16 @@
     "isolatedModules": true
   },
   "include": [
+    "src/**/*.js",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue"
+  ],
+  "references": [
+    {
+      "path": "../variant-ally"
+    }
   ],
   "exclude": []
 }

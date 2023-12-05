@@ -1,59 +1,32 @@
 {
-  "zh-hans": {
+  "variants": {
+    "zh-cn": "中国大陆简体",
+    "zh-sg": "新加坡简体",
+    "zh-my": "马来西亚简体",
+    "zh-hk": "香港繁體",
+    "zh-mo": "澳门繁體",
+    "zh-tw": "臺灣正體"
+  },
+  "hans": {
     "space": "",
     "close": "关闭",
-    "title": "我们希望提供更好的阅读体验",
-    "desc": "为避免您阅读简繁混杂的内容，请选择偏好的中文语言变体。",
-    "desc.btn": "了解更多。",
-    "desc.ext.1": "中文维基百科使用自动简繁转换技术，以满足不同文化背景的读者的需求。",
-    "desc.ext.2": "由于我们无法确定您的语言变体偏好，该功能将无法运作。您可能看到在其他地区常用的术语词汇，甚至简繁混杂的文本。",
-    "desc.ext.3": "为保障阅读体验，强烈建议您选择期望的中文语言变体。带来不便，敬请谅解！",
-    "vb.cn": "中国大陆简体",
-    "vb.sg": "新加坡简体",
-    "vb.my": "马来西亚简体",
-    "vb.hk": "香港繁體",
-    "vb.mo": "澳门繁體",
-    "vb.tw": "臺灣正體",
-    "footer.1": "您的选择仅保存于浏览器中，不会用作其他用途。",
-    "footer.2": "本提示不会再次显示。",
-    "footer.2.btn": "仍然显示？"
+    "vp.header": "我们支持",
+    "vp.header.alt": "记住此变体？",
+    "vp.main": "选取内容的语言变体",
+    "vp.main.alt": "以后都使用此变体呈现内容",
+    "vp.main.ext": "保存您偏好的中文语言变体，以避免显示简繁混杂的内容，提供最佳的阅读体验。",
+    "vp.button.ok": "确定",
+    "vp.button.other": "其他"
   },
-  "zh-hant": {
+  "hant": {
     "space": "",
     "close": "關閉",
-    "title": "我們希望提供更好的閱讀體驗",
-    "desc": "為避免您閱讀簡繁混雜的內容，請選擇偏好的中文語言變體。",
-    "desc.btn": "瞭解更多。",
-    "desc.ext.1": "中文維基百科使用自動簡繁轉換技術，以滿足不同文化背景的讀者的需求。",
-    "desc.ext.2": "由於我們無法確定您的語言變體偏好，該功能將無法運作。您可能看到在其他地區常用的術語詞彙，甚至簡繁混雜的文字。",
-    "desc.ext.3": "為保障閱讀體驗，強烈建議您選擇期望的中文語言變體。帶來不便，敬請諒解！",
-    "vb.cn": "中国大陆简体",
-    "vb.sg": "新加坡简体",
-    "vb.my": "马来西亚简体",
-    "vb.hk": "香港繁體",
-    "vb.mo": "澳门繁體",
-    "vb.tw": "臺灣正體",
-    "footer.1": "您的選擇僅儲存於瀏覽器中，不會用作其他用途。",
-    "footer.2": "本提示不會再次顯示。",
-    "footer.2.btn": "仍然顯示？"
-  },
-  "en": {
-    "space": " ",
-    "close": "Close",
-    "title": "We strive for a better experience",
-    "desc": "Please select your preferred Chinese language variant.",
-    "desc.btn": "Learn more.",
-    "desc.ext.1": "To accommodate readers from diverse cultural backgrounds, Chinese Wikipedia features an automatic conversion mechanism between Simplified and Traditional Chinese.",
-    "desc.ext.2": "Without your variant preference, this functionality remains inactive. Consequently, you might encounter commonly used terms from various regions and a mix of Simplified and Traditional Chinese content.",
-    "desc.ext.3": "For an optimized reading experience, we highly recommend selecting your preferred Chinese language variant. We apologize for the inconvenience.",
-    "vb.cn": "China Mainland (Simplified)",
-    "vb.sg": "Singapore (Simplified)",
-    "vb.my": "Malaysia (Simplified)",
-    "vb.hk": "Hong Kong (Traditional)",
-    "vb.mo": "Macau (Traditional)",
-    "vb.tw": "Taiwan (Traditional)",
-    "footer.1": "Your choice is stored only in this browser and is never used for other purposes.",
-    "footer.2": "This is a one-time prompt.",
-    "footer.2.btn": "Keep seeing this?"
+    "vp.header": "我們支援",
+    "vp.header.alt": "記住此變體？",
+    "vp.main": "選取內容的語言變體",
+    "vp.main.alt": "以後都使用此變體呈現內容",
+    "vp.main.ext": "儲存您偏好的中文語言變體，以避免顯示簡繁混雜的內容，提供最佳的閱讀體驗。",
+    "vp.button.ok": "確定",
+    "vp.button.other": "其他"
   }
 }

@@ -7,7 +7,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint .",
-    "type-check": "pnpm -r exec tsc --noEmit",
+    "type-check": "pnpm -r run type-check",
     "build:prod": "pnpm -r run build:prod",
     "build:debug": "pnpm -r run build:debug"
   },
@@ -21,6 +21,7 @@
     "eslint-plugin-vue": "^9.14.1",
     "only-allow": "^1.1.1",
     "tslib": "^2.6.0",
+    "types-mediawiki": "^1.4.0",
     "typescript": "^5.1.6"
   },
   "pnpm": {

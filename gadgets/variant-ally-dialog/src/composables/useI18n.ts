@@ -1,36 +1,23 @@
-import { Ref } from 'vue';
-import msgsByLang from '../../assets/messages.json';
-import useSyncedRef from './useSyncedRef';
+import { computed } from 'vue';
+import messages from '../../assets/messages.json';
+import { wgUserVariant } from '../utils';
 
-const LANG_CYCLE = {
-  'zh-hans': 'en',
-  en: 'zh-hant',
-  'zh-hant': 'zh-hans',
-} as const;
-
-type Lang = keyof typeof msgsByLang;
-
-/**
- * Get default language. Has a 50% chance of zh-hans and otherwise zh-hant.
- * @returns default language
- */
-function getDefaultLang(): Lang {
-  if (Math.random() > 0.5) {
-    return 'zh-hans';
+// Interface variant of variant prompt
+const i18nVariant = computed(() => {
+  if (wgUserVariant.value === 'zh') {
+    // No conversion: use randomly selected variant
+    return Math.random() > 0.5 ? 'hans' : 'hant';
   }
-  return 'zh-hant';
-}
+  if (['zh-hant', 'zh-tw', 'zh-hk', 'zh-mo'].includes(wgUserVariant.value)) {
+    return 'hant';
+  }
 
-const currentLang: Ref<Lang> = useSyncedRef('lang', getDefaultLang());
-
-function cycleThroughLangs(): void {
-  currentLang.value = LANG_CYCLE[currentLang.value];
-}
+  return 'hans';
+});
 
 function useI18n(key: string): string {
-  const currentMsgsGroup: Record<string, string> = msgsByLang[currentLang.value];
+  const currentMsgsGroup: Record<string, string> = messages[i18nVariant.value];
   return currentMsgsGroup[key] ?? key;
 }
 
-// Export currentLang for debugging purposes
-export { useI18n as default, currentLang, cycleThroughLangs };
+export { useI18n as default, i18nVariant };

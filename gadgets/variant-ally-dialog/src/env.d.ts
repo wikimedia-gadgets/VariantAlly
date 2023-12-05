@@ -1,8 +1,12 @@
-// Additional types (ambient modules).
+// Additional types.
 
 /// <reference types="vite/client" />
+/// <reference types="../../../node_modules/types-mediawiki"/>
 
-declare module 'ext.gadget.VariantAlly' {
-  export function redirect(preferredVariant: string, link?: string): void;
-  export function setLocalVariant(variant: string): void;
+import { createApp } from 'vue';
+
+module 'vue' {
+  export const createMwApp: typeof createApp;
 }
+
+export default {};

@@ -1,33 +1,69 @@
-import { output, showDebugInformation } from './debug';
-import { checkThisPage, rewriteAnchors, showDialog } from './controller';
-import { calculatePreferredVariant, getPageVariant } from './model';
-import { isExperiencedUser, isLangSpecified, isReferrerBlocked } from './utils';
+import { checkDebugURLParam, output, showDebugInfo } from './debug';
+import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt, isEligibleForRewriting } from './controller';
+import { calculatePreferredVariant, getPageVariant, isOptOuted } from './model';
+import { isLoggedIn, isLangChinese, isReferrerBlocked, isWikitextPage, isViewingPage } from './utils';
 
-showDebugInformation();
+showDebugInfo();
+checkDebugURLParam();
+applyURLVariant();
 
-const pageVariant = getPageVariant();
-
-if (pageVariant === null) {
-  output('index', 'Non-article page. Stop.');
-} else {
-  const preferredVariant = calculatePreferredVariant();
-
-  if (preferredVariant === null) {
-    output('index', 'Preferred variant is null, show variant dialog');
-    showDialog();
-  } else if (isExperiencedUser()) {
-    output('index', 'User is experienced. Stop.');
-  } else if (isReferrerBlocked()) {
-    output('index', `Referrer is in blocklist. Stop.`);
-  } else if (isLangSpecified()) {
-    output('index', `uselang is specified. Stop.`);
-  } else {
-    checkThisPage(preferredVariant, pageVariant);
+function main() {
+  // Manually opt outed users
+  if (isOptOuted()) {
+    output('main', 'Opt-outed. Stop.');
+    return;
   }
 
-  rewriteAnchors(pageVariant);
+  if (isLoggedIn()) {
+    output('main', 'checkThisPage', 'Logged in. Stop.');
+    return;
+  }
+
+  // Non-Chinese pages/users
+  if (!isLangChinese()) {
+    output('main', 'Current lang is not Chinese. Stop.');
+    return;
+  }
+
+  const preferredVariant = calculatePreferredVariant();
+  const pageVariant = getPageVariant();
+
+  // Non-article page (JS/CSS pages, Special pages etc.)
+  if (pageVariant === null || !isWikitextPage()) {
+    output('main', 'Non-article page.');
+    // Such page can't have variant, but preferred variant may be available
+    // So still rewrite links
+    if (preferredVariant !== null) {
+      output('main', 'Preferred variant is not null, continue.');
+      rewriteAnchors(preferredVariant);
+    }
+    return;
+  }
+
+  // Preferred variant unavailable
+  if (preferredVariant === null) {
+    if (isViewingPage()) {
+      output('main', 'Preferred variant is null, show variant prompt');
+      showVariantPrompt();
+    }
+    output('main', 'Preferred variant is null, do nothing.');
+    return;
+  }
+
+  // On-site navigation
+  if (isReferrerBlocked() && !isEligibleForRewriting(location.href)) {
+    output('main', 'Referrer is in blocklist. No checking redirection.');
+    rewriteAnchors(preferredVariant);
+    return;
+  }
+
+  checkThisPage(preferredVariant, pageVariant);
+  rewriteAnchors(preferredVariant);
 }
 
+main();
+
 // Expose for VariantAllyDialog's use
-export { setLocalVariant } from './model';
+export { setLocalVariant, setOptOut, type ValidVariant, type Variant } from './model';
 export { redirect } from './controller';
+export { default as stat } from './stats';

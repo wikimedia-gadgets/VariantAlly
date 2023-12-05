@@ -51,3 +51,50 @@
   transition-duration: @transition-duration-base;
   transition-timing-function: @transition-timing-function-user;
 }
+
+.select__handle() {
+  box-sizing: @box-sizing-base;
+  min-height: @spacing-200;
+  border-width: @border-width-base;
+  border-style: @border-style-base;
+  border-radius: @border-radius-base;
+  padding-top: @spacing-25;
+  padding-bottom: @spacing-25;
+  padding-left: @spacing-75;
+  padding-right: calc(@spacing-50 + @spacing-50 + @size-icon-medium);
+  font: inherit;
+  touch-action: manipulation;
+  line-height: @line-height-x-small;
+}
+
+.select__handle--disabled() {
+  background-color: @background-color-disabled-subtle;
+  color: @color-disabled;
+  border-color: @border-color-disabled;
+}
+
+.select__handle--enabled() {
+  background-color: @background-color-interactive-subtle;
+  color: @color-base;
+  border-color: @border-color-base;
+  transition-property: @transition-property-base;
+  transition-duration: @transition-duration-base;
+
+  &:hover {
+    background-color: @background-color-base;
+    color: @color-base--hover;
+    border-color: @border-color-base;
+    cursor: @cursor-base--hover;
+  }
+
+  &:focus {
+    border-color: @border-color-progressive--focus;
+    box-shadow: @box-shadow-inset-small @box-shadow-color-progressive--focus;
+    outline: @outline-base--focus;
+  }
+
+  &:active {
+    color: @color-emphasized;
+    border-color: @border-color-interactive;
+  }
+}

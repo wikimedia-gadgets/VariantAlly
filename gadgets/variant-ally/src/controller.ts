@@ -1,42 +1,50 @@
 import { output } from './debug';
-import { getMediaWikiVariant } from './model';
+import { Variant, getMediaWikiVariant, isValidVariant, setLocalVariant } from './model';
+import stat from './stats';
 
-const WIKIURL_REGEX = /^\/(?:wiki|zh(?:-\w+)?)\//i;
+const REGEX_WIKI_URL = /^\/(?:wiki|zh(?:-\w+)?)\//i;
+const REGEX_VARIANT_URL = /^\/zh(?:-\w+)?\//i;
+const VARIANT_PARAM = 'va-variant';
 
-const REDIRECTED_FROM_KEY = 'va-rf';
+function isEligibleForRewriting(link: string): boolean {
+  try {
+    // No rewriting for empty links
+    if (link === '') {
+      return false;
+    }
+    const url = new URL(link, location.origin);
+    // No rewriting if link itself has variant info
+    if (REGEX_VARIANT_URL.test(url.pathname)) {
+      return false;
+    }
+    if (url.searchParams.has('variant')) {
+      return false;
+    }
+    // No rewriting for foreign origin URLs
+    // Note that links like javascript:void(0) are blocked by this
+    if (url.host !== location.host) {
+      return false;
+    }
 
-function rewriteLink(link: string, variant: string): string {
-  const normalizationTargetVariant = getMediaWikiVariant();
-  const url = new URL(link);
-  const pathname = url.pathname;
-  const searchParams = url.searchParams;
+    return true;
+  } catch {
+    output('isEligibleForRewriting', `Exception occurs when checking ${link}!`);
+    return false;
+  }
+}
 
-  // Only handle same origin urls
-  if (url.host === location.host) {
-    if (WIKIURL_REGEX.test(pathname)) {
-      url.pathname = `/${variant}/${url.pathname.replace(WIKIURL_REGEX, '')}`;
+function rewriteLink(link: string, variant: Variant): string {
+  try {
+    const normalizationTargetVariant = getMediaWikiVariant();
+    const url = new URL(link, location.origin);
+    const pathname = url.pathname;
+    const searchParams = url.searchParams;
+
+    if (REGEX_WIKI_URL.test(pathname)) {
+      url.pathname = `/${variant}/${url.pathname.replace(REGEX_WIKI_URL, '')}`;
       searchParams.delete('variant'); // For things like /zh-cn/A?variant=zh-hk
     } else {
-      // HACK: workaround search box redirection not respecting `variant` URL param
-      // This should be eventually fixed in MediaWiki itself
-      //
-      // Example url: https://zh.wikipedia.org/w/index.php?title=Special:Search&search=Foo&wprov=acrw1_0
-      // It should be replaced by https://zh.wikipedia.org/<variant>/Foo.
-      //
-      // Note that the "search for pages containing XXX" link is not covered by this hack
-      // since the `variant` URL param works there
-      const searchQuery = searchParams.get('search');
-      if (
-        pathname.startsWith('/w/index.php')
-        && searchQuery !== null
-        && searchParams.get('title')?.startsWith('Special:')
-        && searchParams.get('fulltext') !== '1'
-      ) {
-        url.pathname = `/${variant}/${searchQuery}`;
-        url.search = '';
-      } else {
-        searchParams.set('variant', variant);
-      }
+      searchParams.set('variant', variant);
     }
 
     if (variant === normalizationTargetVariant) {
@@ -44,24 +52,26 @@ function rewriteLink(link: string, variant: string): string {
       //
       // For example, for link /zh-tw/Title and normalization variant zh-tw, the result is /wiki/Title,
       // while for the same link and normalization variant zh-cn, the result is /zh-tw/Title (unchanged).
-      url.pathname = url.pathname.replace(WIKIURL_REGEX, '/wiki/');
+      url.pathname = url.pathname.replace(REGEX_WIKI_URL, '/wiki/');
       url.searchParams.delete('variant');
     }
-  }
 
-  const result = url.toString();
-  output('rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => ${result}`);
-  return result;
+    const result = url.toString();
+    output('rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => ${result}`);
+    return result;
+  } catch {
+    output('rewriteLink', `Exception occurs when rewriting ${link} + ${variant}!`);
+    // If anything fails, return the link as-is
+    return link;
+  }
 }
 
-function redirect(preferredVariant: string, link?: string): void {
-  sessionStorage.setItem(REDIRECTED_FROM_KEY, preferredVariant);
-
+function redirect(preferredVariant: Variant, link?: string): void {
   // Use replace() to prevent navigating back
   location.replace(rewriteLink(link ?? location.href, preferredVariant));
 }
 
-function checkThisPage(preferredVariant: string, pageVariant: string): void {
+function checkThisPage(preferredVariant: Variant, pageVariant?: Variant): void {
   if (pageVariant === preferredVariant) {
     output('checkThisPage', 'Variant is correct :)');
     return;
@@ -85,31 +95,30 @@ function checkThisPage(preferredVariant: string, pageVariant: string): void {
   redirect(preferredVariant, redirectionURL.toString());
 }
 
-function rewriteAnchors(pageVariant: string): void {
-
+function rewriteAnchors(variant: Variant): void {
   ['click', 'auxclick', 'dragstart'].forEach((name) => {
     document.addEventListener(name, (ev) => {
       const target = ev.target;
 
       if (target instanceof Element) {
-        const anchor = target.closest('a[href]');
+        // Do not write <a> with hash only href or no href
+        // which is known to cause breakage in e.g. Visual Editor
+        const anchor: HTMLAnchorElement | null = target.closest('a[href]:not([href^="#"])');
 
-        if (anchor) {
+        if (anchor !== null) {
           output('rewriteAnchors', `Event ${ev.type} on ${anchor.href}`);
 
-          // Prevent variant dropdown/list links being overridden
-          // Vector/Vector 2022: in #p-variants
-          // Timeless: in #p-variants-desktop
-          // Minerva/MobileFrontend: in .suggested-languages
-          // Monobook: in .pBody
-          if (anchor.closest('#p-variants, #p-variants-desktop, .suggested-languages, .pBody')) {
-            output('rewriteAnchors', `Anchor is in variant dropdown list. Stop.`);
+          const origLink = anchor.href;
+          if (!isEligibleForRewriting(origLink)) {
+            output('rewriteAnchors', 'Anchor does not require rewriting. Stop.');
             return;
           }
 
-          const newLink = rewriteLink(anchor.href, pageVariant);
+          const newLink = rewriteLink(origLink, variant);
 
-          if (ev instanceof DragEvent && ev.dataTransfer) {
+          // Browser support: Safari < 14
+          // Fail silently when DragEvent is not present
+          if (window.DragEvent && ev instanceof DragEvent && ev.dataTransfer) {
             // Modify drag data directly because setting href has no effect in drag event
             ev.dataTransfer.types.forEach((type) => {
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -125,9 +134,7 @@ function rewriteAnchors(pageVariant: string): void {
               output('rewriteAnchors', 'clickHandler', 'Anchor locked.');
             }
 
-            const origLink = anchor.href;
             anchor.href = newLink;
-
             output('rewriteAnchors', 'clickHandler', `href ${anchor.href}, origLink ${origLink}`);
 
             // HACK: workaround popups not working on modified links
@@ -156,8 +163,29 @@ function rewriteAnchors(pageVariant: string): void {
   });
 }
 
-function showDialog(): void {
+function showVariantPrompt(): void {
   import('ext.gadget.VariantAllyDialog');
 }
 
-export { rewriteLink, redirect, checkThisPage, rewriteAnchors, showDialog };
+/**
+ * Set local variant according to URL query parameters.
+ *
+ * e.g. a URL with ?va-variant=zh-cn will set local variant to zh-cn
+ */
+function applyURLVariant(): void {
+  const variant = new URL(location.href).searchParams.get(VARIANT_PARAM);
+  if (variant !== null && isValidVariant(variant)) {
+    output('applyURLVariant', `${VARIANT_PARAM}=${variant}, setting local variant...`);
+    setLocalVariant(variant);
+  }
+}
+
+export {
+  isEligibleForRewriting,
+  rewriteLink,
+  redirect,
+  checkThisPage,
+  rewriteAnchors,
+  showVariantPrompt,
+  applyURLVariant,
+};

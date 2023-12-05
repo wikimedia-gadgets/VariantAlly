@@ -72,8 +72,8 @@ export default defineConfig({
     }),
     production && strip({
       include: ['**/*.ts'],
-      // Remove calls to debug functions to save bundle size
-      functions: ['console.*', 'assert.*', 'output'],
+      // Remove calls to debug functions in production
+      functions: ['console.*', 'assert.*', 'output', 'checkDebugURLParam'],
     }),
   ],
 });

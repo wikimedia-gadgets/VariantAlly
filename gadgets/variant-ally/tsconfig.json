@@ -13,15 +13,14 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "declaration": true,
+    "composite": true
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "test/**/*.ts",
-    "test/**/*.d.ts",
-    "node_modules/types-mediawiki",
+    "src/**/*.tsx"
   ],
   "exclude": []
 }

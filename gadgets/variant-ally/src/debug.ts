@@ -1,3 +1,5 @@
+// Call to content in this fill will be striped in production build.
+import { showVariantPrompt } from './controller';
 import {
   getAccountVariant,
   getLocalVariant,
@@ -6,9 +8,9 @@ import {
   getBrowserVariant,
   getMediaWikiVariant,
 } from './model';
-import { isLoggedIn, isExperiencedUser } from './utils';
+import { isLoggedIn } from './utils';
 
-function showDebugInformation(): void {
+function showDebugInfo(): void {
   console.log(`[VariantAlly]
 Build: ${BUILD_HASH}
 Referrer: ${document.referrer || '(empty)'}
@@ -18,7 +20,6 @@ Account variant: ${getAccountVariant()}
 Page variant: ${getPageVariant()}
 MediaWiki variant: ${getMediaWikiVariant()}
 User logged in: ${isLoggedIn()}
-User experienced: ${isExperiencedUser()}
 Calculated preferred variant: ${calculatePreferredVariant()}
 `);
 }
@@ -27,4 +28,11 @@ function output(...outputs: string[]): void {
   console.log(`[VariantAlly] ${outputs.slice(0, -1).join('/')}: ${outputs.pop()}`);
 }
 
-export { showDebugInformation, output };
+function checkDebugURLParam(): void {
+  const vaForceDialog = new URL(location.href).searchParams.get('va-force-dialog');
+  if (vaForceDialog !== null) {
+    showVariantPrompt();
+  }
+}
+
+export { showDebugInfo, output, checkDebugURLParam };

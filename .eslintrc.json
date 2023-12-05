@@ -5,6 +5,9 @@
     "node": true,
     "browser": true
   },
+  "globals": {
+    "mw": "readonly"
+  },
   "rules": {
     "semi": "error",
     "comma-dangle": [
