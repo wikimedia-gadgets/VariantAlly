@@ -17,6 +17,10 @@ function isReferrerBlocked(): boolean {
   }
 }
 
+function isViewingPage(): boolean {
+  return mw.config.get('wgAction') === 'view';
+}
+
 /**
  * Check whether the current language (set in user preference or by ?uselang=xxx)
  * is Chinese or not.
@@ -30,4 +34,4 @@ function isWikitextPage(): boolean {
     && mw.config.get('wgPageContentModel') === 'wikitext';
 }
 
-export { isLoggedIn, isReferrerBlocked, isLangChinese, isWikitextPage };
+export { isLoggedIn, isReferrerBlocked, isViewingPage, isLangChinese, isWikitextPage };

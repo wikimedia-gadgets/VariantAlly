@@ -1,7 +1,7 @@
 import { checkDebugURLParam, output, showDebugInfo } from './debug';
 import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt, isEligibleForRewriting } from './controller';
 import { calculatePreferredVariant, getPageVariant, isOptOuted } from './model';
-import { isLoggedIn, isLangChinese, isReferrerBlocked, isWikitextPage } from './utils';
+import { isLoggedIn, isLangChinese, isReferrerBlocked, isWikitextPage, isViewingPage } from './utils';
 
 showDebugInfo();
 checkDebugURLParam();
@@ -42,8 +42,11 @@ function main() {
 
   // Preferred variant unavailable
   if (preferredVariant === null) {
-    output('main', 'Preferred variant is null, show variant prompt');
-    showVariantPrompt();
+    if (isViewingPage()) {
+      output('main', 'Preferred variant is null, show variant prompt');
+      showVariantPrompt();
+    }
+    output('main', 'Preferred variant is null, do nothing.');
     return;
   }
 
