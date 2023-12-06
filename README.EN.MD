@@ -22,11 +22,11 @@ A prompt is shown if Variant Ally cannot detect a user's preferred variant. Once
 
 ## FAQ
 ### Why I keep seeing the prompt?
-The gadget stores your language variant preference in the browser. If your browser clears browsing data automatically, or you are using incognito mode, you may keep seeing this prompt.
+The gadget stores your language variant preference in the browser. If your browser has a language different from Chinese, and clears browsing data automatically or is in incognito mode, you may keep seeing this prompt.
 
 To fix the problem, try these solutions:
 1. Add Chinese Wikipedia to the allow list of preserving site data.
-2. Add one of these links to your bookmark ([China Mainland (Simplified)](https://zh.wikipedia.org/?va-variant=zh-cn), [Singapore (Simplified)](https://zh.wikipedia.org/?va-variant=zh-sg), [Malaysia (Simplified)](https://zh.wikipedia.org/?va-variant=zh-my), [Taiwan (Traditional)](https://zh.wikipedia.org/?va-variant=zh-tw), [Hong Kong(Traditional)](https://zh.wikipedia.org/?va-variant=zh-hk), [Macau (Traditional)](https://zh.wikipedia.org/?va-variant=zh-mo)). When browsing in incognito, open the bookmark first and your variant preference is saved automatically.
+2. The gadget can recognize special "bootstrap links" ([China Mainland (Simplified)](https://zh.wikipedia.org/?va-variant=zh-cn), [Singapore (Simplified)](https://zh.wikipedia.org/?va-variant=zh-sg), [Malaysia (Simplified)](https://zh.wikipedia.org/?va-variant=zh-my), [Taiwan (Traditional)](https://zh.wikipedia.org/?va-variant=zh-tw), [Hong Kong(Traditional)](https://zh.wikipedia.org/?va-variant=zh-hk), [Macau (Traditional)](https://zh.wikipedia.org/?va-variant=zh-mo)). Bookmark one of these. When browsing in incognito, open the bookmark first and your variant preference is saved automatically.
 3. Click the "X" button when the prompt pops up. This will close it for the rest of the browsing session.
 4. Use an ad-blocker to block the prompt.
 

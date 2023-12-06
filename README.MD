@@ -22,11 +22,11 @@
 
 ## 常见问题（FAQ）
 ### 为什么我总是看到弹窗？
-小工具会将您的变体设置存储于浏览器中，如果您的浏览器会自动清除网站数据，或者使用了无痕模式，您可能会多次看到此弹窗。
+小工具会将您的变体设置存储于浏览器中，如果您的浏览器语言不是中文，并且会自动清除网站数据或者使用了无痕模式，您可能会多次看到此弹窗。
 
 要解决此问题，请尝试以下方案：
 1. 将中文维基百科加入浏览器清除网站数据的白名单中。
-2. 将这些链接添加到书签（[大陆简体](https://zh.wikipedia.org/?va-variant=zh-cn)、[新加坡简体](https://zh.wikipedia.org/?va-variant=zh-sg)、[马来西亚简体](https://zh.wikipedia.org/?va-variant=zh-my)、[臺灣正體](https://zh.wikipedia.org/?va-variant=zh-tw)、[香港繁體](https://zh.wikipedia.org/?va-variant=zh-hk)、[澳门繁體](https://zh.wikipedia.org/?va-variant=zh-mo)）。在使用无痕浏览模式前先打开这些链接，便会自动保存相应的变体设置。
+2. 小工具可以识别特殊的“设置链接”（[大陆简体](https://zh.wikipedia.org/?va-variant=zh-cn)、[新加坡简体](https://zh.wikipedia.org/?va-variant=zh-sg)、[马来西亚简体](https://zh.wikipedia.org/?va-variant=zh-my)、[臺灣正體](https://zh.wikipedia.org/?va-variant=zh-tw)、[香港繁體](https://zh.wikipedia.org/?va-variant=zh-hk)、[澳门繁體](https://zh.wikipedia.org/?va-variant=zh-mo)）。将这些链接添加至书签，在使用无痕浏览模式前先打开这些链接，便会自动保存相应的变体设置。
 3. 出现弹窗时点击右上角关闭按钮，即可在当前会话中不再显示弹窗。
 4. 使用广告拦截插件屏蔽弹窗。
 
