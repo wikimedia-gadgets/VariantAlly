@@ -10,7 +10,6 @@
     "test": "jest"
   },
   "author": "See AUTHORS",
-  "license": "BSD-3-Clause",
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-strip": "^3.0.2",
