@@ -73,7 +73,8 @@ watch(isOpen, (newValue) => {
     @vector-2022-header-height: 50px + 2 * 8px;
     max-height: calc(100% - @spacing-vertical-dialog - @vector-2022-header-height);
 
-    .vector-toc-available.vector-feature-toc-pinned-clientpref-1 & {
+    .vector-toc-available.vector-feature-toc-pinned-clientpref-1 &,
+    .vector-feature-main-menu-pinned-enabled & {
       @media screen and (min-width: 1000px) and (max-width: 1200px) {
         left: unset;
 
