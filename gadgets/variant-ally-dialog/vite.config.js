@@ -26,6 +26,11 @@ export default defineConfig(({ command }) => {
         ],
       },
     },
+    resolve: {
+      'ext.gadget.VariantAlly': [
+        '../variant-ally/src/index',
+      ],
+    },
     build: {
       outDir: 'dist',
       lib: {
