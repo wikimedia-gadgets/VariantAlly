@@ -32,14 +32,10 @@ function isEligibleForRewriting(link: string): boolean {
   }
 }
 
-/**
- * @return string if rewrite success, false if rewrite fails, null if unchange
- */
-function rewriteLink(link: string, variant: Variant): string | false | null {
+function rewriteLink(link: string, variant: Variant): string {
   try {
     const normalizationTargetVariant = getMediaWikiVariant();
     const url = new URL(link, location.origin);
-    const origHref = url.href;
     const pathname = url.pathname;
     const searchParams = url.searchParams;
 
@@ -59,25 +55,24 @@ function rewriteLink(link: string, variant: Variant): string | false | null {
       url.searchParams.delete('variant');
     }
 
-    if (url.href === origHref) {
-      output('rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => (unchange)`);
-      return null;
-    }
-
     const result = url.toString();
     output('rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => ${result}`);
-    
+
     return result;
   } catch {
     output('rewriteLink', `Exception occurs when rewriting ${link} + ${variant}!`);
     // If anything fails, return false to reject rewrite
-    return false;
+    return link;
   }
 }
 
 function redirect(preferredVariant: Variant, link?: string): void {
-  const newLink = rewriteLink(link ?? location.href, preferredVariant);
-  if (newLink) {
+  const origLink = link ?? location.href;
+  const newLink = rewriteLink(origLink, preferredVariant);
+
+  // Do not redirect when links are the same
+  // This could happen occasionally
+  if (origLink !== newLink) {
     // Use replace() to prevent navigating back
     location.replace(newLink);
   }
@@ -127,9 +122,8 @@ function rewriteAnchors(variant: Variant): void {
           }
 
           const newLink = rewriteLink(origLink, variant);
-
-          if (!newLink) {
-            output('rewriteAnchors', 'Anchor link unchange.');
+          if (newLink === origLink) {
+            output('rewriteAnchors', 'Anchor link is unchanged. Stop.');
             return;
           }
 
