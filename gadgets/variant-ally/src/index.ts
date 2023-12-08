@@ -15,7 +15,7 @@ function main() {
   }
 
   if (isLoggedIn()) {
-    output('main', 'checkThisPage', 'Logged in. Stop.');
+    output('main', 'Logged in. Stop.');
     return;
   }
 
@@ -45,7 +45,9 @@ function main() {
     if (isViewingPage()) {
       output('main', 'Preferred variant is null, show variant prompt');
       showVariantPrompt();
+      return;
     }
+
     output('main', 'Preferred variant is null, do nothing.');
     return;
   }

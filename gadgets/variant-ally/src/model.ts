@@ -122,8 +122,11 @@ function getMediaWikiVariant(): Variant | null {
  * @returns preferred variant
  */
 function calculatePreferredVariant(): ValidVariant | null {
-  const result = getAccountVariant() ?? getBrowserVariant() ?? getLocalVariant();
-  if (result === null || !isValidVariant(result)) {
+  const result = [getAccountVariant(), getBrowserVariant(), getLocalVariant()]
+    .map((variant) => variant !== null && isValidVariant(variant) ? variant : null)
+    .reduce((prev, curr) => prev ?? curr);
+
+  if (result === null) {
     return null;
   }
   // Optimistically set local variant to be equal to browser variant
