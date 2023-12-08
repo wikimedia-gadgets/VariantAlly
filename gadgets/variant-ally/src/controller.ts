@@ -33,10 +33,14 @@ function isEligibleForRewriting(link: string): boolean {
   }
 }
 
-function rewriteLink(link: string, variant: Variant): string {
+/**
+ * @return string if rewrite success, false if rewrite fails, null if unchange
+ */
+function rewriteLink(link: string, variant: Variant): string | false | null {
   try {
     const normalizationTargetVariant = getMediaWikiVariant();
     const url = new URL(link, location.origin);
+    const origHref = url.href;
     const pathname = url.pathname;
     const searchParams = url.searchParams;
 
@@ -56,19 +60,28 @@ function rewriteLink(link: string, variant: Variant): string {
       url.searchParams.delete('variant');
     }
 
+    if (url.href === origHref) {
+      output('rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => (unchange)`);
+      return null;
+    }
+
     const result = url.toString();
     output('rewriteLink', `${link} + ${variant} - ${normalizationTargetVariant} => ${result}`);
+    
     return result;
   } catch {
     output('rewriteLink', `Exception occurs when rewriting ${link} + ${variant}!`);
-    // If anything fails, return the link as-is
-    return link;
+    // If anything fails, return false to reject rewrite
+    return false;
   }
 }
 
 function redirect(preferredVariant: Variant, link?: string): void {
-  // Use replace() to prevent navigating back
-  location.replace(rewriteLink(link ?? location.href, preferredVariant));
+  const newLink = rewriteLink(link ?? location.href, preferredVariant);
+  if (newLink) {
+    // Use replace() to prevent navigating back
+    location.replace(newLink);
+  }
 }
 
 function checkThisPage(preferredVariant: Variant, pageVariant?: Variant): void {
@@ -115,6 +128,11 @@ function rewriteAnchors(variant: Variant): void {
           }
 
           const newLink = rewriteLink(origLink, variant);
+
+          if (!newLink) {
+            output('rewriteAnchors', 'Anchor link unchange.');
+            return;
+          }
 
           // Browser support: Safari < 14
           // Fail silently when DragEvent is not present
