@@ -6,6 +6,8 @@
 
 const DEBUG: boolean;
 
+const STAT_ENABLE: boolean;
+
 const BUILD_HASH: string;
 
 module 'ext.gadget.VariantAllyDialog';

@@ -9,7 +9,19 @@ import { join } from 'path';
 import strip from '@rollup/plugin-strip';
 import filesize from 'rollup-plugin-filesize';
 
+/**
+ * @param {string} str
+ */
+function strToBool(str) {
+  return ['false', 'no'].includes(String(str).trim().toLowerCase())
+    ? false
+    : Boolean(str);
+}
+
 const production = process.env.NODE_ENV === 'production';
+const statEnable = process.env.VA_STAT_ENABLE !== undefined
+  ? strToBool(process.env.VA_STAT_ENABLE)
+  : production;
 
 /**
  * Compute a meta hash based on metadata of files inside paths.
@@ -59,6 +71,7 @@ export default defineConfig({
     filesize(),
     replace({
       preventAssignment: true,
+      STAT_ENABLE: statEnable,
       BUILD_HASH: JSON.stringify(computeMetaHash(['src/'])),
     }),
     typescript({

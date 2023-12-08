@@ -9,7 +9,9 @@ type StatName =
   | 'variant-prompt-mobile-select';
 
 function stat(name: StatName) {
-  mw.track(`counter.gadget_VariantAlly.${name}`);
+  if (STAT_ENABLE) {
+    mw.track(`counter.gadget_VariantAlly.${name}`);
+  }
 }
 
 export { stat as default, type StatName };
