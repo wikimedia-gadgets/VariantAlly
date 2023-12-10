@@ -25,6 +25,7 @@ const EXT_VARIANTS = [
   'zh-hant-mo',
   ...VARIANTS,
 ] as const;
+// Some browsers (e.g. Firefox Android) may return such languages
 const EXT_MAPPING: Record<string, ValidVariant> = {
   'zh-hans-cn': 'zh-cn',
   'zh-hans-sg': 'zh-sg',
@@ -102,11 +103,14 @@ function getBrowserVariant(): Variant | null {
 }
 
 /**
- * Get the "natural" variant inferred by MediaWiki when the link doesn't specify a variant.
+ * Get the "natural" variant inferred by MediaWiki for anonymous users
+ * when the link doesn't specify a variant.
  *
  * Used in link normalization.
  *
- * Only return valid variants, null otherwise.
+ * FIXME: Old Safari is known to break this method.
+ * User reported that on an iOS 14 device with Chinese language and Singapore region settings,
+ * Accept-Language is zh-cn (thus inferred by MediaWiki) but this method returns zh-sg.
  *
  * @returns variant
  */

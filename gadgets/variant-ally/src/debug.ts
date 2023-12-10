@@ -1,4 +1,4 @@
-// Call to content in this fill will be striped in production build.
+// Call to content in this file will be striped in production build.
 import { showVariantPrompt } from './controller';
 import {
   getAccountVariant,
@@ -28,6 +28,9 @@ function output(...outputs: string[]): void {
   console.log(`[VariantAlly] ${outputs.slice(0, -1).join('/')}: ${outputs.pop()}`);
 }
 
+/**
+ * Forcibly display variant prompt when URL param ?va-force-dialog is set
+ */
 function checkDebugURLParam(): void {
   const vaForceDialog = new URL(location.href).searchParams.get('va-force-dialog');
   if (vaForceDialog !== null) {

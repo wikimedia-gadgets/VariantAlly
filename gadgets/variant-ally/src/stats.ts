@@ -8,6 +8,11 @@ type StatName =
   | 'variant-prompt-mobile-dismiss'
   | 'variant-prompt-mobile-select';
 
+/**
+ * Collect metrics, visible at grafana.wikimedia.org
+ *
+ * @param name metric name
+ */
 function stat(name: StatName) {
   mw.track(`counter.gadget_VariantAlly.${name}`);
 }

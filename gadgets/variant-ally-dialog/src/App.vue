@@ -19,7 +19,7 @@ function setVariant(variant: ValidVariant) {
 }
 
 // Browser support: iOS Safari < 15
-// Work around Safari firing scroll event at unexpected conditions (e.g. popping up select)
+// Work around Safari firing scroll event at unexpected conditions (e.g. popping up Select)
 addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
   if (!isDisabled.value) {
     isOpen.value = false;
