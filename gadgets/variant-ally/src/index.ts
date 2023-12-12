@@ -1,6 +1,6 @@
 import { checkDebugURLParam, output, showDebugInfo } from './debug';
 import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt, isEligibleForRewriting } from './controller';
-import { calculatePreferredVariant, getPageVariant, isOptOuted } from './model';
+import { calculatePreferredVariant, getPageVariant, isOptOuted, setLocalVariant } from './model';
 import { isLoggedIn, isLangChinese, isReferrerBlocked, isWikitextPage, isViewingPage } from './utils';
 
 showDebugInfo();
@@ -26,6 +26,13 @@ function main() {
   }
 
   const preferredVariant = calculatePreferredVariant();
+  if (preferredVariant !== null) {
+    // Optimistically set local variant to be equal to browser variant
+    // In case the user's browser language becomes invalid in the future,
+    // this reduces the possibility to show prompt to disrupt users.
+    setLocalVariant(preferredVariant);
+  }
+
   const pageVariant = getPageVariant();
 
   // Non-article page (JS/CSS pages, Special pages etc.)
