@@ -15,7 +15,7 @@ stat(isMobile ? 'variant-prompt-mobile-show' : 'variant-prompt-show');
 function setVariant(variant: ValidVariant) {
   stat(isMobile ? 'variant-prompt-mobile-select' : 'variant-prompt-select');
   setLocalVariant(variant);
-  redirect(variant);
+  redirect(variant, { forced: true });
 }
 
 // Browser support: iOS Safari < 15

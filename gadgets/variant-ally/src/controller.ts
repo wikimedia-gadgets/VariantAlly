@@ -65,13 +65,19 @@ function rewriteLink(link: string, variant: Variant): string {
   }
 }
 
-function redirect(preferredVariant: Variant, link?: string): void {
-  const origLink = link ?? location.href;
+interface RedirectionOptions {
+  link?: string;
+  /** Should still redirect even destination link is the same as current */
+  forced?: boolean;
+}
+
+function redirect(preferredVariant: Variant, options: RedirectionOptions = {}): void {
+  const origLink = options.link ?? location.href;
   const newLink = rewriteLink(origLink, preferredVariant);
 
   // Do not redirect when links are the same
   // This could happen occasionally
-  if (origLink !== newLink) {
+  if (options.forced || origLink !== newLink) {
     // Use replace() to prevent navigating back
     location.replace(newLink);
   }
@@ -98,7 +104,7 @@ function checkThisPage(preferredVariant: Variant, pageVariant?: Variant): void {
   // Use URL to reserve other parts of the link
   const redirectionURL = new URL(location.href);
   redirectionURL.pathname = `/wiki/${redirectionOrigin}`;
-  redirect(preferredVariant, redirectionURL.toString());
+  redirect(preferredVariant, { link: redirectionURL.toString() });
 }
 
 function rewriteAnchors(variant: Variant): void {
