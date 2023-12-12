@@ -1,6 +1,6 @@
 {
   "name": "variant-ally-dialog",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,6 @@
     "build:prod": "NODE_ENV=production vite build",
     "build:debug": "NODE_ENV=development vite build"
   },
-  "author": "See AUTHORS",
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "autoprefixer": "^10.4.14",

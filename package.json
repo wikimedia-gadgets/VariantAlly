@@ -1,6 +1,6 @@
 {
   "name": "variant-ally-monorepo",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Enhance Chinese Wikipedia's variant support",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "build:prod": "pnpm -r run build:prod",
     "build:debug": "pnpm -r run build:debug"
   },
-  "author": "See AUTHORS",
+  "author": "diskdance",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@types/node": "^20.4.6",
