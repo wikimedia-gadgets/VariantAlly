@@ -27,9 +27,9 @@ export default defineConfig(({ command }) => {
       },
     },
     resolve: {
-      'ext.gadget.VariantAlly': [
-        '../variant-ally/src/index',
-      ],
+      alias: command === 'serve' ? {
+        'ext.gadget.VariantAlly': '../variant-ally/src/index',
+      } : undefined,
     },
     build: {
       outDir: 'dist',
