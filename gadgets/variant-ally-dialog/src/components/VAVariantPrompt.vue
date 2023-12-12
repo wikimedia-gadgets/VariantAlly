@@ -29,10 +29,10 @@ const emit = defineEmits<{
 const prompt = ref<HTMLElement | null>(null);
 const titleId = useUniqueId();
 const descId = useUniqueId();
-const shuffledVariant = useShuffledVariant();
 const isOpen = useModelWrapper(props, emit, 'open');
 const isDisabled = useModelWrapper(props, emit, 'disabled');
 const isVariantNarrowed = useDefault(() => inferredVariant.value !== null);
+const shuffledVariant = useShuffledVariant(isVariantNarrowed);
 
 function optOutAndClose() {
   emit('optout');

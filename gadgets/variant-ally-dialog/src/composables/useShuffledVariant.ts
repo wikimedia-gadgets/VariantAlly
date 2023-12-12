@@ -1,20 +1,30 @@
-import { Ref, ref } from 'vue';
+import { Ref, ref, watch } from 'vue';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
-import { shuffleVariant } from '../utils';
+import { inferredVariant, shuffleVariant } from '../utils';
 
 const INTERVAL = 5 * 1000;
 
 /**
  * Return a ref which shuffle between all possible variants.
+ *
+ * @param isFreezed should shuffling pause or not
  */
-function useShuffledVariant(): Ref<ValidVariant> {
-  // 'zh-cn' is a dummy value that is never used
-  const result = ref<ValidVariant>('zh-cn');
+function useShuffledVariant(isFreezed: Ref<boolean>): Ref<ValidVariant> {
+  const result = ref<ValidVariant>(shuffleVariant());
+  let id: number;
 
-  setInterval(() => {
-    result.value = shuffleVariant();
-  }, INTERVAL);
-  result.value = shuffleVariant();
+  watch(isFreezed, (newValue) => {
+    if (!newValue) {
+      id = window.setInterval(() => {
+        result.value = shuffleVariant();
+      }, INTERVAL);
+    } else {
+      clearInterval(id);
+      // Attempt to freeze at inferred variant at a best effort
+      // This should be most cases
+      result.value = inferredVariant.value ?? shuffleVariant();
+    }
+  }, { immediate: true });
 
   return result;
 }
