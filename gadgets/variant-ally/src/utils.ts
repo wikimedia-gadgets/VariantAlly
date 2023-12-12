@@ -1,16 +1,26 @@
 // Including:
-// - w.wiki
+// - w.wiki (preserve short link destination)
 const BLOCKED_REFERRER_HOST = /^w\.wiki$/i;
 
 function isLoggedIn(): boolean {
   return mw.config.exists('wgUserId');
 }
 
+/**
+ * Check whether referrer originates from the same domain.
+ */
+function isReferrerSelf(): boolean {
+  try {
+    return new URL(document.referrer).hostname === location.hostname;
+  } catch {
+    // Invalid URL
+    return false;
+  }
+}
+
 function isReferrerBlocked(): boolean {
   try {
-    const referrerHostname = new URL(document.referrer).hostname;
-    return referrerHostname === location.hostname
-      || BLOCKED_REFERRER_HOST.test(referrerHostname);
+    return BLOCKED_REFERRER_HOST.test(new URL(document.referrer).hostname);
   } catch {
     // Invalid URL
     return false;
@@ -34,4 +44,11 @@ function isWikitextPage(): boolean {
     && mw.config.get('wgPageContentModel') === 'wikitext';
 }
 
-export { isLoggedIn, isReferrerBlocked, isViewingPage, isLangChinese, isWikitextPage };
+export {
+  isLoggedIn,
+  isReferrerSelf,
+  isReferrerBlocked,
+  isViewingPage,
+  isLangChinese,
+  isWikitextPage,
+};

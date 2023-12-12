@@ -1,7 +1,7 @@
 import { checkDebugURLParam, output, showDebugInfo } from './debug';
 import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt, isEligibleForRewriting } from './controller';
 import { calculatePreferredVariant, getPageVariant, isOptOuted, setLocalVariant } from './model';
-import { isLoggedIn, isLangChinese, isReferrerBlocked, isWikitextPage, isViewingPage } from './utils';
+import { isLoggedIn, isLangChinese, isReferrerBlocked, isWikitextPage, isViewingPage, isReferrerSelf } from './utils';
 
 showDebugInfo();
 checkDebugURLParam();
@@ -59,9 +59,17 @@ function main() {
     return;
   }
 
-  // On-site navigation
-  if (isReferrerBlocked() && !isEligibleForRewriting(location.href)) {
-    output('main', 'Referrer is in blocklist. No checking redirection.');
+  if (isReferrerBlocked()) {
+    output('main', 'Referred is in blocklist. No checking redirection.');
+    rewriteAnchors(preferredVariant);
+    return;
+  }
+
+  // On-site navigation to links ineligible for writing
+  // The eligibility check is require because user may click on a link with variant intentionally
+  // e.g. variant dropdown and {{Variant-cnhktwsg}}
+  if (isReferrerSelf() && !isEligibleForRewriting(location.href)) {
+    output('main', 'On-site navigation to links ineligible for writing. No checking redirection.');
     rewriteAnchors(preferredVariant);
     return;
   }

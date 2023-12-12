@@ -61,7 +61,6 @@ function rewriteLink(link: string, variant: Variant): string {
     return result;
   } catch {
     output('rewriteLink', `Exception occurs when rewriting ${link} + ${variant}!`);
-    // If anything fails, return false to reject rewrite
     return link;
   }
 }
