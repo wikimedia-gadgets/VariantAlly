@@ -2,7 +2,7 @@ import { Ref, ref, watch } from 'vue';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
 import { inferredVariant, shuffleVariant } from '../utils';
 
-const INTERVAL = 5 * 1000;
+const INTERVAL = 3 * 1000;
 
 /**
  * Return a ref which shuffle between all possible variants.
@@ -16,7 +16,7 @@ function useShuffledVariant(isFreezed: Ref<boolean>): Ref<ValidVariant> {
   watch(isFreezed, (newValue) => {
     if (!newValue) {
       id = window.setInterval(() => {
-        result.value = shuffleVariant();
+        result.value = shuffleVariant(result.value);
       }, INTERVAL);
     } else {
       clearInterval(id);
@@ -29,4 +29,4 @@ function useShuffledVariant(isFreezed: Ref<boolean>): Ref<ValidVariant> {
   return result;
 }
 
-export { useShuffledVariant as default, shuffleVariant };
+export default useShuffledVariant;

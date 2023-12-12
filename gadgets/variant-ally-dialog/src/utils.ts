@@ -43,9 +43,15 @@ const inferredVariant = computed(() => {
   return null;
 });
 
-function shuffleVariant(): ValidVariant {
-  const randomIndex = Math.floor(Math.random() * VALID_VARIANTS.length);
-  return VALID_VARIANTS[randomIndex];
+/**
+ * Shuffle between all valid variants.
+ * @param last last shuffled variant, used to prevent duplications
+ * @returns shuffled variant
+ */
+function shuffleVariant(last?: ValidVariant): ValidVariant {
+  const targetArray = [...VALID_VARIANTS].filter((i) => i !== last);
+  const randomIndex = Math.floor(Math.random() * targetArray.length);
+  return targetArray[randomIndex];
 }
 
 export {
