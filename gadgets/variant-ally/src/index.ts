@@ -3,9 +3,9 @@ import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt, isEl
 import { calculatePreferredVariant, getPageVariant, isOptOuted, setLocalVariant } from './model';
 import { isLoggedIn, isLangChinese, isReferrerBlocked, isWikitextPage, isViewingPage, isReferrerSelf } from './utils';
 
+// Debug utilities are (intentionally) unaffected by opt-out logics
 showDebugInfo();
 checkDebugURLParam();
-applyURLVariant();
 
 function main() {
   // Manually opt outed users
@@ -24,6 +24,8 @@ function main() {
     output('main', 'Current lang is not Chinese. Stop.');
     return;
   }
+
+  applyURLVariant();
 
   const preferredVariant = calculatePreferredVariant();
   if (preferredVariant !== null) {
