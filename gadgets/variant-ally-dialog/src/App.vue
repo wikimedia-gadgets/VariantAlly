@@ -44,7 +44,7 @@ watch(isOpen, (newValue) => {
       v-if="!isMobile"
       v-model:open="isOpen"
       v-model:disabled="isDisabled"
-      :auto-close="true"
+      :auto-close="false"
       @optout="onOptOut"
       @select="setVariant"
     />
