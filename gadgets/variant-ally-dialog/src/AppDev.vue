@@ -39,6 +39,7 @@ function onVPSelect(variant: ValidVariant) {
   alert(`Selected ${variant}`);
 }
 
+// See App.vue for comments
 addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
   if (closeVPOnScroll.value && !isVPDisabled.value) {
     isVPOpen.value = false;

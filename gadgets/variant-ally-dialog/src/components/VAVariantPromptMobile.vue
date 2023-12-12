@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
 import VAButton from './VAButton.vue';
 import VASelect from './VASelect.vue';
@@ -25,7 +25,7 @@ const emit = defineEmits<{
 
 const prompt = ref<HTMLElement | null>(null);
 const titleId = useUniqueId();
-const selectedVariant = useDefault(computed(() => inferredVariant.value ?? shuffleVariant()));
+const selectedVariant = useDefault(() => inferredVariant.value ?? shuffleVariant());
 const isOpen = useModelWrapper(props, emit, 'open');
 const isDisabled = useModelWrapper(props, emit, 'disabled');
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
 import VAButton from './VAButton.vue';
 import VAFadeTransition from './VAFadeTransition.vue';
@@ -32,7 +32,7 @@ const descId = useUniqueId();
 const shuffledVariant = useShuffledVariant();
 const isOpen = useModelWrapper(props, emit, 'open');
 const isDisabled = useModelWrapper(props, emit, 'disabled');
-const isVariantNarrowed = useDefault(computed(() => inferredVariant.value !== null));
+const isVariantNarrowed = useDefault(() => inferredVariant.value !== null);
 
 function optOutAndClose() {
   emit('optout');

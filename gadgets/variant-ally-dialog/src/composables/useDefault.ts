@@ -1,4 +1,4 @@
-import { Ref, computed, shallowRef, watch } from 'vue';
+import { Ref, WatchSource, computed, shallowRef, watch } from 'vue';
 
 /**
  * Create a ref that, can be independently updated, but when its default
@@ -6,12 +6,12 @@ import { Ref, computed, shallowRef, watch } from 'vue';
  *
  * Used for debugging.
  */
-function useDefault<T>(defaultRef: Ref<T>): Ref<T> {
-  const realRef = shallowRef<T>(defaultRef.value);
+function useDefault<T>(defaultValue: WatchSource<T>): Ref<T> {
+  const realRef = shallowRef<T>(typeof defaultValue === 'function' ? defaultValue() : defaultValue.value);
 
-  watch(defaultRef, (newValue) => {
+  watch(defaultValue, (newValue) => {
     realRef.value = newValue;
-  });
+  }, { deep: true });
 
   return computed({
     get() {
