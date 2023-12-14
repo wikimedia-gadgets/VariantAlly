@@ -67,7 +67,7 @@ function rewriteLink(link: string, variant: Variant): string {
 
 interface RedirectionOptions {
   link?: string;
-  /** Should still redirect even destination link is the same as current */
+  /** Should still redirect even destination link is the same as current page */
   forced?: boolean;
 }
 
@@ -75,11 +75,13 @@ function redirect(preferredVariant: Variant, options: RedirectionOptions = {}): 
   const origLink = options.link ?? location.href;
   const newLink = rewriteLink(origLink, preferredVariant);
 
-  // Do not redirect when links are the same
-  // This could happen occasionally
-  if (options.forced || origLink !== newLink) {
+  // Prevent infinite redirects
+  // This could happen occasionally, see getMediaWikiVariant()'s comments
+  if (options.forced || newLink !== location.href) {
     // Use replace() to prevent navigating back
     location.replace(newLink);
+  } else {
+    output('redirect', 'newLink === location.href. No refreshing page.');
   }
 }
 
