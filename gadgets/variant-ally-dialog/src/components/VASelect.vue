@@ -1,15 +1,4 @@
-<script lang="ts">
-// For compatibility with @vue/compat shipped with MediaWiki
-// FIXME: Remove this once MediaWiki ships normal Vue
-export default defineComponent({
-  compatConfig: {
-    MODE: 3,
-  },
-});
-</script>
-
 <script setup lang="ts">
-import { defineComponent } from 'vue';
 import useModelWrapper from '../composables/useModelWrapper';
 
 const props = defineProps<{
