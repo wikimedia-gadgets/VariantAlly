@@ -63,9 +63,8 @@ export default defineConfig({
     }),
     typescript({
       compilerOptions: {
-        // Default gadget requires ES5
-        // Specify here so tests can be run without transpilation
-        target: 'ES5',
+        // MediaWiki >= 1.42.0-wmf.13 supports ES2016
+        target: 'ES2016',
       },
     }),
     mwGadget({

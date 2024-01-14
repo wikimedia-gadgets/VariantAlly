@@ -37,7 +37,7 @@ export default defineConfig(({ command }) => {
         entry: 'src/index.ts',
         formats: ['cjs'],
       },
-      target: ['es2016'], // MediaWiki's JavaScript minifier supports up to ES2016
+      target: ['es2016'], // MediaWiki >= 1.42.0-wmf.13 supports up to ES2016
       cssTarget: browserslistToEsbuild(), // Tell esbuild not to use too modern CSS features
       rollupOptions: {
         output: {
