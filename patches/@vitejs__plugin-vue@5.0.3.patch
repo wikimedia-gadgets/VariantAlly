@@ -1,21 +1,21 @@
 diff --git a/dist/index.cjs b/dist/index.cjs
-index aad651e68bd5cacc263a6a8027d285a4d6602af9..3dacb729655ff6b9b6fd1fad27a1602abd43e072 100644
+index f566d73237a833f92df16d5d8a52868f39ecabdf..398777616da42b224a45db6e982696005ee7a588 100644
 --- a/dist/index.cjs
 +++ b/dist/index.cjs
-@@ -2328,7 +2328,7 @@ async function transformMain(code, filename, options, pluginContext, ssr, asCust
+@@ -2447,7 +2447,7 @@ async function transformMain(code, filename, options, pluginContext, ssr, custom
    if (devToolsEnabled || devServer && !isProduction) {
      attachedProps.push([
        `__file`,
--      JSON.stringify(isProduction ? path.basename(filename) : filename)
+-      JSON.stringify(isProduction ? path__default.basename(filename) : filename)
 +      JSON.stringify(path.basename(filename))
      ]);
    }
    if (devServer && devServer.config.server.hmr !== false && !ssr && !isProduction) {
 diff --git a/dist/index.mjs b/dist/index.mjs
-index 59b670095d82c66f7eb904cb71dea9c2a079224e..afb29b29270b7b03dd716790719709833c15191a 100644
+index e420ed92c010bb1aa4e8928f39b2826fe039e145..e16fce44aff3b50aa448d1c3ba331372d4c2da56 100644
 --- a/dist/index.mjs
 +++ b/dist/index.mjs
-@@ -2324,7 +2324,7 @@ async function transformMain(code, filename, options, pluginContext, ssr, asCust
+@@ -2435,7 +2435,7 @@ async function transformMain(code, filename, options, pluginContext, ssr, custom
    if (devToolsEnabled || devServer && !isProduction) {
      attachedProps.push([
        `__file`,

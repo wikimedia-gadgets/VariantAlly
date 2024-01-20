@@ -15,8 +15,8 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@types/node": "^20.4.6",
-    "@typescript-eslint/eslint-plugin": "^5.59.11",
-    "@typescript-eslint/parser": "^5.59.11",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.46.0",
     "eslint-plugin-vue": "^9.14.1",
     "only-allow": "^1.1.1",
@@ -25,12 +25,12 @@
     "typescript": "^5.1.6"
   },
   "pnpm": {
-    "patchedDependencies": {
-      "@vitejs/plugin-vue@4.2.3": "patches/@vitejs__plugin-vue@4.2.3.patch"
-    },
     "overrides": {
       "postcss@<8.4.31": ">=8.4.31",
       "@babel/traverse@<7.23.2": ">=7.23.2"
+    },
+    "patchedDependencies": {
+      "@vitejs/plugin-vue@5.0.3": "patches/@vitejs__plugin-vue@5.0.3.patch"
     }
   }
 }
