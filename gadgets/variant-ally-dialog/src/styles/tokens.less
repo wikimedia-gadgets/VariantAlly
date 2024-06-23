@@ -1,41 +1,41 @@
 // Tokens from https://doc.wikimedia.org/codex/latest/design-tokens/overview.html
 
 /* Foreground colors */
-@color-base: #202122;
-@color-base--hover: #404244;
-@color-progressive: #36c;
-@color-progressive--hover: #447ff5;
-@color-progressive--active: #2a4b8d;
-@color-progressive--focus: #36c;
-@color-visited: #6b4ba1;
-@color-emphasized: #000;
-@color-inverted: #fff;
-@color-disabled: #72777d;
-@color-subtle: #54595d;
+@color-base: var(--color-base, #202122);
+@color-base--hover: var(--color-base--hover, #404244);
+@color-progressive: var(--color-progressive, #36c);
+@color-progressive--hover: var(--color-progressive--hover, #447ff5);
+@color-progressive--active: var(--color-progressive--active, #2a4b8d);
+@color-progressive--focus: var(--color-progressive--focus, #36c);
+@color-visited: var(--color-visited, #6b4ba1);
+@color-emphasized: var(--color-emphasized, #000);
+@color-inverted: var(--color-inverted, #fff);
+@color-disabled: var(--color-disabled, #72777d);
+@color-subtle: var(--color-subtle, #54595d);
 
 /* Background colors */
-@background-color-base: #fff;
-@background-color-transparent: rgba(255, 255, 255, 0);
-@background-color-disabled: #c8ccd1;
-@background-color-interactive: #eaecf0;
-@background-color-interactive-subtle: #f8f9fa;
-@background-color-progressive--active: #2a4b8d;
-@background-color-progressive-subtle: #eaf3ff;
-@background-color-button-quiet--active: rgba(0, 24, 73, 0.082);
-@background-color-button-quiet--hover: rgba(0, 24, 73, 0.027);
-@background-color-backdrop-light: rgba(255, 255, 255, 0.65);
-@background-color-backdrop-dark: rgba(0, 0, 0, 0.65);
-@background-color-disabled-subtle: #eaecf0;
+@background-color-base: var(--background-color-base, #fff);
+@background-color-transparent: var(--background-color-transparent, rgba(255, 255, 255, 0));
+@background-color-disabled: var(--background-color-disabled, #c8ccd1);
+@background-color-interactive: var(--background-color-interactive, #eaecf0);
+@background-color-interactive-subtle: var(--background-color-interactive-subtle, #f8f9fa);
+@background-color-progressive--active: var(--background-color-progressive--active, #2a4b8d);
+@background-color-progressive-subtle: var(--background-color-progressive-subtle, #eaf3ff);
+@background-color-button-quiet--active: var(--background-color-button-quiet--active, rgba(0, 24, 73, 0.082));
+@background-color-button-quiet--hover: var(--background-color-button-quiet--hover, rgba(0, 24, 73, 0.027));
+@background-color-backdrop-light: var(--background-color-backdrop-light, rgba(255, 255, 255, 0.65));
+@background-color-backdrop-dark: var(--background-color-backdrop-dark, rgba(0, 0, 0, 0.65));
+@background-color-disabled-subtle: var(--background-color-disabled-subtle, #eaecf0);
 
 /* Border colors */
-@border-color-base: #a2a9b1;
-@border-color-transparent: transparent;
-@border-color-progressive: #36c;
-@border-color-progressive--hover: #447ff5;
-@border-color-progressive--active: #2a4b8d;
-@border-color-progressive--focus: #36c;
-@border-color-interactive: #72777d;
-@border-color-disabled: #c8ccd1;
+@border-color-base: var(--border-color-base, #a2a9b1);
+@border-color-transparent: var(--border-color-transparent, transparent);
+@border-color-progressive: var(--border-color-progressive, #36c);
+@border-color-progressive--hover: var(--border-color-progressive--hover, #447ff5);
+@border-color-progressive--active: var(--border-color-progressive--active, #2a4b8d);
+@border-color-progressive--focus: var(--border-color-progressive--focus, #36c);
+@border-color-interactive: var(--border-color-interactive, #72777d);
+@border-color-disabled: var(--border-color-disabled, #c8ccd1);
 
 /* Border radius */
 @border-radius-base: 2px;
@@ -54,11 +54,11 @@
 /* Box shadows */
 @box-shadow-drop-small: 0 1px 1px rgba(0, 0, 0, 0.2);
 @box-shadow-drop-medium: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
-@box-shadow-progressive--focus: inset 0 0 0 1px #36c;
+@box-shadow-progressive--focus: inset 0 0 0 1px @box-shadow-color-progressive--focus;
 @box-shadow-inset-small: inset 0 0 0 1px;
 
 /* Box shadow colors */
-@box-shadow-color-progressive--focus: #36c;
+@box-shadow-color-progressive--focus: var(--box-shadow-color-progressive--focus, #36c);
 
 /* Box sizings */
 @box-sizing-base: border-box;
