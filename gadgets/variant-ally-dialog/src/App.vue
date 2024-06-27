@@ -75,7 +75,7 @@ watch(isOpen, (newValue) => {
 
     .vector-toc-available.vector-feature-toc-pinned-clientpref-1 &,
     .vector-feature-main-menu-pinned-enabled & {
-      @media screen and (min-width: 1000px) and (max-width: 1200px) {
+      @media screen and (min-width: 1120px) and (max-width: 1680px) {
         left: unset;
 
         // Calculated from Vector 2022 source code
@@ -87,7 +87,7 @@ watch(isOpen, (newValue) => {
       }
     }
 
-    @media screen and (min-width: 1200px) {
+    @media screen and (min-width: 1680px) {
       @vector-2022-left-padding: 3.25em;
       left: unset;
       margin-left: -(@vector-2022-left-padding / 3 * 2);
