@@ -151,4 +151,6 @@ addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
   </Teleport>
 </template>
 
-<style lang="less"></style>
+<style lang="less">
+@import './styles/dev-vars.less';
+</style>
