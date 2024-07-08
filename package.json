@@ -1,6 +1,6 @@
 {
   "name": "variant-ally-monorepo",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "Enhance Chinese Wikipedia's variant support",
   "private": true,
   "type": "module",
