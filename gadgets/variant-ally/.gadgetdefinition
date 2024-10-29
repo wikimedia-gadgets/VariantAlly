@@ -1,1 +1,1 @@
-* VariantAlly[ResourceLoader|package|default|dependencies=user.options]|VariantAlly.js
+* VariantAlly[ResourceLoader|package|default|dependencies=mediawiki.user,user.options]|VariantAlly.js
