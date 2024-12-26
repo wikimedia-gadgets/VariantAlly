@@ -90,7 +90,7 @@ watch(prompt, () => {
           <span
             v-if="!isVariantNarrowed"
             :key="shuffledVariant"
-            :lang="`zh-${shuffledVariant}`"
+            :lang="shuffledVariant"
             class="va-variant-prompt__title__variant"
           >{{ messages.variants[shuffledVariant] }}</span>
         </VAFadeTransition>
@@ -104,8 +104,8 @@ watch(prompt, () => {
       <div class="va-variant-prompt__options">
         <!-- inferredVariant is non-null, guarded by isVariantNarrowed -->
         <VAButton
-          v-for="variant in
-          (isVariantNarrowed && inferredVariant !== null ? [inferredVariant] : VALID_VARIANTS)"
+          v-for="variant in (isVariantNarrowed && inferredVariant !== null
+            ? [inferredVariant] : VALID_VARIANTS)"
           :key="variant"
           class="va-variant-prompt__options__button"
           :class="{ 'va-variant-prompt__options__button--primary': isVariantNarrowed }"
@@ -192,7 +192,8 @@ watch(prompt, () => {
     padding: @spacing-shorthand-button-icon-only;
     float: right;
     margin-top: @spacing-50;
-    margin-right: -(@spacing-horizontal-button-icon-only + 1px);
+    // Visual alignment, magic number comes from direct measurement
+    margin-right: -(@spacing-horizontal-button-icon-only + @border-width-base + 2px);
   }
 
   &__title {
@@ -207,7 +208,7 @@ watch(prompt, () => {
     overflow: hidden;
     margin: @spacing-75 @spacing-0;
 
-    border: 1px solid @border-color-base;
+    border: 1px solid @border-color-subtle;
     border-radius: @border-radius-base;
 
     &__button {
@@ -241,3 +242,71 @@ watch(prompt, () => {
   opacity: 0;
 }
 </style>
+
+<!-- eslint-disable max-len -->
+<style lang="less">
+@import (reference) '../styles/tokens.less';
+
+// Vector 2022 specific adjustments
+.skin-vector-2022 .va-variant-prompt {
+  // Calculated from Vector 2022 source code
+  @vector-2022-header-height: 50px + 2 * 8px;
+
+  max-height: calc(100% - @spacing-vertical-dialog - @vector-2022-header-height);
+
+  // Has minimum space on the left
+  .vector-toc-available.vector-feature-toc-pinned-clientpref-1 &,
+  .vector-feature-main-menu-pinned-enabled & {
+    @media screen and (min-width: @min-width-breakpoint-desktop) and (max-width: @max-width-breakpoint-desktop) {
+      // Calculated from Vector 2022 source code
+      @vector-2022-left-padding: 2.75em;
+
+      left: unset;
+      right: unset;
+      // Align to appropriate position
+      margin-left: -(@vector-2022-left-padding / 3 * 2);
+      max-width: calc(12.25em + 36px);
+      padding: @spacing-100;
+
+      // A slim layout specially designed for Vector 2022
+
+      &__title {
+        font-size: @font-size-x-large;
+        margin-top: @spacing-0;
+      }
+
+      &__close {
+        margin-top: @spacing-0;
+        margin-right: -@spacing-horizontal-button-icon-only;
+      }
+
+      &__options {
+        margin-left: -@spacing-100;
+        margin-right: -@spacing-100;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+
+        &__button {
+          padding-left: @spacing-100;
+          padding-right: @spacing-100;
+        }
+      }
+
+      &__footer .va-para {
+        margin-bottom: @spacing-0;
+      }
+    }
+  }
+
+  @media screen and (min-width: @min-width-breakpoint-desktop-wide) {
+    // Calculated from Vector 2022 source code
+    @vector-2022-left-padding: 3.25em;
+
+    left: unset;
+    margin-left: -(@vector-2022-left-padding / 3 * 2);
+    max-width: calc(15.75em + 36px);
+  }
+}
+</style>
+<!-- eslint-enable max-len -->

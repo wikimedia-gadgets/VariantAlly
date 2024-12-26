@@ -198,13 +198,14 @@ function select(variant: ValidVariant) {
 /* Prompt transition effect */
 .va-variant-prompt-mobile-enter-active,
 .va-variant-prompt-mobile-leave-active {
-  transition-property: @transition-property-layout;
+  transition-property: transform, @transition-property-fade;
   transition-duration: @transition-duration-medium;
   transition-timing-function: @transition-timing-function-system;
 }
 
 .va-variant-prompt-mobile-enter-from,
 .va-variant-prompt-mobile-leave-to {
+  opacity: 0;
   transform: translateY(100%);
 }
 </style>

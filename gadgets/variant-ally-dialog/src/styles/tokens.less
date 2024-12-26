@@ -31,6 +31,7 @@
 
 /* Border colors */
 @border-color-base: var(--border-color-base, #a2a9b1);
+@border-color-subtle: var(--border-color-subtle, #c8ccd1);
 @border-color-transparent: var(--border-color-transparent, transparent);
 @border-color-progressive: var(--border-color-progressive, #36c);
 @border-color-progressive--hover: var(--border-color-progressive--hover, #3056a9);
@@ -94,9 +95,9 @@
 @min-width-breakpoint-tablet: 640px;
 @min-width-breakpoint-desktop: 1120px;
 @min-width-breakpoint-desktop-wide: 1680px;
-@max-width-breakpoint-mobile: 640px - 1px;
-@max-width-breakpoint-tablet: 1120px - 1px;
-@max-width-breakpoint-desktop: 1680px - 1px;
+@max-width-breakpoint-mobile: calc(640px - 1px);
+@max-width-breakpoint-tablet: calc(1120px - 1px);
+@max-width-breakpoint-desktop: calc(1680px - 1px);
 
 /* Transition timing functions */
 @transition-timing-function-system: ease;
@@ -107,8 +108,6 @@
 @transition-property-fade: opacity;
 @transition-property-icon: color;
 @transition-property-icon-css-only: background-color;
-// Tokens specially for this project
-@transition-property-layout: height, transform;
 
 /* Transition durations */
 @transition-duration-base: 100ms;
@@ -184,12 +183,12 @@
 @spacing-half: 50%;
 @spacing-full: 100%;
 // Tokens specially for this project
-@spacing-shorthand-button-icon-only: 6px - 1px;
-@spacing-horizontal-button: 12px - 1px;
-@spacing-horizontal-button--mobile: 6px - 1px;
+@spacing-shorthand-button-icon-only: 6px - @border-width-base;
+@spacing-horizontal-button: 12px - @border-width-base;
+@spacing-horizontal-button--mobile: 6px - @border-width-base;
 @spacing-horizontal-button-icon-only: @spacing-shorthand-button-icon-only;
 @spacing-horizontal-dialog: 1.25em;
-@spacing-vertical-button: 8px - 1px;
+@spacing-vertical-button: 8px - @border-width-base;
 @spacing-vertical-button-icon-only: @spacing-shorthand-button-icon-only;
 @spacing-vertical-dialog: 1em;
 

@@ -16,10 +16,12 @@ const VALID_VARIANTS = [
 const wgUserVariant = ref(mw.config.get('wgUserVariant') ?? '');
 
 function isMobileDevice(): boolean {
+  // Design decision: never be mobile on desktop sites
   // Browser support:
   // Chromium on some Android device (e.g. Samsung) has "(hover: hover)" set
   // So check pointer together
-  return matchMedia('(hover: none), (pointer: coarse)').matches;
+  return !!(mw.config.get('wgMFMode') as string)
+    && matchMedia('(hover: none), (pointer: coarse)').matches;
 }
 
 function getMountPoint(): Element {
