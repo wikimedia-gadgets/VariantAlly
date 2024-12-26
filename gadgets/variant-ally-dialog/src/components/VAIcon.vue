@@ -13,7 +13,7 @@ export type { Icon };
 
 <template>
   <svg
-    class="va-icon-button__icon"
+    class="va-icon"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     :width="size"

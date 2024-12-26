@@ -101,7 +101,7 @@ defineProps<{
     }
 
     &:active {
-      color: @color-inverted;
+      color: @color-inverted-fixed;
       background-color: @background-color-progressive--active;
       border-color: @border-color-progressive--active;
     }
@@ -109,7 +109,7 @@ defineProps<{
 
   &:disabled {
     background-color: @background-color-disabled;
-    color: @color-inverted;
+    color: @color-disabled-emphasized;
     border-color: @border-color-transparent;
     cursor: @cursor-not-allowed;
   }
