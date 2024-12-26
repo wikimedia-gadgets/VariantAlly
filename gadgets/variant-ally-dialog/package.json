@@ -7,8 +7,7 @@
     "dev": "vite",
     "dev:host": "vite --host",
     "type-check": "vue-tsc --noEmit",
-    "build:prod": "NODE_ENV=production vite build",
-    "build:debug": "NODE_ENV=development vite build"
+    "build": "vite build"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.3",

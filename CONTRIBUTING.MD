@@ -12,7 +12,7 @@ To talk more about `variant-ally-dialog`, it is built using Vue and Vite, but it
 ## Setup
 To setup, run `pnpm i`.
 
-Run `pnpm build:xxx` at project root will build both gadgets. Results can be found at each gadget's `dist` folder. `build:debug` builds the gadget in development mode which is suitable for beta/test wikis while `build:prod` builds the gadget in production mode which is suitable for production wikis.
+Run `pnpm build` at project root will build both gadgets. Results can be found at each gadget's `dist` folder. By default it builds the gadget in production mode which is suitable for production wikis, and a special `build:debug` script is provided for `variant-ally` package will builds the gadget in development mode which is suitable for beta/test wikis.
 
 ## Deployment
 Each gadget's definition is in their respective `.gadgetdefinition` file. Add these definitions and distribution files to the wiki and it should work.
