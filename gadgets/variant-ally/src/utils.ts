@@ -3,7 +3,7 @@
 const BLOCKED_REFERRER_HOST = /^w\.wiki$/i;
 
 function isLoggedIn(): boolean {
-  return mw.config.exists('wgUserId');
+  return mw.user.isNamed();
 }
 
 /**
