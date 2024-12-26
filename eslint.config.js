@@ -2,53 +2,81 @@
 
 import eslint from '@eslint/js';
 import tsEslint from 'typescript-eslint';
+import pluginVue from 'eslint-plugin-vue';
 import globals from 'globals';
 
 export default tsEslint.config(
   eslint.configs.recommended,
   ...tsEslint.configs.recommended,
+  ...pluginVue.configs['flat/recommended'],
   {
     ignores: [
-      '**/dist',
+      '**/dist/',
+      '**/assets/',
     ],
   },
   {
+    files: ['**/*.vue'],
     languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.browser,
+      parserOptions: {
+        parser: tsEslint.parser,
+        extraFileExtensions: ['.vue'],
       },
     },
-    'rules': {
-      'semi': 'error',
-      'comma-dangle': [
-        'error',
-        'always-multiline',
-      ],
-      'quotes': [
+  },
+  {
+    files: ['**/scripts/*.js', '**/*.config.js'],
+    languageOptions: {
+      globals: {
+        ...globals.nodeBuiltin,
+      },
+    },
+  },
+  {
+    rules: {
+      semi: 'error',
+      'comma-dangle': ['error', 'always-multiline'],
+      quotes: [
         'error',
         'single',
         {
-          'avoidEscape': true,
-          'allowTemplateLiterals': true,
+          avoidEscape: true,
+          allowTemplateLiterals: true,
         },
       ],
       'max-len': [
         'error',
         {
-          'code': 100,
-          'ignoreComments': true,
-          'ignoreStrings': true,
-          'ignoreTemplateLiterals': true,
+          code: 100,
+          ignoreComments: true,
+          ignoreStrings: true,
+          ignoreTemplateLiterals: true,
+        },
+      ],
+      'no-constant-condition': [
+        'error',
+        {
+          checkLoops: false,
         },
       ],
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
-          'argsIgnorePattern': '_',
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
         },
       ],
-      'vue/multiline-html-element-content-newline': 'off',
+      'quote-props': ['error', 'as-needed'],
+      'no-empty': [
+        'error',
+        { allowEmptyCatch: true },
+      ],
+      eqeqeq: ['error', 'smart'],
+      '@typescript-eslint/no-explicit-any': [
+        'error',
+        { fixToUnknown: true, ignoreRestArgs: true },
+      ],
+      'no-console': ['warn'],
     },
   },
 );

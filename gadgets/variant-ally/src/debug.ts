@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Call to content in this file will be striped in production build.
 import { showVariantPrompt } from './controller';
 import {

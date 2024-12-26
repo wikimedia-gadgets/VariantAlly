@@ -84,7 +84,9 @@ function select(variant: ValidVariant) {
             :key="variant"
             :value="variant"
             :lang="variant"
-          >{{ messages.variants[variant] }}</option>
+          >
+            {{ messages.variants[variant] }}
+          </option>
         </VASelect>
         <VAButton
           class="va-variant-prompt-mobile__main__action"
@@ -92,7 +94,9 @@ function select(variant: ValidVariant) {
           icon="arrowNext"
           :disabled="disabled"
           @click="select(selectedVariant)"
-        >{{ useI18n('vp.button.ok') }}</VAButton>
+        >
+          {{ useI18n('vp.button.ok') }}
+        </VAButton>
       </div>
       <footer class="va-variant-prompt-mobile__footer">
         <p class="va-para va-para--subtle">

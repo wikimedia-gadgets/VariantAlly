@@ -1,5 +1,20 @@
 @import (reference) './tokens.less';
 
+.mw-dark(@rules) {
+
+  // Automatic dark mode
+  @media screen and (prefers-color-scheme: dark) {
+    html.skin-theme-clientpref-os & {
+      @rules();
+    }
+  }
+
+  // Forced dark mode
+  html.skin-theme-clientpref-night & {
+    @rules();
+  }
+}
+
 .link-base() {
   color: @color-progressive;
   border-radius: @border-radius-base;

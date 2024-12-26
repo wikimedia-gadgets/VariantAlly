@@ -1,7 +1,7 @@
 <!-- Vite dev server. This script is never run in the browser! -->
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import VAVariantPrompt from './components/VAVariantPrompt.vue';
 import VAVariantPromptMobile from './components/VAVariantPromptMobile.vue';
 import { ValidVariant } from 'ext.gadget.VariantAlly';
@@ -9,12 +9,23 @@ import { isMobileDevice, wgUserVariant } from './utils';
 
 const variantInput = ref<HTMLInputElement | null>(null);
 const isMobile = isMobileDevice();
+const colorScheme = ref<'light' | 'night' | 'os'>('light');
 
 onMounted(() => {
   if (variantInput.value !== null) {
     variantInput.value.value = wgUserVariant.value;
   }
 });
+
+watch(
+  colorScheme,
+  (newValue, oldValue) => {
+    const classList = document.documentElement.classList;
+    classList.remove(`skin-theme-clientpref-${oldValue}`);
+    classList.add(`skin-theme-clientpref-${newValue}`);
+  },
+  { immediate: true },
+);
 
 function setUserVariant() {
   if (variantInput.value !== null) {
@@ -39,7 +50,8 @@ function onVPSelect(variant: ValidVariant) {
   alert(`Selected ${variant}`);
 }
 
-// See App.vue for comments
+// Browser support: iOS Safari < 15
+// Work around Safari firing scroll event at unexpected conditions (e.g. popping up Select)
 addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
   if (closeVPOnScroll.value && !isVPDisabled.value) {
     isVPOpen.value = false;
@@ -73,7 +85,21 @@ addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
 <template>
   <h1>VariantAllyDialog dev server</h1>
   <div>
-    <p>wgUserVariant: <input ref="variantInput">
+    <p>
+      Color scheme: <select v-model="colorScheme">
+        <option value="light">
+          Light
+        </option>
+        <option value="night">
+          Dark
+        </option>
+        <option value="os">
+          Auto
+        </option>
+      </select>
+    </p>
+    <p>
+      wgUserVariant: <input ref="variantInput">
       <button @click="setUserVariant">
         Set
       </button>
