@@ -10,8 +10,8 @@ import browserslistToEsbuild from './scripts/browserslist-to-esbuild';
 export default defineConfig(({ command }) => {
   return {
     esbuild: {
-      banner: readFileSync('assets/intro.js').toString().trim(),
-      footer: readFileSync('assets/outro.js').toString().trim(),
+      banner: readFileSync('../../assets/intro.js').toString().trim(),
+      footer: readFileSync('../../assets/outro.js').toString().trim(),
     },
     css: {
       postcss: {

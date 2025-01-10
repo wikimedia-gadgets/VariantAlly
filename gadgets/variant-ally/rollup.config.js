@@ -51,8 +51,8 @@ export default defineConfig({
     entryFileNames: 'Gadget-VariantAlly.js',
     format: 'cjs',
     generatedCode: 'es5', // Keep in sync with TS target
-    banner: readFileSync('assets/intro.js').toString().trim(),
-    footer: readFileSync('assets/outro.js').toString().trim(),
+    banner: readFileSync('../../assets/intro.js').toString().trim(),
+    footer: readFileSync('../../assets/outro.js').toString().trim(),
   },
   plugins: [
     replace({
