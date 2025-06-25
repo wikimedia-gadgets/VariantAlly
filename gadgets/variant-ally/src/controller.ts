@@ -109,7 +109,7 @@ function checkThisPage(preferredVariant: Variant, pageVariant?: Variant): void {
   redirect(preferredVariant, { link: redirectionURL.toString() });
 }
 
-function rewriteAnchors(variant: Variant): void {
+function rewriteNavigation(variant: Variant): void {
   ['click', 'auxclick', 'dragstart'].forEach((name) => {
     document.addEventListener(name, (ev) => {
       const target = ev.target;
@@ -120,17 +120,17 @@ function rewriteAnchors(variant: Variant): void {
         const anchor: HTMLAnchorElement | null = target.closest('a[href]:not([href^="#"])');
 
         if (anchor !== null) {
-          output('rewriteAnchors', `Event ${ev.type} on ${anchor.href}`);
+          output('rewriteNavigation', `Event ${ev.type} on ${anchor.href}`);
 
           const origLink = anchor.href;
           if (!isEligibleForRewriting(origLink)) {
-            output('rewriteAnchors', 'Anchor does not require rewriting. Stop.');
+            output('rewriteNavigation', 'Anchor does not require rewriting. Stop.');
             return;
           }
 
           const newLink = rewriteLink(origLink, variant);
           if (newLink === origLink) {
-            output('rewriteAnchors', 'Anchor link is unchanged. Stop.');
+            output('rewriteNavigation', 'Anchor link is unchanged. Stop.');
             return;
           }
 
@@ -139,28 +139,27 @@ function rewriteAnchors(variant: Variant): void {
           if (window.DragEvent && ev instanceof DragEvent && ev.dataTransfer) {
             // Modify drag data directly because setting href has no effect in drag event
             ev.dataTransfer.types.forEach((type) => {
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               ev.dataTransfer!.setData(type, newLink);
             });
 
-            output('rewriteAnchors', 'dragHandler', `Drop data changed!`);
+            output('rewriteNavigation', 'dragHandler', `Drop data changed!`);
           } else {
             // Use a mutex to avoid being overwritten by overlapped handler calls
             if (anchor.dataset.vaMutex === undefined) {
               anchor.dataset.vaMutex = '';
 
-              output('rewriteAnchors', 'clickHandler', 'Anchor locked.');
+              output('rewriteNavigation', 'clickHandler', 'Anchor locked.');
             }
 
             anchor.href = newLink;
-            output('rewriteAnchors', 'clickHandler', `href ${anchor.href}, origLink ${origLink}`);
+            output('rewriteNavigation', 'clickHandler', `href ${anchor.href}, origLink ${origLink}`);
 
             // HACK: workaround popups not working on modified links
             // Add handler to <a> directly so it was triggered before anything else
             ['mouseover', 'mouseleave', 'keyup'].forEach((innerName) => {
               anchor.addEventListener(innerName, (innerEv) => {
                 output(
-                  'rewriteAnchors',
+                  'rewriteNavigation',
                   'clickHandler',
                   'restorationHandler',
                   `Event ${innerEv.type} on ${anchor.href}, origLink ${origLink}`,
@@ -170,7 +169,7 @@ function rewriteAnchors(variant: Variant): void {
                   anchor.href = origLink;
                   delete anchor.dataset.vaMutex;
 
-                  output('rewriteAnchors', 'clickHandler', 'restorationHandler', 'Anchor unlocked.');
+                  output('rewriteNavigation', 'clickHandler', 'restorationHandler', 'Anchor unlocked.');
                 }
               }, { once: true });
             });
@@ -178,6 +177,17 @@ function rewriteAnchors(variant: Variant): void {
         }
       }
     });
+  });
+
+  // Alter <form> submission actions, especially for edit forms
+  // to prevent a later refresh causing loss of the edit buffer
+  document.addEventListener('submit', (ev) => {
+    const target = ev.target;
+
+    if (target instanceof HTMLFormElement && isEligibleForRewriting(target.action)) {
+      output('rewriteNavigation', `Event ${ev.type} on ${target.action}`);
+      target.action = rewriteLink(target.action, variant);
+    }
   });
 }
 
@@ -203,7 +213,7 @@ export {
   rewriteLink,
   redirect,
   checkThisPage,
-  rewriteAnchors,
+  rewriteNavigation,
   showVariantPrompt,
   applyURLVariant,
 };

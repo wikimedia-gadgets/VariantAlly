@@ -1,5 +1,5 @@
 import { checkDebugURLParam, output, showDebugInfo } from './debug';
-import { checkThisPage, rewriteAnchors, applyURLVariant, showVariantPrompt, isEligibleForRewriting } from './controller';
+import { checkThisPage, rewriteNavigation, applyURLVariant, showVariantPrompt, isEligibleForRewriting } from './controller';
 import { calculatePreferredVariant, getPageVariant, isOptOuted, setLocalVariant } from './model';
 import { isLoggedIn, isLangChinese, isReferrerBlocked, isWikitextPage, isViewingPage, isReferrerSelf } from './utils';
 
@@ -44,7 +44,7 @@ function main() {
     // So still rewrite links
     if (preferredVariant !== null) {
       output('main', 'Preferred variant is not null, continue.');
-      rewriteAnchors(preferredVariant);
+      rewriteNavigation(preferredVariant);
     }
     return;
   }
@@ -63,7 +63,7 @@ function main() {
 
   if (isReferrerBlocked()) {
     output('main', 'Referred is in blocklist. No checking redirection.');
-    rewriteAnchors(preferredVariant);
+    rewriteNavigation(preferredVariant);
     return;
   }
 
@@ -72,12 +72,12 @@ function main() {
   // e.g. variant dropdown and {{Variant-cnhktwsg}}
   if (isReferrerSelf() && !isEligibleForRewriting(location.href)) {
     output('main', 'On-site navigation to links ineligible for writing. No checking redirection.');
-    rewriteAnchors(preferredVariant);
+    rewriteNavigation(preferredVariant);
     return;
   }
 
   checkThisPage(preferredVariant, pageVariant);
-  rewriteAnchors(preferredVariant);
+  rewriteNavigation(preferredVariant);
 }
 
 main();
