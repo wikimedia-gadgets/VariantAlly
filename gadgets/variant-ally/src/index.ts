@@ -62,7 +62,7 @@ function main() {
   }
 
   if (isReferrerBlocked()) {
-    output('main', 'Referred is in blocklist. No checking redirection.');
+    output('main', 'Referrer is in blocklist. No checking redirection.');
     rewriteNavigation(preferredVariant);
     return;
   }
