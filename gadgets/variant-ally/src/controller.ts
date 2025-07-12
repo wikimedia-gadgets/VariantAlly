@@ -184,9 +184,13 @@ function rewriteNavigation(variant: Variant): void {
   document.addEventListener('submit', (ev) => {
     const target = ev.target;
 
-    if (target instanceof HTMLFormElement && isEligibleForRewriting(target.action)) {
-      output('rewriteNavigation', `Event ${ev.type} on ${target.action}`);
-      target.action = rewriteLink(target.action, variant);
+    if (target instanceof HTMLFormElement) {
+      // Use getAttribute to work around https://github.com/wikimedia-gadgets/VariantAlly/issues/14
+      const submitUrl = target.getAttribute('action');
+      if (submitUrl && isEligibleForRewriting(submitUrl)) {
+        output('rewriteNavigation', `Event ${ev.type} on ${submitUrl}`);
+        target.action = rewriteLink(target.action, variant);
+      }
     }
   });
 }
