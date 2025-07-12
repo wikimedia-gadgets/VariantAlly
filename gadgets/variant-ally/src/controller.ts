@@ -185,11 +185,11 @@ function rewriteNavigation(variant: Variant): void {
     const target = ev.target;
 
     if (target instanceof HTMLFormElement) {
-      // Use getAttribute to work around https://github.com/wikimedia-gadgets/VariantAlly/issues/14
+      // Use getAttribute & setAttribute to work around https://github.com/wikimedia-gadgets/VariantAlly/issues/14
       const submitUrl = target.getAttribute('action');
       if (submitUrl && isEligibleForRewriting(submitUrl)) {
         output('rewriteNavigation', `Event ${ev.type} on ${submitUrl}`);
-        target.action = rewriteLink(target.action, variant);
+        target.setAttribute('action', rewriteLink(submitUrl, variant));
       }
     }
   });
