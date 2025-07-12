@@ -193,7 +193,7 @@ function rewriteNavigation(variant: Variant): void {
         output('rewriteNavigation', `Event ${ev.type} on ${method} <form> of ${submitUrl}`);
 
         if (method === 'get') {
-          // In GET form, query parameters in action is striped, so added it via a hidden <input>
+          // In GET form, query parameters in action is striped, so add it via a hidden <input>
           // See https://stackoverflow.com/questions/1116019/when-submitting-a-get-form-the-query-string-is-removed-from-the-action-url
           const variantInput = document.createElement('input');
           variantInput.type = 'hidden';
