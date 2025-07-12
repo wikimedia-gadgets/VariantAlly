@@ -188,8 +188,25 @@ function rewriteNavigation(variant: Variant): void {
       // Use getAttribute & setAttribute to work around https://github.com/wikimedia-gadgets/VariantAlly/issues/14
       const submitUrl = target.getAttribute('action');
       if (submitUrl && isEligibleForRewriting(submitUrl)) {
-        output('rewriteNavigation', `Event ${ev.type} on ${submitUrl}`);
-        target.setAttribute('action', rewriteLink(submitUrl, variant));
+        const method = target.getAttribute('method') ?? 'get';
+
+        output('rewriteNavigation', `Event ${ev.type} on ${method} <form> of ${submitUrl}`);
+
+        if (method === 'get') {
+          // In GET form, query parameters in action is striped, so added it via a hidden <input>
+          // See https://stackoverflow.com/questions/1116019/when-submitting-a-get-form-the-query-string-is-removed-from-the-action-url
+          const variantInput = document.createElement('input');
+          variantInput.type = 'hidden';
+          variantInput.name = 'variant';
+          variantInput.value = variant;
+          target.append(variantInput);
+
+          output('rewriteNavigation', 'Hidden <input> added.');
+        } else {
+          target.setAttribute('action', rewriteLink(submitUrl, variant));
+
+          output('rewriteNavigation', 'Submit URL changed.');
+        }
       }
     }
   });
