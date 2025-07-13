@@ -195,10 +195,15 @@ function rewriteNavigation(variant: Variant): void {
         if (method === 'get') {
           // In GET forms, query parameters in action are striped, so add it via a hidden <input>
           // See https://stackoverflow.com/questions/1116019/when-submitting-a-get-form-the-query-string-is-removed-from-the-action-url
+
+          // Remove existing variant <input>'s, should only be caused by bfcache due to the special
+          // role of ?variant in MediaWiki
+          target.querySelectorAll('input[name="variant"]').forEach((elem) => elem.remove());
+
           const variantInput = document.createElement('input');
           variantInput.type = 'hidden';
           variantInput.name = 'variant';
-          variantInput.value = variant;
+          variantInput.value = variant; // TODO: No normalization here, but should not be a big problem
           target.append(variantInput);
 
           output('rewriteNavigation', 'Hidden <input> added.');
