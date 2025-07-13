@@ -13,6 +13,7 @@
   "author": "diskdance",
   "license": "BSD-3-Clause",
   "devDependencies": {
+    "@eslint/js": "^9.31.0",
     "@types/node": "^22.10.2",
     "eslint": "^9.17.0",
     "eslint-plugin-vue": "^9.32.0",
