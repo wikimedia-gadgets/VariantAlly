@@ -6,7 +6,7 @@
       "ESNext",
       "DOM"
     ],
-    "outDir": "dist/",
+    "outDir": "../../dist/",
     "rootDir": ".",
     "strict": true,
     "skipLibCheck": true,

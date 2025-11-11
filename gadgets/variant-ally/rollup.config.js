@@ -47,7 +47,7 @@ function computeMetaHash(paths, inputHash) {
 export default defineConfig({
   input: 'src/index.ts',
   output: {
-    dir: 'dist',
+    dir: '../../dist',
     entryFileNames: 'Gadget-VariantAlly.js',
     format: 'cjs',
     generatedCode: 'es5', // Keep in sync with TS target

@@ -11,7 +11,7 @@
         "../variant-ally/src/index"
       ]
     },
-    "outDir": "dist/",
+    "outDir": "../../dist/",
     "rootDir": ".",
     "strict": true,
     "skipLibCheck": true,
