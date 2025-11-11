@@ -27,7 +27,7 @@ addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
 });
 
 function onOptOut() {
-  stat(`dialog_${isMobile ? 'mobile' : 'desktop'}`, 'optout');
+  stat(`dialog_${isMobile ? 'mobile' : 'desktop'}`, 'opt-out');
   setOptOut();
 }
 
