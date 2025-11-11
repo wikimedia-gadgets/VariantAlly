@@ -10,10 +10,10 @@ const isDisabled = ref(false);
 const isMobile = isMobileDevice();
 const desktopMountPoint = getMountPoint();
 
-stat(isMobile ? 'variant-prompt-mobile-show' : 'variant-prompt-show');
+stat(`dialog_${isMobile ? 'mobile' : 'desktop'}`, 'show');
 
 function setVariant(variant: ValidVariant) {
-  stat(isMobile ? 'variant-prompt-mobile-select' : 'variant-prompt-select');
+  stat(`dialog_${isMobile ? 'mobile' : 'desktop'}`, 'select');
   setLocalVariant(variant);
   redirect(variant, { forced: true });
 }
@@ -27,13 +27,13 @@ addEventListener(isMobile ? 'touchmove' : 'scroll', () => {
 });
 
 function onOptOut() {
-  stat(isMobile ? 'variant-prompt-mobile-optout' : 'variant-prompt-optout');
+  stat(`dialog_${isMobile ? 'mobile' : 'desktop'}`, 'optout');
   setOptOut();
 }
 
 watch(isOpen, (newValue) => {
   if (!newValue) {
-    stat(isMobile ? 'variant-prompt-mobile-dismiss' : 'variant-prompt-dismiss');
+    stat(`dialog_${isMobile ? 'mobile' : 'desktop'}`, 'dismiss');
   }
 });
 </script>

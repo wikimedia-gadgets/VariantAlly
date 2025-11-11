@@ -1,20 +1,15 @@
-type StatName =
-  | 'variant-prompt-show'
-  | 'variant-prompt-optout'
-  | 'variant-prompt-dismiss'
-  | 'variant-prompt-select'
-  | 'variant-prompt-mobile-show'
-  | 'variant-prompt-mobile-optout'
-  | 'variant-prompt-mobile-dismiss'
-  | 'variant-prompt-mobile-select';
-
 /**
  * Collect metrics, visible at grafana.wikimedia.org
  *
  * @param name metric name
+ * @param action action performed (metric label)
  */
-function stat(name: StatName) {
-  mw.track(`counter.gadget_VariantAlly.${name}`);
+function stat(name: string, action: string) {
+  mw.track(
+    `stats.mediawiki_gadget_VariantAlly_${name}_total`,
+    1,
+    { action },
+  );
 }
 
-export { stat as default, type StatName };
+export { stat as default };
