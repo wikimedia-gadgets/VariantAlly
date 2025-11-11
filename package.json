@@ -8,7 +8,8 @@
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint .",
     "type-check": "pnpm -r run type-check",
-    "build": "pnpm -r run build"
+    "build": "pnpm -r run build",
+    "prepare": "husky"
   },
   "author": "diskdance",
   "license": "BSD-3-Clause",
