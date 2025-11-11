@@ -6,7 +6,6 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
     "build:debug": "NODE_ENV=development rollup -c",
-    "type-check": "tsc --noEmit",
     "test": "jest"
   },
   "devDependencies": {

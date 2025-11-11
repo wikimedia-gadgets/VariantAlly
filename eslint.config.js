@@ -1,11 +1,12 @@
 // @ts-check
 
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import tsEslint from 'typescript-eslint';
 import pluginVue from 'eslint-plugin-vue';
 import globals from 'globals';
 
-export default tsEslint.config(
+export default defineConfig(
   eslint.configs.recommended,
   ...tsEslint.configs.recommended,
   ...pluginVue.configs['flat/recommended'],

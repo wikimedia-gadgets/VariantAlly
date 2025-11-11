@@ -23,10 +23,10 @@ function browserslistToEsbuild(browserslistConfig) {
   // https://github.com/eBay/browserslist-config/issues/16#issuecomment-863870093
   const UNSUPPORTED = ['android 4'];
 
-  const replaces = {
+  const replaces = /** @type {Record<string,string>} */ ({
     ios_saf: 'ios',
     android: 'chrome',
-  };
+  });
 
   const separator = ' ';
 
