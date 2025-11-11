@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "lint": "eslint .",
-    "type-check": "pnpm -r run type-check",
+    "lint": "eslint . && pnpm -r run type-check",
     "build": "pnpm -r run build",
     "prepare": "husky"
   },
