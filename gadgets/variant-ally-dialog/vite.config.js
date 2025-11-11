@@ -27,6 +27,7 @@ export default defineConfig(({ command }) => {
     },
     build: {
       outDir: '../../dist',
+      emptyOutDir: false,
       lib: {
         entry: 'src/index.ts',
         formats: ['cjs'],
