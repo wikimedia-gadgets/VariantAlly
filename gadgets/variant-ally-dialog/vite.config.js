@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue';
 import { readFileSync } from 'fs';
 import mwGadget from 'rollup-plugin-mediawiki-gadget';
 import autoprefixer from 'autoprefixer';
-import browserslistToEsbuild from './scripts/browserslist-to-esbuild';
+import browserslistToEsbuild from '../../scripts/browserslist_to_esbuild';
 
 export default defineConfig(({ command }) => {
   return {
@@ -26,7 +26,8 @@ export default defineConfig(({ command }) => {
       } : undefined,
     },
     build: {
-      outDir: 'dist',
+      outDir: '../../dist',
+      emptyOutDir: false,
       lib: {
         entry: 'src/index.ts',
         formats: ['cjs'],
