@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable",
+    ],
+    "types": [
+      "types-mediawiki",
+    ],
+    "paths": {
+      "ext.gadget.VariantAlly": [
+        "./gadgets/variant-ally/src/index",
+      ],
+      "ext.gadget.HanAssist": [
+        "./node_modules/hanassist",
+      ],
+    },
+    "rootDir": ".",
+    "outDir": "dist",
+    "strict": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "composite": true,
+    "allowJs": true,
+  },
+  "include": [
+    "gadgets/*/src/**/*.ts",
+    "gadgets/*/src/**/*.js",
+    "gadgets/*/src/**/*.tsx",
+    "gadgets/*/src/**/*.vue",
+    "gadgets/*/scripts/**/*.js",
+    "gadgets/*/__tests__/**/*.ts",
+    "gadgets/*/assets/messages.json",
+    "gadgets/*/package.json",
+    "gadgets/env.d.ts",
+    "server/*.ts",
+    "scripts/*.js",
+    "**/*.config.js",
+  ],
+}
